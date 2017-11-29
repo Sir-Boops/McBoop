@@ -58,7 +58,7 @@ public class RunGame {
 		// Extract required libs
 		// Make sure that libraries folder is there
 		if (!new File(Cache.rootDir + "natives" + File.separator).exists()) {
-			new File(Cache.rootDir + "natives + File.separator").mkdir();
+			new File(Cache.rootDir + "natives" + File.separator).mkdir();
 		} else {
 			ArrayList<File> files = new ArrayList<File>(Arrays.asList(new File(Cache.rootDir + "natives" + File.separator).listFiles()));
 			for(int i = 0; i < files.size(); i++) {
