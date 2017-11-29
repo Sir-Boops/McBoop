@@ -9,11 +9,11 @@ public class ArgsParser {
 			if(args[i].equalsIgnoreCase("--check-status")) {
 				Config.checkStatus = true;
 			}
-			if(args[i].equalsIgnoreCase("--check-release")) {
-				Config.checkRelease = true;
+			if(args[i].equalsIgnoreCase("--get-release-version")) {
+				Config.printReleaseVersion = true;
 			}
-			if(args[i].equalsIgnoreCase("--check-snapshot")) {
-				Config.checkSnapshot = true;
+			if(args[i].equalsIgnoreCase("--get-snapshot-version")) {
+				Config.printSnapshotVersion = true;
 			}
 			if(args[i].equalsIgnoreCase("--list-all-versions")) {
 				Config.listAllVersions = true;

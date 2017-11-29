@@ -12,8 +12,8 @@ public class Config {
 	
 	// Store Args
 	public static boolean checkStatus = false;
-	public static boolean checkRelease = false;
-	public static boolean checkSnapshot = false;
+	public static boolean printReleaseVersion = false;
+	public static boolean printSnapshotVersion = false;
 	public static boolean listAllVersions = false;
 	
 	public static String runVersion = "";

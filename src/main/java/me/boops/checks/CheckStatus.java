@@ -1,4 +1,4 @@
-package me.boops.functions;
+package me.boops.checks;
 
 import org.json.JSONArray;
 
