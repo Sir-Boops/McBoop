@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.json.JSONObject;
 
-import me.boops.base.Config;
+import me.boops.base.Cache;
 
 public class FinishStartArgs {
 	
@@ -14,8 +14,8 @@ public class FinishStartArgs {
 		String gameArgs = "";
 		gameArgs += " --username " + ticket.getJSONObject("selectedProfile").getString("name") + " ";
 		gameArgs += "--version " + details.getString("id") + " ";
-		gameArgs += "--gameDir " + Config.rootDir + " ";
-		gameArgs += "--assetsDir " + Config.rootDir + "assets" + File.separator + " ";
+		gameArgs += "--gameDir " + Cache.rootDir + " ";
+		gameArgs += "--assetsDir " + Cache.rootDir + "assets" + File.separator + " ";
 		gameArgs += "--assetIndex " + details.getString("assets") + " ";
 		gameArgs += "--accessToken " + ticket.getString("accessToken") + " ";
 		gameArgs += "--uuid " + ticket.getJSONObject("selectedProfile").getString("id") + " ";

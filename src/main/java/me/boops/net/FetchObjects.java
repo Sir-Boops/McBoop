@@ -5,12 +5,12 @@ import java.util.Iterator;
 
 import org.json.JSONObject;
 
-import me.boops.base.Config;
+import me.boops.base.Cache;
 
 public class FetchObjects {
 	public void Download(JSONObject assetsRaw) throws Exception {
 		
-		String assetsDir = (Config.rootDir + "assets/");
+		String assetsDir = (Cache.rootDir + "assets/");
 		JSONObject assets = assetsRaw.getJSONObject("objects");
 		
 		// Download all the objects

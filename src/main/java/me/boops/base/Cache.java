@@ -3,7 +3,7 @@ package me.boops.base;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Config {
+public class Cache {
 	
 	// Store the strings
 	public static String OS = System.getProperty("os.name").split(" ")[0].toLowerCase();

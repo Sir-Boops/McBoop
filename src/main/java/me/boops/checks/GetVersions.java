@@ -19,4 +19,8 @@ public class GetVersions {
 	public JSONArray getAllVersions() throws Exception {
 		return new JSONObject(new GetURL().get("https://launchermeta.mojang.com/mc/game/version_manifest.json")).getJSONArray("versions");
 	}
+	
+	public JSONObject getAllVersionsRaw() throws Exception {
+		return new JSONObject(new GetURL().get("https://launchermeta.mojang.com/mc/game/version_manifest.json"));
+	}
 }

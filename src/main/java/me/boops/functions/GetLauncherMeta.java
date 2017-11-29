@@ -2,7 +2,7 @@ package me.boops.functions;
 
 import org.json.JSONObject;
 
-import me.boops.base.Config;
+import me.boops.base.Cache;
 import me.boops.net.GetURL;
 
 public class GetLauncherMeta {
@@ -15,7 +15,7 @@ public class GetLauncherMeta {
 		
 		// Find the requested version url in the list
 		for(int i = 0; i < versionList.getJSONArray("versions").length(); i++) {
-			if(versionList.getJSONArray("versions").getJSONObject(i).getString("id").equalsIgnoreCase(Config.runVersion)) {
+			if(versionList.getJSONArray("versions").getJSONObject(i).getString("id").equalsIgnoreCase(Cache.runVersion)) {
 				metaURL = versionList.getJSONArray("versions").getJSONObject(i).getString("url");
 			}
 		}

@@ -9,7 +9,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONObject;
 
-import me.boops.base.Config;
+import me.boops.base.Cache;
 
 public class LoginToMojang {
 
@@ -23,8 +23,8 @@ public class LoginToMojang {
 		agent.put("name", "Minecraft");
 		agent.put("version", 1);
 		payload.put("agent", agent);
-		payload.put("username", Config.userName);
-		payload.put("password", Config.password);
+		payload.put("username", Cache.userName);
+		payload.put("password", Cache.password);
 
 		HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 		conn.setReadTimeout(10 * 1000);

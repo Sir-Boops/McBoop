@@ -3,7 +3,7 @@ package me.boops.functions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import me.boops.base.Config;
+import me.boops.base.Cache;
 import me.boops.net.DownloadFile;
 
 public class FetchLibraries {
@@ -18,8 +18,8 @@ public class FetchLibraries {
 					download(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact"), pathFirst, libs.getJSONObject(i).has("extract"));
 				}
 				if(libs.getJSONObject(i).getJSONObject("downloads").has("classifiers")) {
-					if(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").has("natives-" + Config.OS)) {
-						download(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + Config.OS), pathFirst, libs.getJSONObject(i).has("extract"));
+					if(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").has("natives-" + Cache.OS)) {
+						download(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + Cache.OS), pathFirst, libs.getJSONObject(i).has("extract"));
 					}
 				}
 			}
@@ -30,9 +30,9 @@ public class FetchLibraries {
 		String URL = json.getString("url");
 		String path = pathFirst + (json.getString("path").substring(0, json.getString("path").lastIndexOf("/") + 1));
 		String fileName = URL.substring(URL.lastIndexOf("/") + 1, URL.length());
-		Config.libPaths.add(path + fileName);
+		Cache.libPaths.add(path + fileName);
 		if(shouldExtract) {
-			Config.extractPaths.add(path + fileName);
+			Cache.extractPaths.add(path + fileName);
 		}
 		System.out.println("Downloading Lib: " + fileName);
 		new DownloadFile().Download(path, URL, fileName);

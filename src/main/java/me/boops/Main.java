@@ -3,7 +3,7 @@ package me.boops;
 import org.json.JSONArray;
 
 import me.boops.base.ArgsParser;
-import me.boops.base.Config;
+import me.boops.base.Cache;
 import me.boops.checks.CheckStatus;
 import me.boops.checks.GetVersions;
 
@@ -14,21 +14,21 @@ public class Main {
 		// Parse the cmd args
 		new ArgsParser().parse(args);
 
-		if (Config.checkStatus) {
+		if (Cache.checkStatus) {
 			new CheckStatus();
 		}
 
-		if (Config.printReleaseVersion) {
+		if (Cache.printReleaseVersion) {
 			System.out.println("Current release version is: " + new GetVersions().getReleaseVersion());
 			System.exit(0);
 		}
 
-		if (Config.printSnapshotVersion) {
+		if (Cache.printSnapshotVersion) {
 			System.out.println("Current release version is: " + new GetVersions().getSnapShotVersion());
 			System.exit(0);
 		}
 
-		if (Config.listAllVersions) {
+		if (Cache.listAllVersions) {
 			System.out.println("Here is a list of versions you can play:");
 			JSONArray versions = new GetVersions().getAllVersions();
 			for (int i = 0; i < versions.length(); i++) {
@@ -37,7 +37,7 @@ public class Main {
 			System.exit(0);
 		}
 
-		if (!Config.runVersion.isEmpty() && !Config.userName.isEmpty() && !Config.password.isEmpty()) {
+		if (!Cache.runVersion.isEmpty() && !Cache.userName.isEmpty() && !Cache.password.isEmpty()) {
 			new RunGame();
 		}
 

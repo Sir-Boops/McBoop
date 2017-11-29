@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 import org.json.JSONObject;
 
-import me.boops.base.Config;
+import me.boops.base.Cache;
 import me.boops.base.SaveTextFile;
 import me.boops.functions.ExtractLibs;
 import me.boops.functions.FetchLibraries;
@@ -29,38 +29,38 @@ public class RunGame {
 				new GetURL().get(details.getJSONObject("assetIndex").getString("url")));
 
 		// Make sure the root-dir is there
-		if (!new File(Config.rootDir).exists()) {
+		if (!new File(Cache.rootDir).exists()) {
 			// Make the root-dir
-			new File(Config.rootDir).mkdirs();
+			new File(Cache.rootDir).mkdirs();
 		}
 
 		// Make sure that assets folder is there
-		if (!new File(Config.rootDir + "assets" + File.separator).exists()) {
-			new File(Config.rootDir + "assets" + File.separator).mkdir();
+		if (!new File(Cache.rootDir + "assets" + File.separator).exists()) {
+			new File(Cache.rootDir + "assets" + File.separator).mkdir();
 		}
 
 		// Fetch all the assets
-		new SaveTextFile().Save(Config.rootDir + "assets" + File.separator + "indexes" + File.separator, versionAssets.toString(),
+		new SaveTextFile().Save(Cache.rootDir + "assets" + File.separator + "indexes" + File.separator, versionAssets.toString(),
 				details.getJSONObject("assetIndex").getString("id") + ".json");
 		if(details.has("logging")) {
-			new FetchLoggingConfig(details.getJSONObject("logging"), Config.rootDir + "assets" + File.separator);
+			new FetchLoggingConfig(details.getJSONObject("logging"), Cache.rootDir + "assets" + File.separator);
 		}
 		new FetchObjects().Download(versionAssets);
 
 		// Make sure that libraries folder is there
-		if (!new File(Config.rootDir + "libraries" + File.separator).exists()) {
-			new File(Config.rootDir + "libraries" + File.separator).mkdir();
+		if (!new File(Cache.rootDir + "libraries" + File.separator).exists()) {
+			new File(Cache.rootDir + "libraries" + File.separator).mkdir();
 		}
 
 		// Fetch all the libs
-		new FetchLibraries(details, Config.rootDir + "libraries" + File.separator);
+		new FetchLibraries(details, Cache.rootDir + "libraries" + File.separator);
 
 		// Extract required libs
 		// Make sure that libraries folder is there
-		if (!new File(Config.rootDir + "natives" + File.separator).exists()) {
-			new File(Config.rootDir + "natives + File.separator").mkdir();
+		if (!new File(Cache.rootDir + "natives" + File.separator).exists()) {
+			new File(Cache.rootDir + "natives + File.separator").mkdir();
 		} else {
-			ArrayList<File> files = new ArrayList<File>(Arrays.asList(new File(Config.rootDir + "natives" + File.separator).listFiles()));
+			ArrayList<File> files = new ArrayList<File>(Arrays.asList(new File(Cache.rootDir + "natives" + File.separator).listFiles()));
 			for(int i = 0; i < files.size(); i++) {
 				files.get(i).delete();
 			}
@@ -70,20 +70,20 @@ public class RunGame {
 		new ExtractLibs();
 
 		// Make sure that versions folder is there
-		if (!new File(Config.rootDir + "versions" + File.separator).exists()) {
-			new File(Config.rootDir + "versions" + File.separator).mkdir();
+		if (!new File(Cache.rootDir + "versions" + File.separator).exists()) {
+			new File(Cache.rootDir + "versions" + File.separator).mkdir();
 		}
 
 		System.out.println("Downloading client: " + details.getString("id") + ".jar");
-		new DownloadFile().Download(Config.rootDir + "versions" + File.separator,
+		new DownloadFile().Download(Cache.rootDir + "versions" + File.separator,
 				details.getJSONObject("downloads").getJSONObject("client").getString("url"),
 				details.getString("id") + ".jar");
 
-		String startArgs = "java -Djava.library.path=" + (Config.rootDir + "natives" + File.separator) + " -cp \"";
-		for (int i = 0; i < Config.libPaths.size(); i++) {
-			startArgs += Config.libPaths.get(i) + File.pathSeparator;
+		String startArgs = "java -Djava.library.path=" + (Cache.rootDir + "natives" + File.separator) + " -cp \"";
+		for (int i = 0; i < Cache.libPaths.size(); i++) {
+			startArgs += Cache.libPaths.get(i) + File.pathSeparator;
 		}
-		startArgs += Config.rootDir + "versions" + File.separator + details.getString("id") + ".jar"
+		startArgs += Cache.rootDir + "versions" + File.separator + details.getString("id") + ".jar"
 				+ "\" " + details.getString("mainClass");
 
 		// Now Login to MC
