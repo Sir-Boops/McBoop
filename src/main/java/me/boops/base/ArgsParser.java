@@ -1,8 +1,6 @@
-package me.boops.functions;
+package me.boops.base;
 
 import java.io.File;
-
-import me.boops.Config;
 
 public class ArgsParser {
 	
@@ -24,7 +22,7 @@ public class ArgsParser {
 				Config.runVersion = args[i + 1];
 			}
 			if(args[i].equalsIgnoreCase("--root-dir")) {
-				Config.rootDir = new File(args[i + 1]).getCanonicalPath().toString() + "/";
+				Config.rootDir = new File(args[i + 1]).getCanonicalPath().toString() + File.separator;
 			}
 			if(args[i].equalsIgnoreCase("--username")) {
 				Config.userName = args[i + 1];

@@ -1,4 +1,4 @@
-package me.boops.functions;
+package me.boops.base;
 
 import java.io.BufferedWriter;
 import java.io.File;

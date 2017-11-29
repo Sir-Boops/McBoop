@@ -1,4 +1,4 @@
-package me.boops;
+package me.boops.base;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.List;
 public class Config {
 	
 	// Store the strings
-	public static int launcherVersion = 21;
 	public static String OS = System.getProperty("os.name").split(" ")[0].toLowerCase();
 	public static List<String> libPaths = new ArrayList<String>();
 	public static List<String> extractPaths = new ArrayList<String>();

@@ -1,4 +1,4 @@
-package me.boops.functions;
+package me.boops.net;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -9,7 +9,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONObject;
 
-import me.boops.Config;
+import me.boops.base.Config;
 
 public class LoginToMojang {
 
@@ -31,6 +31,7 @@ public class LoginToMojang {
 		conn.setConnectTimeout(10 * 1000);
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux X11; x64; rv:59.0) Gecko/20100101 Firefox/59.0");
 		conn.setDoOutput(true);
 
 		conn.connect();
@@ -46,8 +47,6 @@ public class LoginToMojang {
 		while ((inByte = in.readLine()) != null) {
 			sb.append(inByte);
 		}
-		
-		System.out.println(sb.toString());
 
 		return new JSONObject(sb.toString());
 	}

@@ -2,7 +2,7 @@ package me.boops.functions;
 
 import org.json.JSONObject;
 
-import me.boops.Config;
+import me.boops.base.Config;
 import me.boops.net.GetURL;
 
 public class GetLauncherMeta {

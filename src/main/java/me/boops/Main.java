@@ -1,11 +1,11 @@
 package me.boops;
 
-import me.boops.functions.ArgsParser;
+import me.boops.base.ArgsParser;
+import me.boops.base.Config;
 import me.boops.functions.CheckRelease;
 import me.boops.functions.CheckSnapShot;
 import me.boops.functions.CheckStatus;
 import me.boops.functions.ListAllVersions;
-import me.boops.functions.RunGame;
 
 public class Main {
 	
@@ -30,8 +30,11 @@ public class Main {
 			new ListAllVersions();
 		}
 		
-		if(!Config.runVersion.isEmpty()) {
+		if(!Config.runVersion.isEmpty() && !Config.userName.isEmpty() && !Config.password.isEmpty()) {
 			new RunGame();
 		}
+		
+		System.out.println("Run --help for help");
+		
 	}
 }

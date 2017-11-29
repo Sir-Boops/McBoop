@@ -2,6 +2,8 @@ package me.boops.functions;
 
 import org.json.JSONObject;
 
+import me.boops.net.DownloadFile;
+
 public class FetchLoggingConfig {
 	public FetchLoggingConfig(JSONObject json, String path) throws Exception {
 		

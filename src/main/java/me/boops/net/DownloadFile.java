@@ -1,4 +1,4 @@
-package me.boops.functions;
+package me.boops.net;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,6 +22,7 @@ public class DownloadFile {
 			conn.setReadTimeout(10 * 1000);
 			conn.setConnectTimeout(10 * 1000);
 			conn.setRequestMethod("GET");
+			conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux X11; x64; rv:59.0) Gecko/20100101 Firefox/59.0");
 
 			conn.connect();
 

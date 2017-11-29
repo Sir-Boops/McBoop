@@ -1,4 +1,4 @@
-package me.boops.functions;
+package me.boops;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,8 +8,17 @@ import java.util.Arrays;
 
 import org.json.JSONObject;
 
-import me.boops.Config;
+import me.boops.base.Config;
+import me.boops.base.SaveTextFile;
+import me.boops.functions.ExtractLibs;
+import me.boops.functions.FetchLibraries;
+import me.boops.functions.FetchLoggingConfig;
+import me.boops.functions.FinishStartArgs;
+import me.boops.functions.GetLauncherMeta;
+import me.boops.net.DownloadFile;
+import me.boops.net.FetchObjects;
 import me.boops.net.GetURL;
+import me.boops.net.LoginToMojang;
 
 public class RunGame {
 	public RunGame() throws Exception {
@@ -26,32 +35,32 @@ public class RunGame {
 		}
 
 		// Make sure that assets folder is there
-		if (!new File(Config.rootDir + "assets/").exists()) {
-			new File(Config.rootDir + "assets/").mkdir();
+		if (!new File(Config.rootDir + "assets" + File.separator).exists()) {
+			new File(Config.rootDir + "assets" + File.separator).mkdir();
 		}
 
 		// Fetch all the assets
-		new SaveTextFile().Save(Config.rootDir + "assets/indexes/", versionAssets.toString(),
+		new SaveTextFile().Save(Config.rootDir + "assets" + File.separator + "indexes" + File.separator, versionAssets.toString(),
 				details.getJSONObject("assetIndex").getString("id") + ".json");
 		if(details.has("logging")) {
-			new FetchLoggingConfig(details.getJSONObject("logging"), Config.rootDir + "assets/");
+			new FetchLoggingConfig(details.getJSONObject("logging"), Config.rootDir + "assets" + File.separator);
 		}
 		new FetchObjects().Download(versionAssets);
 
 		// Make sure that libraries folder is there
-		if (!new File(Config.rootDir + "libraries/").exists()) {
-			new File(Config.rootDir + "libraries/").mkdir();
+		if (!new File(Config.rootDir + "libraries" + File.separator).exists()) {
+			new File(Config.rootDir + "libraries" + File.separator).mkdir();
 		}
 
 		// Fetch all the libs
-		new FetchLibraries(details, Config.rootDir + "libraries/");
+		new FetchLibraries(details, Config.rootDir + "libraries" + File.separator);
 
 		// Extract required libs
 		// Make sure that libraries folder is there
-		if (!new File(Config.rootDir + "natives/").exists()) {
-			new File(Config.rootDir + "natives/").mkdir();
+		if (!new File(Config.rootDir + "natives" + File.separator).exists()) {
+			new File(Config.rootDir + "natives + File.separator").mkdir();
 		} else {
-			ArrayList<File> files = new ArrayList<File>(Arrays.asList(new File(Config.rootDir + "natives/").listFiles()));
+			ArrayList<File> files = new ArrayList<File>(Arrays.asList(new File(Config.rootDir + "natives" + File.separator).listFiles()));
 			for(int i = 0; i < files.size(); i++) {
 				files.get(i).delete();
 			}
@@ -61,34 +70,26 @@ public class RunGame {
 		new ExtractLibs();
 
 		// Make sure that versions folder is there
-		if (!new File(Config.rootDir + "versions/").exists()) {
-			new File(Config.rootDir + "versions/").mkdir();
+		if (!new File(Config.rootDir + "versions" + File.separator).exists()) {
+			new File(Config.rootDir + "versions" + File.separator).mkdir();
 		}
 
 		System.out.println("Downloading client: " + details.getString("id") + ".jar");
-		new DownloadFile().Download(Config.rootDir + "versions/",
+		new DownloadFile().Download(Config.rootDir + "versions" + File.separator,
 				details.getJSONObject("downloads").getJSONObject("client").getString("url"),
 				details.getString("id") + ".jar");
 
-		String startArgs = "java -Djava.library.path=" + (Config.rootDir + "natives/") + " -cp \"";
-		String serp = "";
-		if(Config.OS.equalsIgnoreCase("linux")) {
-			serp = ":";
-		} else {
-			serp = ";";
-		}
+		String startArgs = "java -Djava.library.path=" + (Config.rootDir + "natives" + File.separator) + " -cp \"";
 		for (int i = 0; i < Config.libPaths.size(); i++) {
-			startArgs += Config.libPaths.get(i) + serp;
+			startArgs += Config.libPaths.get(i) + File.pathSeparator;
 		}
-		startArgs += Config.rootDir + "versions/" + details.getString("id") + ".jar"
+		startArgs += Config.rootDir + "versions" + File.separator + details.getString("id") + ".jar"
 				+ "\" " + details.getString("mainClass");
 
 		// Now Login to MC
 		JSONObject authTicket = new LoginToMojang().login();
 
 		startArgs = new FinishStartArgs().Finish(startArgs, authTicket, details);
-
-		System.out.println(startArgs);
 
 		Runtime rt = Runtime.getRuntime();
 		Process pr = rt.exec(startArgs);

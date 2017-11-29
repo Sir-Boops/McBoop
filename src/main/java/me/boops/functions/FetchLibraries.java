@@ -3,26 +3,19 @@ package me.boops.functions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import me.boops.Config;
+import me.boops.base.Config;
+import me.boops.net.DownloadFile;
 
 public class FetchLibraries {
 	
 	public FetchLibraries(JSONObject details, String pathFirst) throws Exception {
 		
 		JSONArray libs = details.getJSONArray("libraries");
-		System.out.println(details.toString());
 		
 		for(int i = 0; i < libs.length(); i++) {
 			if(libs.getJSONObject(i).has("downloads")) {
 				if(libs.getJSONObject(i).getJSONObject("downloads").has("artifact")) {
-					if(libs.getJSONObject(i).getJSONObject("downloads").has("classifiers") && details.getInt("minimumLauncherVersion") < 20) {
-						//if(!libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").has("natives-" + Config.OS)) {
-						//	download(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact"), pathFirst, libs.getJSONObject(i).has("extract"));
-						//}
-						download(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact"), pathFirst, libs.getJSONObject(i).has("extract"));
-					} else {
-						download(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact"), pathFirst, libs.getJSONObject(i).has("extract"));
-					}
+					download(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact"), pathFirst, libs.getJSONObject(i).has("extract"));
 				}
 				if(libs.getJSONObject(i).getJSONObject("downloads").has("classifiers")) {
 					if(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").has("natives-" + Config.OS)) {
