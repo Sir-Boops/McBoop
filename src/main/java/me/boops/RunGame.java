@@ -10,25 +10,23 @@ import org.json.JSONObject;
 
 import me.boops.base.Cache;
 import me.boops.base.SaveTextFile;
+import me.boops.functions.AddJVMArgs;
 import me.boops.functions.ExtractLibs;
 import me.boops.functions.FetchLibraries;
 import me.boops.functions.FetchLoggingConfig;
 import me.boops.functions.FinishStartArgs;
-import me.boops.functions.GetLauncherMeta;
+import me.boops.functions.ReadFile;
 import me.boops.net.DownloadFile;
 import me.boops.net.FetchObjects;
-import me.boops.net.GetURL;
 import me.boops.net.LoginToMojang;
 
 public class RunGame {
 	public RunGame() throws Exception {
 
-		// Get version details
-		JSONObject details = new GetLauncherMeta().get();
-		JSONObject versionAssets = new JSONObject(
-				new GetURL().get(details.getJSONObject("assetIndex").getString("url")));
-		
-		System.out.println(details);
+		// Get launcher meta
+		JSONObject details = getVersionMeta();
+		// Get assetIndex
+		JSONObject assetIndex = getAssetIndex(details);
 
 		// Make sure the root-dir is there
 		if (!new File(Cache.rootDir).exists()) {
@@ -42,12 +40,12 @@ public class RunGame {
 		}
 
 		// Fetch all the assets
-		new SaveTextFile().Save(Cache.rootDir + "assets" + File.separator + "indexes" + File.separator, versionAssets.toString(),
-				details.getJSONObject("assetIndex").getString("id") + ".json");
-		if(details.has("logging")) {
+		new SaveTextFile().Save(Cache.rootDir + "assets" + File.separator + "indexes" + File.separator,
+				assetIndex.toString(), details.getJSONObject("assetIndex").getString("id") + ".json");
+		if (details.has("logging")) {
 			new FetchLoggingConfig(details.getJSONObject("logging"), Cache.rootDir + "assets" + File.separator);
 		}
-		new FetchObjects().Download(versionAssets);
+		new FetchObjects().Download(assetIndex);
 
 		// Make sure that libraries folder is there
 		if (!new File(Cache.rootDir + "libraries" + File.separator).exists()) {
@@ -62,12 +60,13 @@ public class RunGame {
 		if (!new File(Cache.rootDir + "natives" + File.separator).exists()) {
 			new File(Cache.rootDir + "natives" + File.separator).mkdir();
 		} else {
-			ArrayList<File> files = new ArrayList<File>(Arrays.asList(new File(Cache.rootDir + "natives" + File.separator).listFiles()));
-			for(int i = 0; i < files.size(); i++) {
+			ArrayList<File> files = new ArrayList<File>(
+					Arrays.asList(new File(Cache.rootDir + "natives" + File.separator).listFiles()));
+			for (int i = 0; i < files.size(); i++) {
 				files.get(i).delete();
 			}
 		}
-		
+
 		System.out.println("Extracting natives");
 		new ExtractLibs();
 
@@ -75,26 +74,22 @@ public class RunGame {
 		if (!new File(Cache.rootDir + "versions" + File.separator).exists()) {
 			new File(Cache.rootDir + "versions" + File.separator).mkdir();
 		}
+		
+		System.out.println(details);
 
 		System.out.println("Downloading client: " + details.getString("id") + ".jar");
 		new DownloadFile().Download(Cache.rootDir + "versions" + File.separator,
 				details.getJSONObject("downloads").getJSONObject("client").getString("url"),
 				details.getString("id") + ".jar");
 
-		String startArgs = "java -Djava.library.path=" + (Cache.rootDir + "natives" + File.separator) + " -cp \"";
-		for (int i = 0; i < Cache.libPaths.size(); i++) {
-			startArgs += Cache.libPaths.get(i) + File.pathSeparator;
-		}
-		startArgs += Cache.rootDir + "versions" + File.separator + details.getString("id") + ".jar"
-				+ "\" " + details.getString("mainClass");
+		String startArgs = new AddJVMArgs().add(details);
 
 		// Now Login to MC
 		JSONObject authTicket = new LoginToMojang().login();
 
 		startArgs = new FinishStartArgs().Finish(startArgs, authTicket, details);
-		
+
 		System.out.println(startArgs);
-		//System.exit(0);
 
 		Runtime rt = Runtime.getRuntime();
 		Process pr = rt.exec(startArgs);
@@ -111,4 +106,34 @@ public class RunGame {
 		System.exit(0);
 
 	}
+
+	private JSONObject getVersionMeta() throws Exception {
+		JSONObject ans = new JSONObject();
+		if (new File(Cache.rootDir + "versions" + File.separator + Cache.runVersion + ".json").exists()) {
+			ans = new ReadFile().Read(Cache.rootDir + "versions" + File.separator + Cache.runVersion + ".json");
+		} else {
+			new File(Cache.rootDir + "versions" + File.separator).mkdirs();
+			new DownloadFile().Download(Cache.rootDir + "versions" + File.separator, Cache.versionMetaURL,
+					Cache.runVersion + ".json");
+			ans = new ReadFile().Read(Cache.rootDir + "versions" + File.separator + Cache.runVersion + ".json");
+		}
+		return ans;
+	}
+
+	private JSONObject getAssetIndex(JSONObject details) throws Exception {
+
+		JSONObject ans = new JSONObject();
+		String indexDir = Cache.rootDir + "assets" + File.separator + "indexes" + File.separator;
+
+		if (new File(indexDir + Cache.runVersion + ".json").exists()) {
+			ans = new ReadFile().Read(indexDir + Cache.runVersion + ".json");
+		} else {
+			new File(indexDir).mkdirs();
+			new DownloadFile().Download(indexDir, details.getJSONObject("assetIndex").getString("url"),
+					Cache.runVersion + ".json");
+			ans = new ReadFile().Read(indexDir + Cache.runVersion + ".json");
+		}
+		return ans;
+	}
+
 }

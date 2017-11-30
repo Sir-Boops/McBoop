@@ -7,6 +7,7 @@ public class Cache {
 	
 	// Store the strings
 	public static String OS = System.getProperty("os.name").split(" ")[0].toLowerCase();
+	public static String mcBoopVersion = "1.0.0";
 	public static List<String> libPaths = new ArrayList<String>();
 	public static List<String> extractPaths = new ArrayList<String>();
 	
@@ -18,6 +19,7 @@ public class Cache {
 	
 	public static String runVersion = "";
 	public static String rootDir = "";
+	public static String versionMetaURL = "";
 	
 	public static String userName = "";
 	public static String password = "";

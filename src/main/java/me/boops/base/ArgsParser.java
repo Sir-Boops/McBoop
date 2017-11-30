@@ -2,6 +2,7 @@ package me.boops.base;
 
 import java.io.File;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import me.boops.checks.GetVersions;
@@ -23,11 +24,7 @@ public class ArgsParser {
 				Cache.listAllVersions = true;
 			}
 			if(args[i].equalsIgnoreCase("--run")) {
-				String versionID = getVersionID(args[i + 1]);
-				if(versionID.isEmpty()) {
-					System.exit(0);
-				}
-				Cache.runVersion = versionID;
+				getVersionID(args[i + 1]);
 			}
 			if(args[i].equalsIgnoreCase("--root-dir")) {
 				Cache.rootDir = new File(args[i + 1]).getCanonicalPath().toString() + File.separator;
@@ -41,26 +38,42 @@ public class ArgsParser {
 		}
 	}
 	
-	private String getVersionID(String requestedVersion) throws Exception {
+	private void getVersionID(String requestedVersion) throws Exception {
 		JSONObject versions = new GetVersions().getAllVersionsRaw();
 		
 		if(requestedVersion.equalsIgnoreCase("stable")) {
-			return versions.getJSONObject("latest").getString("release");
+			Cache.runVersion = versions.getJSONObject("latest").getString("release");
+			Cache.versionMetaURL = getVersionMeta(versions.getJSONArray("versions"));
+			return;
 		}
 		
 		if(requestedVersion.equalsIgnoreCase("snapshot")) {
-			return versions.getJSONObject("latest").getString("snapshot");
+			Cache.runVersion = versions.getJSONObject("latest").getString("snapshot");
+			Cache.versionMetaURL = getVersionMeta(versions.getJSONArray("versions"));
+			return;
 		}
 		
 		for(int i2 = 0; i2 < versions.getJSONArray("versions").length(); i2++) {
 			if(versions.getJSONArray("versions").getJSONObject(i2).getString("id").equalsIgnoreCase(requestedVersion)) {
-				return versions.getJSONArray("versions").getJSONObject(i2).getString("id");
+				Cache.runVersion = versions.getJSONArray("versions").getJSONObject(i2).getString("id");
+				Cache.versionMetaURL = getVersionMeta(versions.getJSONArray("versions"));
+				return;
 			}
 		}
 		
 		System.out.println("`" + requestedVersion + "` Is not a valid version string please run `--list-all-versions` to see vaild version names");
 		System.out.println("Or use `--help` for help");
-		return "";
+		System.exit(0);
+	}
+	
+	private String getVersionMeta(JSONArray versions) {
+		String ans = "";
+		for(int i = 0; i < versions.length(); i++) {
+			if(versions.getJSONObject(i).getString("id").equalsIgnoreCase(Cache.runVersion)) {
+				ans = versions.getJSONObject(i).getString("url");
+			}
+		}
+		return ans;
 	}
 	
 }
