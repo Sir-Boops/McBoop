@@ -27,6 +27,8 @@ public class RunGame {
 		JSONObject details = new GetLauncherMeta().get();
 		JSONObject versionAssets = new JSONObject(
 				new GetURL().get(details.getJSONObject("assetIndex").getString("url")));
+		
+		System.out.println(details);
 
 		// Make sure the root-dir is there
 		if (!new File(Cache.rootDir).exists()) {
@@ -90,6 +92,9 @@ public class RunGame {
 		JSONObject authTicket = new LoginToMojang().login();
 
 		startArgs = new FinishStartArgs().Finish(startArgs, authTicket, details);
+		
+		System.out.println(startArgs);
+		//System.exit(0);
 
 		Runtime rt = Runtime.getRuntime();
 		Process pr = rt.exec(startArgs);

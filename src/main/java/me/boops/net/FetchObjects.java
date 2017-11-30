@@ -40,5 +40,10 @@ public class FetchObjects {
 				}
 			}).start();
 		}
+		
+		// Wait for all downloads to finish
+		while(dlGroup.activeCount() > 0) {
+			Thread.sleep(1000);
+		}
 	}
 }
