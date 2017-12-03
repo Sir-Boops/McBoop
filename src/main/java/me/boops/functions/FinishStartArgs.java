@@ -30,7 +30,7 @@ public class FinishStartArgs {
 		playerName = ticket.getJSONObject("selectedProfile").getString("name"); // ${auth_player_name}
 		version = details.getString("id"); // ${version_name}
 		gameDir = Cache.rootDir; // ${game_directory}
-		addetsDir = Cache.rootDir + "assets" + File.separator; // ${assets_root}
+		addetsDir = Cache.cacheDir + "assets" + File.separator; // ${assets_root}
 		assetName = details.getString("assets"); // ${assets_index_name}
 		uuid = ticket.getJSONObject("selectedProfile").getString("id"); // ${auth_uuid}
 		accessToken = ticket.getString("accessToken"); // ${auth_access_token}

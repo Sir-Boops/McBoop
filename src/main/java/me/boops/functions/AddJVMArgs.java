@@ -49,19 +49,18 @@ public class AddJVMArgs {
 	}
 
 	private String classPath(JSONObject details) {
-		String ans = "\"";
+		String ans = "";
 		for (int i = 0; i < Cache.libPaths.size(); i++) {
 			ans += Cache.libPaths.get(i) + File.pathSeparator;
 		}
-		ans += Cache.rootDir + "versions" + File.separator + details.getString("id") + ".jar";
-		ans += "\"";
+		ans += Cache.cacheDir + "versions" + File.separator + details.getString("id") + ".jar";
 		return ans;
 	}
 
 	private String loggingConfig(JSONObject details) {
 		String ans = "";
 		if (details.has("logging")) {
-			String path = (Cache.rootDir + "assets" + File.separator + "log_configs" + File.separator
+			String path = (Cache.cacheDir + "assets" + File.separator + "log_configs" + File.separator
 					+ details.getJSONObject("logging").getJSONObject("client").getJSONObject("file").getString("id"));
 			ans = details.getJSONObject("logging").getJSONObject("client").getString("argument")
 					.replaceFirst("\\$\\{path\\}", "") + path + " ";

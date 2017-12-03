@@ -29,6 +29,9 @@ public class ArgsParser {
 			if(args[i].equalsIgnoreCase("--root-dir")) {
 				Cache.rootDir = new File(args[i + 1]).getCanonicalPath().toString() + File.separator;
 			}
+			if(args[i].equalsIgnoreCase("--cache-dir")) {
+				Cache.cacheDir = new File(args[i + 1]).getCanonicalPath().toString() + File.separator;
+			}
 			if(args[i].equalsIgnoreCase("--username")) {
 				Cache.userName = args[i + 1];
 			}
@@ -36,6 +39,11 @@ public class ArgsParser {
 				Cache.password = args[i + 1];
 			}
 		}
+		
+		if(Cache.cacheDir.isEmpty()) {
+			Cache.cacheDir = System.getProperty("user.home") + File.separator + ".mcboopCache" + File.separator;
+		}
+		
 	}
 	
 	private void getVersionID(String requestedVersion) throws Exception {

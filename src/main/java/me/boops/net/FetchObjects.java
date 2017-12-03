@@ -10,7 +10,7 @@ import me.boops.base.Cache;
 public class FetchObjects {
 	public void Download(JSONObject assetsRaw) throws Exception {
 		
-		String assetsDir = (Cache.rootDir + "assets/");
+		String assetsDir = (Cache.cacheDir + "assets/");
 		JSONObject assets = assetsRaw.getJSONObject("objects");
 		
 		// Download all the objects

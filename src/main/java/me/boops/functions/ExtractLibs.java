@@ -11,6 +11,10 @@ import me.boops.base.Cache;
 
 public class ExtractLibs {
 	public ExtractLibs() throws Exception {
+		
+		if(!new File(Cache.rootDir + "natives" + File.separator).exists()) {
+			new File(Cache.rootDir + "natives" + File.separator).mkdirs();
+		}
 
 		for (int i = 0; i < Cache.extractPaths.size(); i++) {
 

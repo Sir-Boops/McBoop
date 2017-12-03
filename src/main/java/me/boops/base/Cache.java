@@ -19,6 +19,7 @@ public class Cache {
 	
 	public static String runVersion = "";
 	public static String rootDir = "";
+	public static String cacheDir = "";
 	public static String versionMetaURL = "";
 	
 	public static String userName = "";
