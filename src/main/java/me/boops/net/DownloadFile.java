@@ -7,6 +7,8 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import me.boops.base.Cache;
+
 public class DownloadFile {
 	public void Download(String destFolder, String URL, String fileName) throws Exception {
 
@@ -22,7 +24,7 @@ public class DownloadFile {
 			conn.setReadTimeout(10 * 1000);
 			conn.setConnectTimeout(10 * 1000);
 			conn.setRequestMethod("GET");
-			conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux X11; x64; rv:59.0) Gecko/20100101 Firefox/59.0");
+			conn.setRequestProperty("User-Agent", "McBoop/" + Cache.mcBoopVersion);
 
 			conn.connect();
 

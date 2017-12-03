@@ -1,10 +1,11 @@
-package me.boops.base;
+package me.boops;
 
 import java.io.File;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import me.boops.base.Cache;
 import me.boops.checks.GetVersions;
 
 public class ArgsParser {

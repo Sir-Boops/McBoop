@@ -9,13 +9,13 @@ import java.util.Arrays;
 import org.json.JSONObject;
 
 import me.boops.base.Cache;
-import me.boops.base.SaveTextFile;
+import me.boops.files.ReadFile;
+import me.boops.files.SaveTextFile;
 import me.boops.functions.AddJVMArgs;
 import me.boops.functions.ExtractLibs;
 import me.boops.functions.FetchLibraries;
 import me.boops.functions.FetchLoggingConfig;
 import me.boops.functions.FinishStartArgs;
-import me.boops.functions.ReadFile;
 import me.boops.net.DownloadFile;
 import me.boops.net.FetchObjects;
 import me.boops.net.LoginToMojang;

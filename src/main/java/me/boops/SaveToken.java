@@ -5,7 +5,7 @@ import java.io.File;
 import org.json.JSONObject;
 
 import me.boops.base.Cache;
-import me.boops.base.SaveTextFile;
+import me.boops.files.SaveTextFile;
 import me.boops.net.LoginToMojang;
 
 public class SaveToken {

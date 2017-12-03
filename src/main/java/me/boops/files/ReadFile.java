@@ -1,4 +1,4 @@
-package me.boops.functions;
+package me.boops.files;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
