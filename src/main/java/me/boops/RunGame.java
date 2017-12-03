@@ -84,7 +84,12 @@ public class RunGame {
 		String startArgs = new AddJVMArgs().add(details);
 
 		// Now Login to MC
-		JSONObject authTicket = new LoginToMojang().login();
+		JSONObject authTicket = new JSONObject();
+		if(!Cache.userName.isEmpty() && !Cache.password.isEmpty()) {
+			authTicket = new LoginToMojang().login();
+		} else {
+			authTicket = new LoginToMojang().refresh();
+		}
 
 		startArgs = new FinishStartArgs().Finish(startArgs, authTicket, details);
 

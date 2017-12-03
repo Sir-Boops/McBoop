@@ -16,6 +16,7 @@ public class Cache {
 	public static boolean printReleaseVersion = false;
 	public static boolean printSnapshotVersion = false;
 	public static boolean listAllVersions = false;
+	public static boolean saveLogin = true;
 	
 	public static String runVersion = "";
 	public static String rootDir = "";

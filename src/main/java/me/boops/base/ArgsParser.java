@@ -23,6 +23,9 @@ public class ArgsParser {
 			if(args[i].equalsIgnoreCase("--list-all-versions")) {
 				Cache.listAllVersions = true;
 			}
+			if(args[i].equalsIgnoreCase("--save-login")) {
+				Cache.saveLogin = true;
+			}
 			if(args[i].equalsIgnoreCase("--run")) {
 				getVersionID(args[i + 1]);
 			}

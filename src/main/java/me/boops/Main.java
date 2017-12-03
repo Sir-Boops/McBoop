@@ -1,5 +1,7 @@
 package me.boops;
 
+import java.io.File;
+
 import org.json.JSONArray;
 
 import me.boops.base.ArgsParser;
@@ -36,9 +38,15 @@ public class Main {
 			}
 			System.exit(0);
 		}
+		
+		if (Cache.saveLogin && !Cache.userName.isEmpty() && !Cache.password.isEmpty()) {
+			new SaveToken();
+		}
 
-		if (!Cache.runVersion.isEmpty() && !Cache.userName.isEmpty() && !Cache.password.isEmpty()) {
-			new RunGame();
+		if (!Cache.runVersion.isEmpty()) {
+			if((!Cache.userName.isEmpty() && !Cache.password.isEmpty()) || new File(Cache.cacheDir + File.separator + "auth.json").exists()) {
+				new RunGame();
+			}
 		}
 
 		System.out.println("Run --help for help");
