@@ -3,10 +3,8 @@ package me.boops.files;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-import org.json.JSONObject;
-
 public class ReadFile {
-	public JSONObject Read(String file) throws Exception {
+	public String Read(String file) throws Exception {
 		
 		StringBuilder sb = new StringBuilder();
 
@@ -19,6 +17,6 @@ public class ReadFile {
 		}
 		br.close();
 		
-		return new JSONObject(sb.toString());
+		return sb.toString();
 	}
 }

@@ -1,12 +1,11 @@
 package me.boops;
 
-import java.io.File;
-
 import org.json.JSONArray;
 
 import me.boops.base.Cache;
 import me.boops.checks.CheckStatus;
 import me.boops.checks.GetVersions;
+import me.boops.net.MojangAuth;
 
 public class Main {
 
@@ -39,13 +38,12 @@ public class Main {
 		}
 		
 		if (Cache.saveLogin && !Cache.userName.isEmpty() && !Cache.password.isEmpty()) {
-			new SaveToken();
+			new MojangAuth().login(Cache.userName, Cache.password);
+			System.exit(0);
 		}
 
-		if (!Cache.runVersion.isEmpty()) {
-			if((!Cache.userName.isEmpty() && !Cache.password.isEmpty()) || new File(Cache.cacheDir + File.separator + "auth.json").exists()) {
-				new RunGame();
-			}
+		if (!Cache.runVersion.isEmpty() && !Cache.userName.isEmpty()) {
+			new RunGame();
 		}
 
 		System.out.println("Run --help for help");

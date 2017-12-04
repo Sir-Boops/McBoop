@@ -21,18 +21,17 @@ public class FinishStartArgs {
 	private String versionType = "";
 	private String userType = "";
 	
-	public String Finish(String oldArgs, JSONObject ticket, JSONObject details) {
+	public String Finish(JSONObject ticket, JSONObject details) {
 		
-		//JSONArray arrArgs = details.getJSONObject("arguments").getJSONArray("game");
 		String gameArgs = " ";
 		
 		// Launch Args
-		playerName = ticket.getJSONObject("selectedProfile").getString("name"); // ${auth_player_name}
+		playerName = ticket.getString("userName"); // ${auth_player_name}
 		version = details.getString("id"); // ${version_name}
 		gameDir = Cache.rootDir; // ${game_directory}
 		addetsDir = Cache.cacheDir + "assets" + File.separator; // ${assets_root}
 		assetName = details.getString("assets"); // ${assets_index_name}
-		uuid = ticket.getJSONObject("selectedProfile").getString("id"); // ${auth_uuid}
+		uuid = ticket.getString("UUID"); // ${auth_uuid}
 		accessToken = ticket.getString("accessToken"); // ${auth_access_token}
 		userProperties = "{}"; // ${user_properties}
 		versionType = details.getString("type"); // ${version_type}
@@ -64,7 +63,7 @@ public class FinishStartArgs {
 			}
 		}
 		
-		return (oldArgs + gameArgs);
+		return gameArgs;
 	}
 	
 	// Replace args with the proper args

@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 public class SaveTextFile {
-	public void Save(String path, String text, String fileName) throws Exception {
+	public SaveTextFile(String path, String text, String fileName) throws Exception {
 
 		// Make sure that folder is there
 		if (!new File(path).exists()) {
