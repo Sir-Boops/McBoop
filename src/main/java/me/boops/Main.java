@@ -2,9 +2,9 @@ package me.boops;
 
 import org.json.JSONArray;
 
-import me.boops.base.Cache;
-import me.boops.checks.CheckStatus;
-import me.boops.checks.GetVersions;
+import me.boops.functions.ListForgeVersions;
+import me.boops.net.CheckStatus;
+import me.boops.net.GetVersions;
 import me.boops.net.MojangAuth;
 
 public class Main {
@@ -28,6 +28,11 @@ public class Main {
 			System.exit(0);
 		}
 
+		if (Cache.listForgeVersions && !Cache.runVersion.isEmpty()) {
+			new ListForgeVersions().listVersions();
+			System.exit(0);
+		}
+
 		if (Cache.listAllVersions) {
 			System.out.println("Here is a list of versions you can play:");
 			JSONArray versions = new GetVersions().getAllVersions();
@@ -36,7 +41,7 @@ public class Main {
 			}
 			System.exit(0);
 		}
-		
+
 		if (Cache.saveLogin && !Cache.userName.isEmpty() && !Cache.password.isEmpty()) {
 			new MojangAuth().login(Cache.userName, Cache.password);
 			System.exit(0);
@@ -44,6 +49,7 @@ public class Main {
 
 		if (!Cache.runVersion.isEmpty() && !Cache.userName.isEmpty()) {
 			new RunGame();
+			System.exit(0);
 		}
 
 		System.out.println("Run --help for help");

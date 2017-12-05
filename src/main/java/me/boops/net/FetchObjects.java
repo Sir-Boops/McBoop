@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import org.json.JSONObject;
 
-import me.boops.base.Cache;
+import me.boops.Cache;
 
 public class FetchObjects {
 	public FetchObjects(JSONObject assetsRaw) throws Exception {

@@ -1,8 +1,6 @@
-package me.boops.checks;
+package me.boops.net;
 
 import org.json.JSONArray;
-
-import me.boops.net.GetURL;
 
 public class CheckStatus {
 	

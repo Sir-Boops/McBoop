@@ -1,9 +1,7 @@
-package me.boops.checks;
+package me.boops.net;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import me.boops.net.GetURL;
 
 public class GetVersions {
 	public String getReleaseVersion() throws Exception {

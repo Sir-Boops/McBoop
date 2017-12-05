@@ -5,10 +5,10 @@ import java.io.File;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import me.boops.base.Cache;
+import me.boops.Cache;
 
 public class AddJVMArgs {
-	public String add(JSONObject details) {
+	public String add(JSONObject details) throws Exception {
 
 		String ans = "java ";
 
@@ -33,16 +33,24 @@ public class AddJVMArgs {
 					ans += parseJSONObject(json.getJSONObject(i));
 				}
 			}
-			
+
 			ans += loggingConfig(details);
 			ans += "-cp " + classPath(details) + " ";
-			ans += details.getString("mainClass");
-			
+			if (!Cache.forgeVersion.isEmpty()) {
+				ans += new ReadForgeVersion().read().getString("mainClass");
+			} else {
+				ans += details.getString("mainClass");
+			}
+
 		} else {
 			ans += "-Djava.library.path=" + nativesDir + " ";
 			ans += loggingConfig(details);
 			ans += "-cp " + classPath(details) + " ";
-			ans += details.getString("mainClass");
+			if (!Cache.forgeVersion.isEmpty()) {
+				ans += new ReadForgeVersion().read().getString("mainClass");
+			} else {
+				ans += details.getString("mainClass");
+			}
 		}
 
 		return ans;
@@ -60,10 +68,8 @@ public class AddJVMArgs {
 	private String loggingConfig(JSONObject details) {
 		String ans = "";
 		if (details.has("logging")) {
-			String path = (Cache.cacheDir + "assets" + File.separator + "log_configs" + File.separator
-					+ details.getJSONObject("logging").getJSONObject("client").getJSONObject("file").getString("id"));
-			ans = details.getJSONObject("logging").getJSONObject("client").getString("argument")
-					.replaceFirst("\\$\\{path\\}", "") + path + " ";
+			String path = (Cache.cacheDir + "assets" + File.separator + "log_configs" + File.separator + details.getJSONObject("logging").getJSONObject("client").getJSONObject("file").getString("id"));
+			ans = details.getJSONObject("logging").getJSONObject("client").getString("argument").replaceFirst("\\$\\{path\\}", "") + path + " ";
 		}
 		return ans;
 	}
@@ -73,15 +79,14 @@ public class AddJVMArgs {
 		JSONObject OS = object.getJSONArray("rules").getJSONObject(0).getJSONObject("os");
 		if (OS.getString("name").equalsIgnoreCase(Cache.OS)) {
 			if (OS.has("version")) {
-				if (OS.getString("version").replaceAll("[^a-zA-Z0-9]", "").contains(System.getProperty("os.version")
-						.substring(0, System.getProperty("os.version").lastIndexOf(".")))) {
+				if (OS.getString("version").replaceAll("[^a-zA-Z0-9]", "").contains(System.getProperty("os.version").substring(0, System.getProperty("os.version").lastIndexOf(".")))) {
 					// For OS and for this Version of said OS
 					if (object.get("value") instanceof String) {
 						ans += object.getString("value") + " ";
 					} else {
 						for (int i = 0; i < object.getJSONArray("value").length(); i++) {
 							String[] split = object.getJSONArray("value").getString(i).split("=");
-							if(split[1].contains(" ")) {
+							if (split[1].contains(" ")) {
 								ans += (split[0] + "=" + "\"" + split[1] + "\" ");
 							} else {
 								ans += object.getJSONArray("value").getString(i) + " ";
@@ -96,7 +101,7 @@ public class AddJVMArgs {
 				} else {
 					for (int i = 0; i < object.getJSONArray("value").length(); i++) {
 						String[] split = object.getJSONArray("value").getString(i).split("=");
-						if(split[1].contains(" ")) {
+						if (split[1].contains(" ")) {
 							ans += (split[0] + "=" + "\"" + split[1] + "\" ");
 						} else {
 							ans += object.getJSONArray("value").getString(i) + " ";

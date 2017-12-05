@@ -11,7 +11,7 @@ import javax.net.ssl.HttpsURLConnection;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import me.boops.base.Cache;
+import me.boops.Cache;
 import me.boops.files.ReadFile;
 import me.boops.files.SaveTextFile;
 

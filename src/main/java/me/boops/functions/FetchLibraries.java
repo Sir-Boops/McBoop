@@ -3,7 +3,7 @@ package me.boops.functions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import me.boops.base.Cache;
+import me.boops.Cache;
 import me.boops.net.DownloadFile;
 
 public class FetchLibraries {

@@ -8,13 +8,13 @@ import java.util.Arrays;
 
 import org.json.JSONObject;
 
-import me.boops.base.Cache;
 import me.boops.files.ReadFile;
 import me.boops.functions.AddJVMArgs;
 import me.boops.functions.ExtractLibs;
 import me.boops.functions.FetchLibraries;
 import me.boops.functions.FinishStartArgs;
 import me.boops.net.DownloadFile;
+import me.boops.net.DownloadForgeLibs;
 import me.boops.net.FetchObjects;
 import me.boops.net.MojangAuth;
 
@@ -43,6 +43,10 @@ public class RunGame {
 		// Start libs handler
 		grabLibs(versionMeta);
 		// End libs handler
+
+		// Start forge handler
+		setupForge(versionMeta);
+		// end forge handler
 
 		// Start natives handler
 		setupNatives();
@@ -78,14 +82,12 @@ public class RunGame {
 		while ((lineErr = brErr.readLine()) != null) {
 			System.out.println(lineErr);
 		}
-		System.exit(0);
-
 	}
 
 	private String launchArgs(JSONObject versionMeta) throws Exception {
 		String startArgs = new AddJVMArgs().add(versionMeta);
 		startArgs += new FinishStartArgs().Finish(new MojangAuth().getUser(Cache.userName), versionMeta);
-		return startArgs;
+		return startArgs + "--tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker";
 	}
 
 	private void downloadClient(JSONObject versionMeta) throws Exception {
@@ -112,6 +114,31 @@ public class RunGame {
 
 		// Extract the natives
 		new ExtractLibs();
+	}
+
+	private void setupForge(JSONObject versionMeta) throws Exception {
+
+		if (!Cache.forgeVersion.isEmpty()) {
+
+			// Make sure the folder is there
+			String path = Cache.cacheDir + "libraries" + File.separator + "net" + File.separator + "minecraftforge" + File.separator + "forge" + File.separator;
+			path += Cache.runVersion + "-" + Cache.forgeVersion + File.separator;
+			if (!new File(path).exists()) {
+				new File(path).mkdirs();
+			}
+
+			String URL = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + Cache.runVersion + "-" + Cache.forgeVersion + "/forge-" + Cache.runVersion + "-" + Cache.forgeVersion + "-universal.jar";
+			String fileName = (URL.substring(URL.lastIndexOf("/") + 1, URL.length()));
+
+			// Download the forge jar
+			new DownloadFile().Download(path, URL, fileName);
+
+			// Add the forge jar to libs
+			Cache.libPaths.add(path + fileName);
+
+			// Grab all the required forge libs
+			new DownloadForgeLibs(versionMeta);
+		}
 	}
 
 	private void grabLibs(JSONObject versionMeta) throws Exception {

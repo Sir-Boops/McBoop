@@ -26,6 +26,7 @@ dependencies {
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
     compile group: 'org.json', name: 'json', version: '20171018'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.11.2'
 }
 
 jar {

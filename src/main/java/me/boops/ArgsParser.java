@@ -5,8 +5,8 @@ import java.io.File;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import me.boops.base.Cache;
-import me.boops.checks.GetVersions;
+import me.boops.functions.ListForgeVersions;
+import me.boops.net.GetVersions;
 
 public class ArgsParser {
 	
@@ -24,11 +24,17 @@ public class ArgsParser {
 			if(args[i].equalsIgnoreCase("--list-all-versions")) {
 				Cache.listAllVersions = true;
 			}
+			if(args[i].equalsIgnoreCase("--list-forge-versions")) {
+				Cache.listForgeVersions = true;
+			}
 			if(args[i].equalsIgnoreCase("--save-login")) {
 				Cache.saveLogin = true;
 			}
 			if(args[i].equalsIgnoreCase("--run")) {
 				getVersionID(args[i + 1]);
+			}
+			if(args[i].equalsIgnoreCase("--with-forge")) {
+				getForgeVersion(args[i + 1]);
 			}
 			if(args[i].equalsIgnoreCase("--root-dir")) {
 				Cache.rootDir = new File(args[i + 1]).getCanonicalPath().toString() + File.separator;
@@ -48,6 +54,19 @@ public class ArgsParser {
 			Cache.cacheDir = System.getProperty("user.home") + File.separator + ".mcboopCache" + File.separator;
 		}
 		
+	}
+	
+	private void getForgeVersion(String version) throws Exception {
+		if(version.equalsIgnoreCase("stable")) {
+			Cache.forgeVersion = new ListForgeVersions().getStableVersion();
+		}
+		if(version.equalsIgnoreCase("latest")) {
+			Cache.forgeVersion = new ListForgeVersions().getLatestVersion();
+		}
+		
+		if(!version.equalsIgnoreCase("latest") && !version.equalsIgnoreCase("stable")) {
+			Cache.forgeVersion = version;
+		}
 	}
 	
 	private void getVersionID(String requestedVersion) throws Exception {

@@ -1,4 +1,4 @@
-package me.boops.base;
+package me.boops;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,10 @@ public class Cache {
 	public static boolean printSnapshotVersion = false;
 	public static boolean listAllVersions = false;
 	public static boolean saveLogin = false;
+	public static boolean listForgeVersions = false;
 	
 	public static String runVersion = "";
+	public static String forgeVersion = "";
 	public static String rootDir = "";
 	public static String cacheDir = "";
 	public static String versionMetaURL = "";

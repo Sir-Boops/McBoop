@@ -7,7 +7,7 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import me.boops.base.Cache;
+import me.boops.Cache;
 
 public class ExtractLibs {
 	public ExtractLibs() throws Exception {

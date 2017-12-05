@@ -3,11 +3,10 @@ package me.boops.net;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import me.boops.base.Cache;
+import me.boops.Cache;
 
 public class DownloadFile {
 	public void Download(String destFolder, String URL, String fileName) throws Exception {
@@ -20,7 +19,7 @@ public class DownloadFile {
 			
 			URL url = new URL(URL);
 
-			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setReadTimeout(10 * 1000);
 			conn.setConnectTimeout(10 * 1000);
 			conn.setRequestMethod("GET");
