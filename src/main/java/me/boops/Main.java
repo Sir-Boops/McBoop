@@ -66,7 +66,6 @@ public class Main {
 		// Launch the game!
 		new LaunchGame(libs, Main.homeDir, versionMeta.getString("id"), user, versionMeta);
 		
-		System.exit(0);
 		System.out.println("Run --help for help");
 
 	}

@@ -19,7 +19,7 @@ public class UserHander {
 		for(int i = 0; i < args.length; i++) {
 			
 			// If listing accounts!
-			if(args[i].equalsIgnoreCase("--list-all-accounts")) {
+			if(args[i].equalsIgnoreCase("--list-accounts")) {
 				listAllAccounts(authFile);
 				System.exit(0);
 			}
@@ -54,6 +54,8 @@ public class UserHander {
 		for(int i = 0; i < auth.length(); i++) {
 			if(auth.getJSONObject(i).getBoolean("default")) {
 				System.out.println(auth.getJSONObject(i).getString("username") + " - Default!");
+			} else {
+				System.out.println(auth.getJSONObject(i).getString("username"));
 			}
 		}
 		
@@ -88,6 +90,8 @@ public class UserHander {
 		
 		if(authFile.length() <= 0) {
 			entry.put("default", true);
+		} else {
+			entry.put("default", false);
 		}
 		
 		authFile.put(entry);
