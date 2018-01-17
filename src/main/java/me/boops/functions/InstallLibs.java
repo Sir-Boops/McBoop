@@ -78,6 +78,8 @@ public class InstallLibs {
 			
 		}
 		
+		List<String> nativeList = new ArrayList<String>();
+		
 		for(int i = 0; i < natives.size(); i++) {
 			
 			try {
@@ -93,19 +95,23 @@ public class InstallLibs {
 						String ext = file.getName().substring(file.getName().lastIndexOf("."), file.getName().length());
 						if(ext.equalsIgnoreCase(".so") || ext.equalsIgnoreCase(".dll")) {
 							
-							System.out.println("Extracting " + file.getName());
-							
-							InputStream is = jar.getInputStream(file);
-							FileOutputStream fos = new FileOutputStream(dirS + "natives" + File.separator + file.getName());
-							int inByte;
-							
-							while ((inByte = is.read()) != -1) {
-								fos.write(inByte);
+							if(!nativeList.contains(file.getName())) {
+								
+								System.out.println("Extracting " + file.getName());
+								nativeList.add(file.getName());
+								
+								InputStream is = jar.getInputStream(file);
+								FileOutputStream fos = new FileOutputStream(dirS + "natives" + File.separator + file.getName());
+								int inByte;
+								
+								while ((inByte = is.read()) != -1) {
+									fos.write(inByte);
+								}
+								
+								is.close();
+								fos.close();
+								
 							}
-							
-							is.close();
-							fos.close();
-							
 						}
 					}
 				}

@@ -3,6 +3,7 @@ package me.boops.functions;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -15,20 +16,28 @@ public class LaunchGame {
 	public LaunchGame(List<String> libs, String dirS, String version, String[] user, JSONObject versionMeta) {
 
 		new CreateFolder(dirS + "base");
+		
+		List<String> launchArr = new ArrayList<String>();
 
 		String cleanLibs = cleanLibsPaths(libs);
-		String launchArgs = ("java -Xms256M -Xmx1G -Djava.library.path=" + dirS + "natives" + File.separator + " -cp "
-				+ cleanLibs + dirS + "versions" + File.separator + version + ".jar" + " " + versionMeta.getString("mainClass") + " "
-				+ genMCArgs(dirS, version, user, versionMeta));
+		launchArr.add("java");
+		launchArr.add("-Xms256M");
+		launchArr.add("-Xmx1G");
+		launchArr.add("-Djava.library.path=" + dirS + "natives" + File.separator);
+		launchArr.add("-cp");
+		launchArr.add(cleanLibs + dirS + "versions" + File.separator + version + ".jar");
+		launchArr.add(versionMeta.getString("mainClass"));
+		launchArr.addAll(genMCArgs(dirS, version, user, versionMeta));
 
-		System.out.println(launchArgs);
-
+		System.out.println(launchArr);
 		//System.exit(0);
 
 		try {
 
-			Runtime rt = Runtime.getRuntime();
-			Process pr = rt.exec(launchArgs);
+			Process pr = null;
+			ProcessBuilder pb = new ProcessBuilder(launchArr);
+			pb.directory(new File(dirS + "base"));
+			pr = pb.start();
 
 			BufferedReader brErr = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
 			BufferedReader br = new BufferedReader(new InputStreamReader(pr.getInputStream()));
@@ -57,8 +66,8 @@ public class LaunchGame {
 		return ans;
 	}
 
-	private String genMCArgs(String dirS, String version, String[] user, JSONObject versionMeta) {
-		String ans = "";
+	private List<String> genMCArgs(String dirS, String version, String[] user, JSONObject versionMeta) {
+		List<String> ans = new ArrayList<String>();
 
 		// Newer versions use a JSONArray older versions use a string
 		// Just run through both and keep appending to ans!
@@ -69,9 +78,9 @@ public class LaunchGame {
 			for (int i = 0; i < arr.length(); i++) {
 				if (arr.get(i) instanceof String) {
 					if (arr.getString(i).indexOf("--") == 0) {
-						ans += arr.getString(i) + " ";
+						ans.add(arr.getString(i));
 					} else {
-						ans += getVar(arr.getString(i), dirS, version, user, versionMeta) + " ";
+						ans.add(getVar(arr.getString(i), dirS, version, user, versionMeta));
 					}
 				}
 			}
@@ -82,14 +91,14 @@ public class LaunchGame {
 			String[] arr = versionMeta.getString("minecraftArguments").split(" ");
 			for(int i = 0; i < arr.length; i++) {
 				if(arr[i].indexOf("--") == 0) {
-					ans += arr[i] + " ";
+					ans.add(arr[i]);
 				} else {
-					ans += getVar(arr[i], dirS, version, user, versionMeta) + " ";
+					ans.add(getVar(arr[i], dirS, version, user, versionMeta));
 				}
 			}
 		}
 
-		return ans.substring(0, ans.lastIndexOf(" "));
+		return ans;
 	}
 
 	private String getVar(String var, String dirS, String version, String[] user, JSONObject versionMeta) {
