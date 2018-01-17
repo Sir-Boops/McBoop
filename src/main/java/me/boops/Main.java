@@ -11,6 +11,7 @@ import me.boops.functions.InstallLibs;
 import me.boops.functions.LaunchGame;
 import me.boops.functions.UserHander;
 import me.boops.functions.VersionVerifyMeta;
+import me.boops.functions.commands.CommandParser;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.network.FetchRemoteText;
 
@@ -28,6 +29,9 @@ public class Main {
 		// Verify game files are present (checking sums?)
 		// Extract natives (Unless the current version is the same as the last launched version ?)
 		// Run game ( Reading from json? or hard coded launch args ?)
+		
+		// Run non-launcher related commands
+		new CommandParser(args);
 		
 		
 		// Check for a base dir
@@ -51,7 +55,7 @@ public class Main {
 		String versionMetaURL = new VersionVerifyMeta().getMeta(args);
 		JSONObject versionMeta = new JSONObject(new FetchRemoteText().fetch(versionMetaURL));
 		
-		//System.out.println(versionMeta);
+		System.out.println(versionMeta);
 		
 		// Install/check the assets for
 		// This version of MC
