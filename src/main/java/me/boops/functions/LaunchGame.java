@@ -79,10 +79,10 @@ public class LaunchGame {
 			JSONArray arr = versionMeta.getJSONObject("arguments").getJSONArray("game");
 			for (int i = 0; i < arr.length(); i++) {
 				if (arr.get(i) instanceof String) {
-					if (arr.getString(i).indexOf("--") == 0) {
-						ans.add(arr.getString(i));
-					} else {
+					if (arr.getString(i).indexOf("${") == 0) {
 						ans.add(getVar(arr.getString(i), dirS, version, user, versionMeta));
+					} else {
+						ans.add(arr.getString(i));
 					}
 				}
 			}
@@ -92,10 +92,10 @@ public class LaunchGame {
 		if(versionMeta.has("minecraftArguments")) {
 			String[] arr = versionMeta.getString("minecraftArguments").split(" ");
 			for(int i = 0; i < arr.length; i++) {
-				if(arr[i].indexOf("--") == 0) {
-					ans.add(arr[i]);
-				} else {
+				if(arr[i].indexOf("${") == 0) {
 					ans.add(getVar(arr[i], dirS, version, user, versionMeta));
+				} else {
+					ans.add(arr[i]);
 				}
 			}
 		}

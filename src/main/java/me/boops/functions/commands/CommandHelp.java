@@ -14,7 +14,9 @@ public class CommandHelp {
 		System.out.println("");
 		System.out.println("McBoop --account <user name> => Used with `--run` to run MC with a non-default account");
 		System.out.println("");
-		System.out.println("McBoop --run <MC version ID> => launches the disred MC version");
+		System.out.println("McBoop --run <MC version ID> => launches the disred MC version ( You can get a MC id using --list-all-versions )");
+		System.out.println("");
+		System.out.println("McBoop --list-all-versions => Lists all the MC versions you can run");
 		
 		System.out.println("");
 		System.out.println("");
