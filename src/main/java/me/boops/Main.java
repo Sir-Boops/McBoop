@@ -42,6 +42,7 @@ public class Main {
 		String[] user = new UserHander().getUser(Main.homeDir, args); // Look into verfiying over refreshing every time! http://wiki.vg/Authentication
 		
 		System.out.println("Running MC using user: " + user[3]);
+		//String[] user = {"i","am","very","gay"};
 		
 		// Grab the version index
 		// This checks to see if the version the user
@@ -49,6 +50,8 @@ public class Main {
 		// launcher meta URL
 		String versionMetaURL = new VersionVerifyMeta().getMeta(args);
 		JSONObject versionMeta = new JSONObject(new FetchRemoteText().fetch(versionMetaURL));
+		
+		System.out.println(versionMeta);
 		
 		// Install/check the assets for
 		// This version of MC
