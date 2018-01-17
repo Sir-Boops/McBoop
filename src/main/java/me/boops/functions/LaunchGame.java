@@ -18,7 +18,7 @@ public class LaunchGame {
 
 		String cleanLibs = cleanLibsPaths(libs);
 		String launchArgs = ("java -Xms256M -Xmx1G -Djava.library.path=" + dirS + "natives" + File.separator + " -cp "
-				+ cleanLibs + dirS + "versions" + File.separator + version + ".jar" + " net.minecraft.client.main.Main "
+				+ cleanLibs + dirS + "versions" + File.separator + version + ".jar" + " " + versionMeta.getString("mainClass") + " "
 				+ genMCArgs(dirS, version, user, versionMeta));
 
 		System.out.println(launchArgs);
@@ -123,7 +123,7 @@ public class LaunchGame {
 			ans = user[0];
 		}
 
-		if (var.equalsIgnoreCase("${user_type}")) {
+		if (var.equalsIgnoreCase("${user_type}") || var.equalsIgnoreCase("${user_properties}")) {
 			ans = "{}";
 		}
 
