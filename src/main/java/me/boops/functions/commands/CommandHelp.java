@@ -17,6 +17,12 @@ public class CommandHelp {
 		System.out.println("McBoop --run <MC version ID> => launches the disred MC version ( You can get a MC id using --list-all-versions )");
 		System.out.println("");
 		System.out.println("McBoop --list-all-versions => Lists all the MC versions you can run");
+		System.out.println("");
+		System.out.println("McBoop --create-profile <profile name> <version> => Create a profile for X version");
+		System.out.println("");
+		System.out.println("McBoop --update-profile <profile name> <version> => Update a profile to use X version");
+		System.out.println("");
+		System.out.println("McBoop --profile <profile nmae> => Launch said profile");
 		
 		System.out.println("");
 		System.out.println("");

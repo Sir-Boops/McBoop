@@ -9,6 +9,7 @@ import me.boops.functions.DownloadClient;
 import me.boops.functions.InstallAssets;
 import me.boops.functions.InstallLibs;
 import me.boops.functions.LaunchGame;
+import me.boops.functions.ProfileManager;
 import me.boops.functions.UserHander;
 import me.boops.functions.VersionVerifyMeta;
 import me.boops.functions.commands.CommandParser;
@@ -26,6 +27,7 @@ public class Main {
 		// List of things to do
 		// Check/Create a hidden dir to use
 		// Login/Reauth
+		// Setup profile
 		// Verify game files are present (checking sums?)
 		// Extract natives (Unless the current version is the same as the last launched version ?)
 		// Run game ( Reading from json? or hard coded launch args ?)
@@ -48,14 +50,20 @@ public class Main {
 		//String[] user = {"i","am","very","gay"};
 		System.out.println("Running MC using user: " + user[3]);
 		
+		//Setup the profile
+		// All a profile is, is a folder
+		// that launches a spefic version!
+		String profileVersion = new ProfileManager().getProfile(Main.homeDir, args);
+		String profileName = new ProfileManager().getProfileName(args);
+		
 		// Grab the version index
 		// This checks to see if the version the user
 		// Is trying to run and if it is returns the
 		// launcher meta URL
-		String versionMetaURL = new VersionVerifyMeta().getMeta(args);
+		String versionMetaURL = new VersionVerifyMeta().getMeta(args, profileVersion);
 		JSONObject versionMeta = new JSONObject(new FetchRemoteText().fetch(versionMetaURL));
 		
-		System.out.println(versionMeta);
+		//System.out.println(versionMeta);
 		
 		// Install/check the assets for
 		// This version of MC
@@ -68,7 +76,7 @@ public class Main {
 		new DownloadClient(versionMeta.getJSONObject("downloads"), Main.homeDir, versionMeta.getString("id"));
 		
 		// Launch the game!
-		new LaunchGame(libs, Main.homeDir, versionMeta.getString("id"), user, versionMeta);
+		new LaunchGame(libs, Main.homeDir, versionMeta.getString("id"), user, versionMeta, profileName);
 		
 		System.out.println("Run --help for help");
 

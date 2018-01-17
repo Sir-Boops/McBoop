@@ -13,9 +13,15 @@ import me.boops.functions.file.CreateFolder;
 
 public class LaunchGame {
 
-	public LaunchGame(List<String> libs, String dirS, String version, String[] user, JSONObject versionMeta) {
-
-		new CreateFolder(dirS + "base");
+	public LaunchGame(List<String> libs, String dirS, String version, String[] user, JSONObject versionMeta, String profileName) {
+		
+		if(profileName.isEmpty()) {
+			profileName = "default";
+		}
+		
+		String ProfilePath = dirS + "profiles" + File.separator + profileName + File.separator;
+		
+		new CreateFolder(ProfilePath);
 		
 		List<String> launchArr = new ArrayList<String>();
 
@@ -27,7 +33,7 @@ public class LaunchGame {
 		launchArr.add("-cp");
 		launchArr.add(cleanLibs + dirS + "versions" + File.separator + version + ".jar");
 		launchArr.add(versionMeta.getString("mainClass"));
-		launchArr.addAll(genMCArgs(dirS, version, user, versionMeta));
+		launchArr.addAll(genMCArgs(dirS, version, user, versionMeta, ProfilePath));
 
 		System.out.println(launchArr);
 		//System.exit(0);
@@ -36,7 +42,7 @@ public class LaunchGame {
 
 			Process pr = null;
 			ProcessBuilder pb = new ProcessBuilder(launchArr);
-			pb.directory(new File(dirS + "base"));
+			pb.directory(new File(ProfilePath));
 			pr = pb.start();
 
 			BufferedReader brErr = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
@@ -68,7 +74,7 @@ public class LaunchGame {
 		return ans;
 	}
 
-	private List<String> genMCArgs(String dirS, String version, String[] user, JSONObject versionMeta) {
+	private List<String> genMCArgs(String dirS, String version, String[] user, JSONObject versionMeta, String profilePath) {
 		List<String> ans = new ArrayList<String>();
 
 		// Newer versions use a JSONArray older versions use a string
@@ -80,7 +86,7 @@ public class LaunchGame {
 			for (int i = 0; i < arr.length(); i++) {
 				if (arr.get(i) instanceof String) {
 					if (arr.getString(i).indexOf("${") == 0) {
-						ans.add(getVar(arr.getString(i), dirS, version, user, versionMeta));
+						ans.add(getVar(arr.getString(i), dirS, version, user, versionMeta, profilePath));
 					} else {
 						ans.add(arr.getString(i));
 					}
@@ -93,7 +99,7 @@ public class LaunchGame {
 			String[] arr = versionMeta.getString("minecraftArguments").split(" ");
 			for(int i = 0; i < arr.length; i++) {
 				if(arr[i].indexOf("${") == 0) {
-					ans.add(getVar(arr[i], dirS, version, user, versionMeta));
+					ans.add(getVar(arr[i], dirS, version, user, versionMeta, profilePath));
 				} else {
 					ans.add(arr[i]);
 				}
@@ -103,7 +109,7 @@ public class LaunchGame {
 		return ans;
 	}
 
-	private String getVar(String var, String dirS, String version, String[] user, JSONObject versionMeta) {
+	private String getVar(String var, String dirS, String version, String[] user, JSONObject versionMeta, String profilePath) {
 		String ans = "";
 
 		if (var.equalsIgnoreCase("${auth_player_name}")) {
@@ -115,7 +121,7 @@ public class LaunchGame {
 		}
 
 		if (var.equalsIgnoreCase("${game_directory}")) {
-			ans = (dirS + "base" + File.separator);
+			ans = (profilePath);
 		}
 
 		if (var.equalsIgnoreCase("${assets_root}") || var.equalsIgnoreCase("${game_assets}")) {
