@@ -12,6 +12,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONObject;
 
+import me.boops.functions.file.CreateFolder;
+import me.boops.functions.file.WriteTextToFile;
+
 public class InstallAssets {
 
 	public InstallAssets(JSONObject assetIndex, String dirS) {

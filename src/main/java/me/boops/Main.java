@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import me.boops.functions.CreateFolder;
 import me.boops.functions.DownloadClient;
 import me.boops.functions.FetchVersionMeta;
 import me.boops.functions.InstallAssets;
@@ -13,6 +12,7 @@ import me.boops.functions.InstallLibs;
 import me.boops.functions.LaunchGame;
 import me.boops.functions.UserHander;
 import me.boops.functions.VersionVerifyMeta;
+import me.boops.functions.file.CreateFolder;
 
 public class Main {
 	

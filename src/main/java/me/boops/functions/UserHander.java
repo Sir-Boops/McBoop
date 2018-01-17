@@ -3,6 +3,10 @@ package me.boops.functions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import me.boops.functions.file.LoadAuthFile;
+import me.boops.functions.file.WriteTextToFile;
+import me.boops.functions.network.MojangAuth;
+
 public class UserHander {
 	
 	public String[] getUser(String dirS, String[] args) {

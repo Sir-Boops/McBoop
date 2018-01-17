@@ -14,6 +14,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONArray;
 
+import me.boops.functions.file.CreateFolder;
+import me.boops.functions.file.DeleteDir;
+
 public class InstallLibs {
 	
 	public List<String> install(String dirS, JSONArray libs) {

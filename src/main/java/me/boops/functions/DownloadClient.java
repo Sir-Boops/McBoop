@@ -9,6 +9,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONObject;
 
+import me.boops.functions.file.CreateFolder;
+
 public class DownloadClient {
 	
 	public DownloadClient(JSONObject downloads, String dirS, String version) {
