@@ -1,4 +1,4 @@
-package me.boops.functions;
+package me.boops.functions.network;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -6,14 +6,12 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.json.JSONObject;
-
-public class FetchVersionMeta {
-
-	public JSONObject fetch(String URL) {
-
-		JSONObject ans = new JSONObject();
-
+public class FetchRemoteText {
+	
+	public String fetch(String URL) {
+		
+		String ans = "";
+		
 		try {
 
 			URL url = new URL(URL);
@@ -34,14 +32,13 @@ public class FetchVersionMeta {
 				sb.append(inByte);
 			}
 
-			ans = new JSONObject(sb.toString());
+			ans = sb.toString();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		return ans;
-
+		
 	}
-
 }

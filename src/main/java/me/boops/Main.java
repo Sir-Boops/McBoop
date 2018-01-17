@@ -6,13 +6,13 @@ import java.util.List;
 import org.json.JSONObject;
 
 import me.boops.functions.DownloadClient;
-import me.boops.functions.FetchVersionMeta;
 import me.boops.functions.InstallAssets;
 import me.boops.functions.InstallLibs;
 import me.boops.functions.LaunchGame;
 import me.boops.functions.UserHander;
 import me.boops.functions.VersionVerifyMeta;
 import me.boops.functions.file.CreateFolder;
+import me.boops.functions.network.FetchRemoteText;
 
 public class Main {
 	
@@ -48,7 +48,7 @@ public class Main {
 		// Is trying to run and if it is returns the
 		// launcher meta URL
 		String versionMetaURL = new VersionVerifyMeta().getMeta(args);
-		JSONObject versionMeta = new FetchVersionMeta().fetch(versionMetaURL);
+		JSONObject versionMeta = new JSONObject(new FetchRemoteText().fetch(versionMetaURL));
 		
 		// Install/check the assets for
 		// This version of MC

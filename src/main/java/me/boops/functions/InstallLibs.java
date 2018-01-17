@@ -3,19 +3,17 @@ package me.boops.functions;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import org.json.JSONArray;
 
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.file.DeleteDir;
+import me.boops.functions.network.FetchRemoteFile;
 
 public class InstallLibs {
 	
@@ -126,44 +124,9 @@ public class InstallLibs {
 			
 			if(!new File(distDir + libURLS.get(i).substring(libURLS.get(i).lastIndexOf("/") + 1, libURLS.get(i).length())).exists()) {
 				System.out.println("Downloading: " + libURLS.get(i).substring(libURLS.get(i).lastIndexOf("/") + 1, libURLS.get(i).length()));
-				downloadFile(libURLS.get(i), distDir);
+				new FetchRemoteFile(libURLS.get(i), distDir, "");
 			}
 			
 		}
-	}
-	
-	private void downloadFile(String URL, String destDir) {
-		
-		new CreateFolder(destDir);
-		
-		String fileName = URL.substring(URL.lastIndexOf("/") + 1, URL.length());
-		
-		try {
-			
-			URL url = new URL(URL);
-			
-			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-			conn.setReadTimeout(10 * 1000);
-			conn.setConnectTimeout(10 * 1000);
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux X11; x64; rv:59.0) Gecko/20100101 Firefox/59.0");
-			
-			conn.connect();
-			
-			InputStream is = conn.getInputStream();
-			FileOutputStream fos = new FileOutputStream(new File(destDir + fileName));
-			int inByte;
-			
-			while ((inByte = is.read()) != -1) {
-				fos.write(inByte);
-			}
-			
-			is.close();
-			fos.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 	}
 }
