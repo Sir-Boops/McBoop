@@ -22,7 +22,5 @@ public class CommandListAllVersions {
 		System.out.println("");
 		System.out.println("");
 		
-		System.exit(0);
-		
 	}
 }

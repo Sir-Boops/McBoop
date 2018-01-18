@@ -45,9 +45,9 @@ public class Main {
 		// 1 => clientToken
 		// 2 => UUID
 		// 3 => username
-		String[] user = new UserHander().getUser(Main.homeDir, args); // Look into verfiying over refreshing every time! http://wiki.vg/Authentication
+		//String[] user = new UserHander().getUser(Main.homeDir, args); // Look into verfiying over refreshing every time! http://wiki.vg/Authentication
 		
-		//String[] user = {"i","am","very","gay"};
+		String[] user = {"i","am","very","gay"};
 		System.out.println("Running MC using user: " + user[3]);
 		
 		//Setup the profile

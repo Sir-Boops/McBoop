@@ -8,10 +8,17 @@ public class CommandParser {
 			
 			if(args[i].equalsIgnoreCase("--help")) {
 				new CommandHelp();
+				System.exit(0);
 			}
 			
 			if(args[i].equalsIgnoreCase("--list-all-versions")) {
 				new CommandListAllVersions();
+				System.exit(0);
+			}
+			
+			if(args[i].equalsIgnoreCase("--list-forge-versions")) {
+				new ListForgeVersions(args);
+				System.exit(0);
 			}
 			
 		}
