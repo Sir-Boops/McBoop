@@ -28,7 +28,7 @@ public class LaunchGame {
 		String cleanLibs = cleanLibsPaths(libs);
 		launchArr.add("java");
 		launchArr.add("-Xms256M");
-		launchArr.add("-Xmx1G");
+		launchArr.add("-Xmx2G");
 		launchArr.add("-Djava.library.path=" + dirS + "natives" + File.separator);
 		launchArr.add("-cp");
 		launchArr.add(cleanLibs + dirS + "versions" + File.separator + version + ".jar");
@@ -116,7 +116,7 @@ public class LaunchGame {
 			ans = user[3];
 		}
 
-		if (var.equalsIgnoreCase("{version_name}")) {
+		if (var.equalsIgnoreCase("${version_name}")) {
 			ans = version;
 		}
 
