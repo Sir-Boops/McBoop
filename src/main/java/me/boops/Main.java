@@ -10,11 +10,11 @@ import me.boops.functions.InstallAssets;
 import me.boops.functions.InstallLibs;
 import me.boops.functions.LaunchGame;
 import me.boops.functions.ProfileManager;
-import me.boops.functions.UserHander;
 import me.boops.functions.VersionVerifyMeta;
 import me.boops.functions.commands.CommandParser;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.network.FetchRemoteText;
+import me.boops.functions.userhandler.UserHander;
 
 public class Main {
 	
