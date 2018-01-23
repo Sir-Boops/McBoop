@@ -34,14 +34,10 @@ public class UserHander {
 				System.exit(0);
 			}
 			
-			if(args[i].equalsIgnoreCase("--account")) {
-				ans = getAccount(args, dirS, authFile);
-			}
-			
 		}
 		
-		// None were defined so grab the default!
-		ans = getDefault(dirS, authFile);
+		// Grab the account to use!
+		ans = getDefault(dirS, authFile, args);
 		
 		return ans;
 		
@@ -125,7 +121,7 @@ public class UserHander {
 		System.out.println("Set the default account to " + username);
 	}
 	
-	public String[] getAccount(String[] args, String dirS, JSONArray authFile) {
+	public String[] getDefault(String dirS, JSONArray authFile, String[] args) {
 		
 		String[] ans = new String[] {};
 		String username = "";
@@ -134,50 +130,16 @@ public class UserHander {
 		String clientToken = "";
 		
 		for(int i = 0; i < args.length; i++) {
-			if(args[i].equalsIgnoreCase("--account") && (args.length == 2)) {
+			if(args[i].equalsIgnoreCase("--account")) {
 				username = args[i + 1];
-				i = (args.length + 1);
-			} else {
-				System.out.println("Did you add an uneeded space?");
-				return ans;
 			}
 		}
 		
-		for(int i = 0; i < authFile.length(); i++) {
-			if(authFile.getJSONObject(i).getString("username").equalsIgnoreCase(username)) {
-				accessToken = authFile.getJSONObject(i).getString("accessToken");
-				clientToken = authFile.getJSONObject(i).getString("clientToken");
-				i = (authFile.length() + 1);
-			}
-		}
-		
-		JSONObject auth = new MojangAuth().refresh(accessToken, clientToken);
-		
-		for(int i = 0; i < authFile.length(); i++) {
-			if(authFile.getJSONObject(i).getString("username").equalsIgnoreCase(username)) {
-				authFile.getJSONObject(i).put("accessToken", auth.getString("accessToken"));
-				authFile.getJSONObject(i).put("clientToken", auth.getString("clientToken"));
-				new WriteTextToFile(dirS + "auth.json", authFile.toString());
-				i = (authFile.length() + 1);
-			}
-		}
-		
-		ans = new String[] {auth.getString("accessToken"), auth.getString("clientToken"), auth.getJSONObject("selectedProfile").getString("id"), 
-				auth.getJSONObject("selectedProfile").getString("name")};
-		return ans;
-	}
-	
-	public String[] getDefault(String dirS, JSONArray authFile) {
-		
-		String[] ans = new String[] {};
-		String username = "";
-		
-		String accessToken = "";
-		String clientToken = "";
-		
-		for(int i = 0; i < authFile.length(); i++) {
-			if(authFile.getJSONObject(i).getBoolean("default")) {
-				username = authFile.getJSONObject(i).getString("username");
+		if(username.isEmpty()) {
+			for(int i = 0; i < authFile.length(); i++) {
+				if(authFile.getJSONObject(i).getBoolean("default")) {
+					username = authFile.getJSONObject(i).getString("username");
+				}
 			}
 		}
 		
