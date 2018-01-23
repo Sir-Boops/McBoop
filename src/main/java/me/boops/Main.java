@@ -21,6 +21,7 @@ public class Main {
 	// Home dir is the base dir that mcboop works in
 	static private String homeDir = System.getProperty("user.home") + File.separator + ".mcboop" + File.separator;
 	static public String version = "2.0.0";
+	static public String HttpUser = "Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0";
 
 	public static void main(String[] args) throws Exception {
 
@@ -45,9 +46,7 @@ public class Main {
 		// 1 => clientToken
 		// 2 => UUID
 		// 3 => username
-		String[] user = new UserHander().getUser(Main.homeDir, args); // Look into verfiying over refreshing every time! http://wiki.vg/Authentication
-		
-		System.out.println("Running MC using user: " + user[3]);
+		String[] user = new UserHander().getUser(Main.homeDir, args);
 		
 		//Setup the profile
 		// All a profile is, is a folder

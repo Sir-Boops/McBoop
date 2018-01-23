@@ -1,4 +1,4 @@
-package me.boops.functions.network;
+package me.boops.functions.mojangauth;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -9,36 +9,26 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONObject;
 
-public class MojangAuth {
+import me.boops.Main;
 
-	public JSONObject auth(String user, String pass) {
-
-		JSONObject agent = new JSONObject().put("name", "Minecraft").put("version", 1);
-		JSONObject payload = new JSONObject().put("username", user).put("password", pass).put("agent", agent);
-		return new JSONObject(postURL("https://authserver.mojang.com/authenticate", payload.toString()));
-
-	}
+public class AuthRefresh {
 	
-	public JSONObject refresh(String access, String client) {
+	public String[] refresh(String access, String client) {
 		
-		JSONObject payload = new JSONObject().put("accessToken", access).put("clientToken", client);
-		return new JSONObject(postURL("https://authserver.mojang.com/refresh", payload.toString()));
-		
-	}
-	
-	private String postURL(String URL, String postbody) {
-		
-		String ans = "";
+		// 0 => accessToken
+		// 1 => clientToken
+		String[] ans = new String[] {};
 		
 		try {
 
-			URL url = new URL(URL);
+			JSONObject payload = new JSONObject().put("accessToken", access).put("clientToken", client);
+			URL url = new URL("https://authserver.mojang.com/refresh");
 
 			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 			conn.setReadTimeout(10 * 1000);
 			conn.setConnectTimeout(10 * 1000);
 			conn.setRequestMethod("POST");
-			conn.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0");
+			conn.setRequestProperty("User-Agent", Main.HttpUser);
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setDoOutput(true);
 
@@ -46,7 +36,7 @@ public class MojangAuth {
 
 			// Send the post data
 			OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-			wr.write(postbody);
+			wr.write(payload.toString());
 			wr.close();
 
 			// Recive the answer
@@ -56,15 +46,17 @@ public class MojangAuth {
 			while ((inByte = in.readLine()) != null) {
 				sb.append(inByte);
 			}
-
-			ans = sb.toString();
+			
+			JSONObject refAns = new JSONObject(sb.toString());
+			ans = new String[] {refAns.getString("accessToken"), refAns.getString("clientToken")};
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("Error refreshing your auth key!");
+			System.out.println("Perhaps try logging in again?");
+			System.exit(1);
 		}
 		
 		return ans;
-		
 	}
-
 }

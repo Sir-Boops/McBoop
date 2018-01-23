@@ -35,7 +35,7 @@ public class UserHander {
 		
 		// Grab the account to use!
 		ans = new GetAccount().get(dirS, authFile, args);
-		
+		System.out.println("Logged in as: " + ans[3]);
 		return ans;
 		
 	}

@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import me.boops.functions.file.WriteTextToFile;
-import me.boops.functions.network.MojangAuth;
+import me.boops.functions.mojangauth.AuthLogin;
 
 public class AppendAccount {
 	
@@ -24,12 +24,12 @@ public class AppendAccount {
 			}
 		}
 		
-		JSONObject auth = new MojangAuth().auth(username, password);
-		JSONObject entry = new JSONObject().put("clientToken", auth.getString("clientToken")).put("accessToken", auth.getString("accessToken"))
-				.put("username", auth.getJSONObject("selectedProfile").getString("name")).put("id", auth.getJSONObject("selectedProfile").getString("id"));
+		String[] auth = new AuthLogin().login(username, password);
+		JSONObject entry = new JSONObject().put("clientToken", auth[1]).put("accessToken", auth[0])
+				.put("username", auth[3]).put("id", auth[2]);
 		
 		for(int i = 0; i < authFile.length(); i++) {
-			if(authFile.getJSONObject(i).getString("username").equalsIgnoreCase(auth.getJSONObject("selectedProfile").getString("name"))) {
+			if(authFile.getJSONObject(i).getString("username").equalsIgnoreCase(auth[3])) {
 				authFile.remove(i);
 				i = (authFile.length() + 1);
 			}
@@ -43,7 +43,7 @@ public class AppendAccount {
 		
 		authFile.put(entry);
 		new WriteTextToFile(dirS + "auth.json", authFile.toString());
-		System.out.println("Added the " + auth.getJSONObject("selectedProfile").getString("name") + " account!");
+		System.out.println("Added the " + auth[3] + " account!");
 	}
 	
 	
