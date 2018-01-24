@@ -16,7 +16,7 @@ import me.boops.functions.userhandler.UserHandler;
 
 public class LaunchGame {
 
-	public LaunchGame(List<String> libs) {
+	public LaunchGame() {
 		
 		String ProfilePath = Main.homeDir + "profiles" + File.separator + ProfileManager.name + File.separator;
 		
@@ -24,7 +24,7 @@ public class LaunchGame {
 		
 		List<String> launchArr = new ArrayList<String>();
 
-		String cleanLibs = cleanLibsPaths(libs);
+		String cleanLibs = cleanLibsPaths(InstallLibs.libs);
 		launchArr.add("java");
 		launchArr.add("-Xms256M");
 		launchArr.add("-Xmx2G");

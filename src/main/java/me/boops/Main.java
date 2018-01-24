@@ -3,7 +3,6 @@ package me.boops;
 import java.io.File;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.List;
 
 import me.boops.functions.DownloadClient;
 import me.boops.functions.InstallAssets;
@@ -71,13 +70,13 @@ public class Main {
 		new InstallAssets();
 		
 		// Install libs / natives
-		List<String> libs = new InstallLibs().install();
+		new InstallLibs();
 		
 		// Download the client
 		new DownloadClient();
 		
 		// Launch the game!
-		new LaunchGame(libs);
+		new LaunchGame();
 		
 		System.out.println("Run --help for help");
 

@@ -17,10 +17,11 @@ import me.boops.functions.network.FetchRemoteFile;
 
 public class InstallLibs {
 	
-	public List<String> install() {
+	public static List<String> libs = new ArrayList<String>();
+	
+	public InstallLibs() {
 		
 		List<String> libURLS = fetchURLS(VersionMeta.Meta.getJSONArray("libraries"));
-		List<String> ans = new ArrayList<String>();
 		
 		startDownload(libURLS, Main.homeDir + "libraries" + File.separator);
 		
@@ -29,13 +30,10 @@ public class InstallLibs {
 		for(int i = 0; i < libURLS.size(); i++) {
 			
 			if(!libURLS.get(i).contains("natives")) {
-				ans.add(Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).length()));
+				InstallLibs.libs.add(Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).length()));
 			}
 			
 		}
-		
-		return ans;
-		
 	}
 	
 	private List<String> fetchURLS(JSONArray libs){
