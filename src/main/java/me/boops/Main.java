@@ -16,7 +16,7 @@ import me.boops.functions.VersionVerifyMeta;
 import me.boops.functions.commands.CommandParser;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.network.FetchRemoteText;
-import me.boops.functions.userhandler.UserHander;
+import me.boops.functions.userhandler.UserHandler;
 
 public class Main {
 	
@@ -50,11 +50,7 @@ public class Main {
 		new CreateFolder(Main.homeDir);
 		
 		// Try to login or refresh auth for the requested user
-		// 0 => accessToken
-		// 1 => clientToken
-		// 2 => UUID
-		// 3 => username
-		String[] user = new UserHander().getUser(Main.homeDir, args);
+		new UserHandler(Main.homeDir, args);
 		
 		//Setup the profile
 		// All a profile is, is a folder
@@ -82,7 +78,7 @@ public class Main {
 		new DownloadClient(versionMeta.getJSONObject("downloads"), Main.homeDir, versionMeta.getString("id"));
 		
 		// Launch the game!
-		new LaunchGame(libs, Main.homeDir, versionMeta.getString("id"), user, versionMeta, profileName);
+		new LaunchGame(libs, Main.homeDir, versionMeta.getString("id"), versionMeta, profileName);
 		
 		System.out.println("Run --help for help");
 

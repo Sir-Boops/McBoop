@@ -4,13 +4,18 @@ import org.json.JSONArray;
 
 import me.boops.functions.file.LoadAuthFile;
 
-public class UserHander {
+public class UserHandler {
 	
-	public String[] getUser(String dirS, String[] args) {
+	// 0 => accessToken
+	// 1 => clientToken
+	// 2 => UUID
+	// 3 => username
+	public static String[] user = {};
+	
+	public UserHandler(String dirS, String[] args) {
 		
 		// Load the auth file
 		JSONArray authFile = new LoadAuthFile().load(dirS);
-		String[] ans = new String[] {};
 		
 		// See what the user wants to do
 		for(int i = 0; i < args.length; i++) {
@@ -34,9 +39,8 @@ public class UserHander {
 		}
 		
 		// Grab the account to use!
-		ans = new GetAccount().get(dirS, authFile, args);
-		System.out.println("Logged in as: " + ans[3]);
-		return ans;
+		user = new GetAccount().get(dirS, authFile, args);
+		System.out.println("Logged in as: " + UserHandler.user[3]);
 		
 	}
 }

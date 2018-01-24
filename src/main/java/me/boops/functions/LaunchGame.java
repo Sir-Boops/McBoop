@@ -12,10 +12,11 @@ import org.json.JSONObject;
 
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
+import me.boops.functions.userhandler.UserHandler;
 
 public class LaunchGame {
 
-	public LaunchGame(List<String> libs, String dirS, String version, String[] user, JSONObject versionMeta, String profileName) {
+	public LaunchGame(List<String> libs, String dirS, String version, JSONObject versionMeta, String profileName) {
 		
 		if(profileName.isEmpty()) {
 			profileName = "default";
@@ -35,7 +36,7 @@ public class LaunchGame {
 		launchArr.add("-cp");
 		launchArr.add(cleanLibs + dirS + "versions" + File.separator + version + ".jar");
 		launchArr.add(versionMeta.getString("mainClass"));
-		launchArr.addAll(genMCArgs(dirS, version, user, versionMeta, ProfilePath));
+		launchArr.addAll(genMCArgs(dirS, version, versionMeta, ProfilePath));
 
 		System.out.println(launchArr);
 		//System.exit(0);
@@ -83,7 +84,7 @@ public class LaunchGame {
 		return ans;
 	}
 
-	private List<String> genMCArgs(String dirS, String version, String[] user, JSONObject versionMeta, String profilePath) {
+	private List<String> genMCArgs(String dirS, String version, JSONObject versionMeta, String profilePath) {
 		List<String> ans = new ArrayList<String>();
 
 		// Newer versions use a JSONArray older versions use a string
@@ -95,7 +96,7 @@ public class LaunchGame {
 			for (int i = 0; i < arr.length(); i++) {
 				if (arr.get(i) instanceof String) {
 					if (arr.getString(i).indexOf("${") == 0) {
-						ans.add(getVar(arr.getString(i), dirS, version, user, versionMeta, profilePath));
+						ans.add(getVar(arr.getString(i), dirS, version, versionMeta, profilePath));
 					} else {
 						ans.add(arr.getString(i));
 					}
@@ -108,7 +109,7 @@ public class LaunchGame {
 			String[] arr = versionMeta.getString("minecraftArguments").split(" ");
 			for(int i = 0; i < arr.length; i++) {
 				if(arr[i].indexOf("${") == 0) {
-					ans.add(getVar(arr[i], dirS, version, user, versionMeta, profilePath));
+					ans.add(getVar(arr[i], dirS, version, versionMeta, profilePath));
 				} else {
 					ans.add(arr[i]);
 				}
@@ -118,11 +119,11 @@ public class LaunchGame {
 		return ans;
 	}
 
-	private String getVar(String var, String dirS, String version, String[] user, JSONObject versionMeta, String profilePath) {
+	private String getVar(String var, String dirS, String version, JSONObject versionMeta, String profilePath) {
 		String ans = "";
 
 		if (var.equalsIgnoreCase("${auth_player_name}")) {
-			ans = user[3];
+			ans = UserHandler.user[3];
 		}
 
 		if (var.equalsIgnoreCase("${version_name}")) {
@@ -142,11 +143,11 @@ public class LaunchGame {
 		}
 
 		if (var.equalsIgnoreCase("${auth_uuid}")) {
-			ans = user[2];
+			ans = UserHandler.user[2];
 		}
 
 		if (var.equalsIgnoreCase("${auth_access_token}") || var.equalsIgnoreCase("${auth_session}")) {
-			ans = user[0];
+			ans = UserHandler.user[0];
 		}
 
 		if (var.equalsIgnoreCase("${user_type}") || var.equalsIgnoreCase("${user_properties}")) {
