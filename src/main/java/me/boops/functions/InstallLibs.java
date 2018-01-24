@@ -18,6 +18,7 @@ import me.boops.functions.network.FetchRemoteFile;
 public class InstallLibs {
 	
 	public static List<String> libs = new ArrayList<String>();
+	public static String nativesPath = "";
 	
 	public InstallLibs() {
 		
@@ -63,6 +64,7 @@ public class InstallLibs {
 	private void extractNatives(String dirS, List<String> libURLS) {
 		
 		new CreateFolder(dirS + "natives-" + Main.randString + File.separator);
+		InstallLibs.nativesPath = (dirS + "natives-" + Main.randString + File.separator);
 		
 		List<String> natives = new ArrayList<String>();
 		

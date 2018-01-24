@@ -12,6 +12,8 @@ import me.boops.functions.network.FetchRemoteFile;
 import me.boops.functions.network.FetchRemoteText;
 
 public class InstallAssets {
+	
+	public static String path = (Main.homeDir + "assets" + File.separator);
 
 	public InstallAssets() {
 		
@@ -21,11 +23,11 @@ public class InstallAssets {
 		new CreateFolder(Main.homeDir + "versions");
 		new WriteTextToFile(Main.homeDir + "assets" + File.separator + "indexes" + File.separatorChar + assetIndex.getString("id") + ".json", assetList.toString());
 		
-		setUpDownloads(assetList.getJSONObject("objects"), (Main.homeDir + "assets" + File.separator + "objects" + File.separator));
+		downloadLibs(assetList.getJSONObject("objects"), (Main.homeDir + "assets" + File.separator + "objects" + File.separator));
 
 	}
 	
-	private void setUpDownloads(JSONObject list, String dirS) {
+	private void downloadLibs(JSONObject list, String dirS) {
 		
 		Iterator<?> keys = list.keys();
 		

@@ -9,7 +9,6 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 
-import me.boops.Main;
 import me.boops.functions.profilemanager.ProfileManager;
 import me.boops.functions.userhandler.UserHandler;
 
@@ -23,9 +22,9 @@ public class LaunchGame {
 		launchArr.add("java");
 		launchArr.add("-Xms256M");
 		launchArr.add("-Xmx2G");
-		launchArr.add("-Djava.library.path=" + Main.homeDir + "natives-" + Main.randString + File.separator);
+		launchArr.add("-Djava.library.path=" + InstallLibs.nativesPath);
 		launchArr.add("-cp");
-		launchArr.add(cleanLibs + Main.homeDir + "versions" + File.separator + VersionMeta.ID + ".jar");
+		launchArr.add(cleanLibs + DownloadClient.jarPath);
 		launchArr.add(VersionMeta.Meta.getString("mainClass"));
 		launchArr.addAll(genMCArgs());
 
@@ -57,7 +56,7 @@ public class LaunchGame {
 		
 		// Delete the natives dir on exit
 		try {
-			FileUtils.deleteDirectory(new File(Main.homeDir + "natives-" + Main.randString + File.separator));
+			FileUtils.deleteDirectory(new File(InstallLibs.nativesPath));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -126,7 +125,7 @@ public class LaunchGame {
 		}
 
 		if (var.equalsIgnoreCase("${assets_root}") || var.equalsIgnoreCase("${game_assets}")) {
-			ans = (Main.homeDir + "assets" + File.separator);
+			ans = InstallAssets.path;
 		}
 
 		if (var.equalsIgnoreCase("${assets_index_name}")) {

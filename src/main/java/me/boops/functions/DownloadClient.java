@@ -7,6 +7,8 @@ import me.boops.functions.network.FetchRemoteFile;
 
 public class DownloadClient {
 	
+	static public String jarPath = (Main.homeDir + "versions" + File.separator + VersionMeta.ID + ".jar");
+	
 	public DownloadClient() {
 		
 		// Check if the client jar exists
