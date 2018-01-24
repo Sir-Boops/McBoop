@@ -51,7 +51,7 @@ public class Main {
 		new CreateFolder(Main.homeDir);
 		
 		// Try to login or refresh auth for the requested user
-		new UserHandler(args);
+		new UserHandler();
 		
 		// Init the profile manager
 		// All a profile is, is a folder
