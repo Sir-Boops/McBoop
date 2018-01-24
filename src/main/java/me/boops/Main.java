@@ -7,10 +7,10 @@ import java.security.SecureRandom;
 import me.boops.functions.DownloadClient;
 import me.boops.functions.InstallAssets;
 import me.boops.functions.InstallLibs;
-import me.boops.functions.LaunchGame;
 import me.boops.functions.VersionMeta;
 import me.boops.functions.commands.CommandParser;
 import me.boops.functions.file.CreateFolder;
+import me.boops.functions.launchgame.LaunchGame;
 import me.boops.functions.profilemanager.ProfileManager;
 import me.boops.functions.userhandler.UserHandler;
 
