@@ -41,6 +41,6 @@ public class ProfileManager {
 		
 		// Set the profile path
 		ProfileManager.path = (Main.homeDir + "profiles" + File.separator + ProfileManager.name + File.separator);
-		
+		new CreateFolder(ProfileManager.path);
 	}
 }

@@ -10,17 +10,12 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 
 import me.boops.Main;
-import me.boops.functions.file.CreateFolder;
 import me.boops.functions.profilemanager.ProfileManager;
 import me.boops.functions.userhandler.UserHandler;
 
 public class LaunchGame {
 
 	public LaunchGame() {
-		
-		String ProfilePath = Main.homeDir + "profiles" + File.separator + ProfileManager.name + File.separator;
-		
-		new CreateFolder(ProfilePath);
 		
 		List<String> launchArr = new ArrayList<String>();
 
@@ -41,7 +36,7 @@ public class LaunchGame {
 
 			Process pr = null;
 			ProcessBuilder pb = new ProcessBuilder(launchArr);
-			pb.directory(new File(ProfilePath));
+			pb.directory(new File(ProfileManager.path));
 			pr = pb.start();
 
 			BufferedReader brErr = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
