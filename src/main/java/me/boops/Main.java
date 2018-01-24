@@ -24,7 +24,7 @@ public class Main {
 	private static SecureRandom random = new SecureRandom();
 	
 	// Home dir is the base dir that mcboop works in
-	static private String homeDir = System.getProperty("user.home") + File.separator + ".mcboop" + File.separator;
+	static public String homeDir = System.getProperty("user.home") + File.separator + ".mcboop" + File.separator;
 	static public String version = "2.0.0";
 	static public String HttpUser = "Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0";
 	static public String randString = "";
@@ -50,7 +50,7 @@ public class Main {
 		new CreateFolder(Main.homeDir);
 		
 		// Try to login or refresh auth for the requested user
-		new UserHandler(Main.homeDir, args);
+		new UserHandler(args);
 		
 		//Setup the profile
 		// All a profile is, is a folder

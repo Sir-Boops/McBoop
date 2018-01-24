@@ -2,11 +2,12 @@ package me.boops.functions.userhandler;
 
 import org.json.JSONArray;
 
+import me.boops.Main;
 import me.boops.functions.file.WriteTextToFile;
 
 public class SetDefault {
 	
-	public SetDefault (String[] args, String dirS, JSONArray authFile) {
+	public SetDefault (String[] args, JSONArray authFile) {
 		
 		String username = "";
 		
@@ -28,7 +29,7 @@ public class SetDefault {
 			}
 		}
 		
-		new WriteTextToFile(dirS + "auth.json", authFile.toString());
+		new WriteTextToFile(Main.homeDir + "auth.json", authFile.toString());
 		System.out.println("Set the default account to " + username);
 	}
 }

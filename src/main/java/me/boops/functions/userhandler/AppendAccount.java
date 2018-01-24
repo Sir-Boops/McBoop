@@ -3,12 +3,13 @@ package me.boops.functions.userhandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import me.boops.Main;
 import me.boops.functions.file.WriteTextToFile;
 import me.boops.functions.mojangauth.AuthLogin;
 
 public class AppendAccount {
 	
-	public AppendAccount(String dirS, JSONArray authFile, String[] args) {
+	public AppendAccount(JSONArray authFile, String[] args) {
 		
 		String username = "";
 		String password = "";
@@ -42,7 +43,7 @@ public class AppendAccount {
 		}
 		
 		authFile.put(entry);
-		new WriteTextToFile(dirS + "auth.json", authFile.toString());
+		new WriteTextToFile(Main.homeDir + "auth.json", authFile.toString());
 		System.out.println("Added the " + auth[3] + " account!");
 	}
 	

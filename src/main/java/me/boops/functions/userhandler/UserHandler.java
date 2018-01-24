@@ -12,10 +12,10 @@ public class UserHandler {
 	// 3 => username
 	public static String[] user = {};
 	
-	public UserHandler(String dirS, String[] args) {
+	public UserHandler(String[] args) {
 		
 		// Load the auth file
-		JSONArray authFile = new LoadAuthFile().load(dirS);
+		JSONArray authFile = new LoadAuthFile().load();
 		
 		// See what the user wants to do
 		for(int i = 0; i < args.length; i++) {
@@ -27,19 +27,19 @@ public class UserHandler {
 			}
 			
 			if(args[i].equalsIgnoreCase("--add-account")) {
-				new AppendAccount(dirS, authFile, args);
+				new AppendAccount(authFile, args);
 				System.exit(0);
 			}
 			
 			if(args[i].equalsIgnoreCase("--set-default")) {
-				new SetDefault(args, dirS, authFile);
+				new SetDefault(args, authFile);
 				System.exit(0);
 			}
 			
 		}
 		
 		// Grab the account to use!
-		user = new GetAccount().get(dirS, authFile, args);
+		user = new GetAccount().get(authFile, args);
 		System.out.println("Logged in as: " + UserHandler.user[3]);
 		
 	}

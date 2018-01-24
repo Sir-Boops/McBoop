@@ -4,11 +4,13 @@ import java.io.File;
 
 import org.json.JSONArray;
 
+import me.boops.Main;
+
 public class LoadAuthFile {
 
-	public JSONArray load(String dirS) {
+	public JSONArray load() {
 
-		File authFile = new File(dirS + "auth.json");
+		File authFile = new File(Main.homeDir + "auth.json");
 		JSONArray ans = new JSONArray();
 
 		// Make sure the auth file is there!

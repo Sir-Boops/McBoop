@@ -2,11 +2,12 @@ package me.boops.functions.userhandler;
 
 import org.json.JSONArray;
 
+import me.boops.Main;
 import me.boops.functions.file.WriteTextToFile;
 import me.boops.functions.mojangauth.MojangAuth;
 
 public class GetAccount {
-	public String[] get(String dirS, JSONArray authFile, String[] args) {
+	public String[] get(JSONArray authFile, String[] args) {
 		String username = "";
 		
 		String accessToken = "";
@@ -48,7 +49,7 @@ public class GetAccount {
 				if(authFile.getJSONObject(i).getString("username").equalsIgnoreCase(username)) {
 					authFile.getJSONObject(i).put("accessToken", auth[0]);
 					authFile.getJSONObject(i).put("clientToken", auth[1]);
-					new WriteTextToFile(dirS + "auth.json", authFile.toString());
+					new WriteTextToFile(Main.homeDir + "auth.json", authFile.toString());
 					i = (authFile.length() + 1);
 				}
 			}
