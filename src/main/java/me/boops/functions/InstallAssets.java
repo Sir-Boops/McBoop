@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.json.JSONObject;
 
+import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.file.WriteTextToFile;
 import me.boops.functions.network.FetchRemoteFile;
@@ -12,14 +13,15 @@ import me.boops.functions.network.FetchRemoteText;
 
 public class InstallAssets {
 
-	public InstallAssets(JSONObject assetIndex, String dirS) {
+	public InstallAssets() {
 		
+		JSONObject assetIndex = VersionMeta.Meta.getJSONObject("assetIndex");
 		JSONObject assetList = new JSONObject(new FetchRemoteText().fetch(assetIndex.getString("url")));
 		
-		new CreateFolder(dirS + "versions");
-		new WriteTextToFile(dirS + "assets" + File.separator + "indexes" + File.separatorChar + assetIndex.getString("id") + ".json", assetList.toString());
+		new CreateFolder(Main.homeDir + "versions");
+		new WriteTextToFile(Main.homeDir + "assets" + File.separator + "indexes" + File.separatorChar + assetIndex.getString("id") + ".json", assetList.toString());
 		
-		setUpDownloads(assetList.getJSONObject("objects"), (dirS + "assets" + File.separator + "objects" + File.separator));
+		setUpDownloads(assetList.getJSONObject("objects"), (Main.homeDir + "assets" + File.separator + "objects" + File.separator));
 
 	}
 	

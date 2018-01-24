@@ -5,23 +5,23 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
 
-import org.json.JSONObject;
-
 import me.boops.functions.DownloadClient;
 import me.boops.functions.InstallAssets;
 import me.boops.functions.InstallLibs;
 import me.boops.functions.LaunchGame;
-import me.boops.functions.ProfileManager;
-import me.boops.functions.VersionVerifyMeta;
+import me.boops.functions.VersionMeta;
 import me.boops.functions.commands.CommandParser;
 import me.boops.functions.file.CreateFolder;
-import me.boops.functions.network.FetchRemoteText;
+import me.boops.functions.profilemanager.ProfileManager;
 import me.boops.functions.userhandler.UserHandler;
 
 public class Main {
 	
 	// Get A Random String for natives
 	private static SecureRandom random = new SecureRandom();
+	
+	// Set the args here so anywhere can access them!
+	public static String[] args = {};
 	
 	// Home dir is the base dir that mcboop works in
 	static public String homeDir = System.getProperty("user.home") + File.separator + ".mcboop" + File.separator;
@@ -32,6 +32,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		
 		Main.randString = new BigInteger(32, Main.random).toString();
+		Main.args = args;
 
 		// List of things to do
 		// Check/Create a hidden dir to use
@@ -52,33 +53,31 @@ public class Main {
 		// Try to login or refresh auth for the requested user
 		new UserHandler(args);
 		
-		//Setup the profile
+		// Init the profile manager
 		// All a profile is, is a folder
 		// that launches a spefic version!
-		String profileVersion = new ProfileManager().getProfile(Main.homeDir, args);
-		String profileName = new ProfileManager().getProfileName(args);
+		new ProfileManager();
 		
 		// Grab the version index
 		// This checks to see if the version the user
 		// Is trying to run and if it is returns the
 		// launcher meta URL
-		String versionMetaURL = new VersionVerifyMeta().getMeta(args, profileVersion);
-		JSONObject versionMeta = new JSONObject(new FetchRemoteText().fetch(versionMetaURL));
+		new VersionMeta();
 		
 		//System.out.println(versionMeta);
 		
 		// Install/check the assets for
 		// This version of MC
-		new InstallAssets(versionMeta.getJSONObject("assetIndex"), Main.homeDir);
+		new InstallAssets();
 		
 		// Install libs / natives
-		List<String> libs = new InstallLibs().install(Main.homeDir, versionMeta.getJSONArray("libraries"));
+		List<String> libs = new InstallLibs().install();
 		
 		// Download the client
-		new DownloadClient(versionMeta.getJSONObject("downloads"), Main.homeDir, versionMeta.getString("id"));
+		new DownloadClient();
 		
 		// Launch the game!
-		new LaunchGame(libs, Main.homeDir, versionMeta.getString("id"), versionMeta, profileName);
+		new LaunchGame(libs);
 		
 		System.out.println("Run --help for help");
 

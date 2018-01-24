@@ -8,21 +8,17 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
+import me.boops.functions.profilemanager.ProfileManager;
 import me.boops.functions.userhandler.UserHandler;
 
 public class LaunchGame {
 
-	public LaunchGame(List<String> libs, String dirS, String version, JSONObject versionMeta, String profileName) {
+	public LaunchGame(List<String> libs) {
 		
-		if(profileName.isEmpty()) {
-			profileName = "default";
-		}
-		
-		String ProfilePath = dirS + "profiles" + File.separator + profileName + File.separator;
+		String ProfilePath = Main.homeDir + "profiles" + File.separator + ProfileManager.name + File.separator;
 		
 		new CreateFolder(ProfilePath);
 		
@@ -32,11 +28,11 @@ public class LaunchGame {
 		launchArr.add("java");
 		launchArr.add("-Xms256M");
 		launchArr.add("-Xmx2G");
-		launchArr.add("-Djava.library.path=" + dirS + "natives-" + Main.randString + File.separator);
+		launchArr.add("-Djava.library.path=" + Main.homeDir + "natives-" + Main.randString + File.separator);
 		launchArr.add("-cp");
-		launchArr.add(cleanLibs + dirS + "versions" + File.separator + version + ".jar");
-		launchArr.add(versionMeta.getString("mainClass"));
-		launchArr.addAll(genMCArgs(dirS, version, versionMeta, ProfilePath));
+		launchArr.add(cleanLibs + Main.homeDir + "versions" + File.separator + VersionMeta.ID + ".jar");
+		launchArr.add(VersionMeta.Meta.getString("mainClass"));
+		launchArr.addAll(genMCArgs());
 
 		System.out.println(launchArr);
 		//System.exit(0);
@@ -66,7 +62,7 @@ public class LaunchGame {
 		
 		// Delete the natives dir on exit
 		try {
-			FileUtils.deleteDirectory(new File(dirS + "natives-" + Main.randString + File.separator));
+			FileUtils.deleteDirectory(new File(Main.homeDir + "natives-" + Main.randString + File.separator));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -84,19 +80,19 @@ public class LaunchGame {
 		return ans;
 	}
 
-	private List<String> genMCArgs(String dirS, String version, JSONObject versionMeta, String profilePath) {
+	private List<String> genMCArgs() {
 		List<String> ans = new ArrayList<String>();
 
 		// Newer versions use a JSONArray older versions use a string
 		// Just run through both and keep appending to ans!
 
 		// If newer
-		if (versionMeta.has("arguments")) {
-			JSONArray arr = versionMeta.getJSONObject("arguments").getJSONArray("game");
+		if (VersionMeta.Meta.has("arguments")) {
+			JSONArray arr = VersionMeta.Meta.getJSONObject("arguments").getJSONArray("game");
 			for (int i = 0; i < arr.length(); i++) {
 				if (arr.get(i) instanceof String) {
 					if (arr.getString(i).indexOf("${") == 0) {
-						ans.add(getVar(arr.getString(i), dirS, version, versionMeta, profilePath));
+						ans.add(getVar(arr.getString(i)));
 					} else {
 						ans.add(arr.getString(i));
 					}
@@ -105,11 +101,11 @@ public class LaunchGame {
 		}
 		
 		// If the version is older
-		if(versionMeta.has("minecraftArguments")) {
-			String[] arr = versionMeta.getString("minecraftArguments").split(" ");
+		if(VersionMeta.Meta.has("minecraftArguments")) {
+			String[] arr = VersionMeta.Meta.getString("minecraftArguments").split(" ");
 			for(int i = 0; i < arr.length; i++) {
 				if(arr[i].indexOf("${") == 0) {
-					ans.add(getVar(arr[i], dirS, version, versionMeta, profilePath));
+					ans.add(getVar(arr[i]));
 				} else {
 					ans.add(arr[i]);
 				}
@@ -119,7 +115,7 @@ public class LaunchGame {
 		return ans;
 	}
 
-	private String getVar(String var, String dirS, String version, JSONObject versionMeta, String profilePath) {
+	private String getVar(String var) {
 		String ans = "";
 
 		if (var.equalsIgnoreCase("${auth_player_name}")) {
@@ -127,19 +123,19 @@ public class LaunchGame {
 		}
 
 		if (var.equalsIgnoreCase("${version_name}")) {
-			ans = version;
+			ans = VersionMeta.ID;
 		}
 
 		if (var.equalsIgnoreCase("${game_directory}")) {
-			ans = (profilePath);
+			ans = (ProfileManager.path);
 		}
 
 		if (var.equalsIgnoreCase("${assets_root}") || var.equalsIgnoreCase("${game_assets}")) {
-			ans = (dirS + "assets" + File.separator);
+			ans = (Main.homeDir + "assets" + File.separator);
 		}
 
 		if (var.equalsIgnoreCase("${assets_index_name}")) {
-			ans = versionMeta.getString("assets");
+			ans = VersionMeta.Meta.getString("assets");
 		}
 
 		if (var.equalsIgnoreCase("${auth_uuid}")) {
@@ -155,7 +151,7 @@ public class LaunchGame {
 		}
 
 		if (var.equalsIgnoreCase("${version_type}")) {
-			ans = versionMeta.getString("type");
+			ans = VersionMeta.Meta.getString("type");
 		}
 
 		return ans;
