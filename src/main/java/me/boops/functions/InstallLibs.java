@@ -11,8 +11,8 @@ import java.util.jar.JarFile;
 
 import org.json.JSONArray;
 
+import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
-import me.boops.functions.file.DeleteDir;
 import me.boops.functions.network.FetchRemoteFile;
 
 public class InstallLibs {
@@ -65,8 +65,7 @@ public class InstallLibs {
 	
 	private void extractNatives(String dirS, List<String> libURLS) {
 		
-		new DeleteDir(dirS + "natives" + File.separator);
-		new CreateFolder(dirS + "natives" + File.separator);
+		new CreateFolder(dirS + "natives-" + Main.randString + File.separator);
 		
 		List<String> natives = new ArrayList<String>();
 		
@@ -101,7 +100,7 @@ public class InstallLibs {
 								nativeList.add(file.getName());
 								
 								InputStream is = jar.getInputStream(file);
-								FileOutputStream fos = new FileOutputStream(dirS + "natives" + File.separator + file.getName());
+								FileOutputStream fos = new FileOutputStream(dirS + "natives-" + Main.randString + File.separator + file.getName());
 								int inByte;
 								
 								while ((inByte = is.read()) != -1) {

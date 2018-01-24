@@ -1,6 +1,8 @@
 package me.boops;
 
 import java.io.File;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -18,12 +20,18 @@ import me.boops.functions.userhandler.UserHander;
 
 public class Main {
 	
+	// Get A Random String for natives
+	private static SecureRandom random = new SecureRandom();
+	
 	// Home dir is the base dir that mcboop works in
 	static private String homeDir = System.getProperty("user.home") + File.separator + ".mcboop" + File.separator;
 	static public String version = "2.0.0";
 	static public String HttpUser = "Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0";
+	static public String randString = "";
 
 	public static void main(String[] args) throws Exception {
+		
+		Main.randString = new BigInteger(32, Main.random).toString();
 
 		// List of things to do
 		// Check/Create a hidden dir to use

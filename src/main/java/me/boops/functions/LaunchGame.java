@@ -6,9 +6,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
 
 public class LaunchGame {
@@ -29,7 +31,7 @@ public class LaunchGame {
 		launchArr.add("java");
 		launchArr.add("-Xms256M");
 		launchArr.add("-Xmx2G");
-		launchArr.add("-Djava.library.path=" + dirS + "natives" + File.separator);
+		launchArr.add("-Djava.library.path=" + dirS + "natives-" + Main.randString + File.separator);
 		launchArr.add("-cp");
 		launchArr.add(cleanLibs + dirS + "versions" + File.separator + version + ".jar");
 		launchArr.add(versionMeta.getString("mainClass"));
@@ -57,6 +59,13 @@ public class LaunchGame {
 				System.out.println(lineErr);
 			}
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// Delete the natives dir on exit
+		try {
+			FileUtils.deleteDirectory(new File(dirS + "natives-" + Main.randString + File.separator));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
