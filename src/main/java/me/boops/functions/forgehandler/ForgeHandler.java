@@ -25,7 +25,6 @@ public class ForgeHandler {
 				ForgeHandler.versionID = Main.args[i + 1];
 				new ForgeFileName();
 				ForgeHandler.versionMeta = new GetVersionMeta().meta();
-				System.out.println(ForgeHandler.versionMeta);
 				ForgeHandler.libs = new FetchForgeLibs().fetch();
 				libs.add(Main.homeDir + "forge" + File.separator + ForgeFileName.fileName);
 				

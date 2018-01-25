@@ -13,7 +13,7 @@ import javax.net.ssl.HttpsURLConnection;
 import org.json.JSONArray;
 
 import me.boops.Main;
-import me.boops.functions.InstallLibs;
+import me.boops.functions.VersionMeta;
 import me.boops.functions.file.CreateFolder;
 
 public class FetchForgeLibs {
@@ -23,18 +23,46 @@ public class FetchForgeLibs {
 		
 		JSONArray libList = ForgeHandler.versionMeta.getJSONArray("libraries");
 		
+		// Download forge libs and add them to the final response!
 		for(int i = 0; i < libList.length(); i++) {
 			String rawName = libList.getJSONObject(i).getString("name");
-			
 			if(!rawName.toLowerCase().contains("minecraftforge")) {
 				String fileName = (rawName.split(":")[1] + "-" + rawName.split(":")[2] + ".jar");
-				if(!InstallLibs.libs.contains(fileName)) {
-					String filePath = (rawName.split(":")[0].replaceAll("\\.", File.separator) + File.separator + rawName.split(":")[1]
-							+ File.separator + rawName.split(":")[2] + File.separator);
-					String fullPath = (Main.homeDir + "libraries" + File.separator + filePath + fileName);
-					downloadLib(fileName, filePath);
-					ans.add(fullPath);
-				}
+				String filePath = (rawName.split(":")[0].replaceAll("\\.", File.separator) + File.separator + rawName.split(":")[1]
+						+ File.separator + rawName.split(":")[2] + File.separator);
+				String fullPath = (Main.homeDir + "libraries" + File.separator + filePath + fileName);
+				downloadLib(fileName, filePath);
+				ans.add(fullPath);
+			}
+		}
+		
+		// Add all the default libs that forge dosn't override
+		JSONArray defaultArr = VersionMeta.Meta.getJSONArray("libraries");
+		for(int i = 0; i < defaultArr.length(); i++) {
+			String rawName = defaultArr.getJSONObject(i).getString("name");
+			String name = (rawName.split(":")[1]);
+			if(shouldAdd(name)) {
+				String fileName = (rawName.split(":")[1] + "-" + rawName.split(":")[2] + ".jar");
+				String filePath = (rawName.split(":")[0].replaceAll("\\.", File.separator) + File.separator + rawName.split(":")[1]
+						+ File.separator + rawName.split(":")[2] + File.separator);
+				String fullPath = (Main.homeDir + "libraries" + File.separator + filePath + fileName);
+				ans.add(fullPath);
+			}
+		}
+		
+		return ans;
+	}
+	
+	private boolean shouldAdd(String term) {
+		boolean ans = true;
+		JSONArray forgeLibs = ForgeHandler.versionMeta.getJSONArray("libraries");
+		
+		for(int i = 0; i < forgeLibs.length(); i++) {
+			String rawName = forgeLibs.getJSONObject(i).getString("name");
+			String name = (rawName.split(":")[1]);
+			
+			if(term.equalsIgnoreCase(name)) {
+				ans = false;
 			}
 		}
 		

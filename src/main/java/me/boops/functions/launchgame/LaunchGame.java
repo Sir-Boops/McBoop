@@ -69,8 +69,11 @@ public class LaunchGame {
 	private String cleanLibsPaths(List<String> basicLibs, List<String> forgeLibs) {
 		
 		List<String> libs = new ArrayList<String>();
-		libs.addAll(basicLibs);
-		libs.addAll(forgeLibs);
+		if(!forgeLibs.isEmpty()) {
+			libs.addAll(forgeLibs);
+		} else {
+			libs.addAll(basicLibs);
+		}
 		
 		String ans = "";
 		for (int i = 0; i < libs.size(); i++) {
