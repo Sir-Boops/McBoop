@@ -33,6 +33,10 @@ public class AuthValidate {
 			OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 			wr.write(payload.toString());
 			wr.close();
+			
+			if(conn.getResponseCode() != 204) {
+				ans = true;
+			}
 
 		} catch (Exception e) {
 			ans = true;
