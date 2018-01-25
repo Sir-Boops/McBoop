@@ -9,7 +9,6 @@ import java.util.jar.JarFile;
 import org.json.JSONObject;
 
 import me.boops.Main;
-import me.boops.functions.VersionMeta;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.network.FetchRemoteFile;
 
@@ -17,15 +16,13 @@ public class GetVersionMeta {
 	
 	public JSONObject meta() {
 		
-		String URL = ("https://files.minecraftforge.net/maven/net/minecraftforge/forge/%mcID%-%forgeID%-%mcID%/forge-%mcID%-%forgeID%-%mcID%-universal.jar");
-		URL = URL.replaceAll("(%mcID%)", VersionMeta.ID);
-		URL = URL.replaceAll("(%forgeID%)", ForgeHandler.versionID);
+		String URL = ("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + ForgeFileName.filePath.replaceAll(File.separator, "/") + ForgeFileName.fileName);
 		
 		String path = Main.homeDir + "forge" + File.separator;
-		String filePath = (path + URL.substring(URL.lastIndexOf("/") + 1, URL.length()));
+		String filePath = (path + ForgeFileName.fileName);
 		new CreateFolder(path);
 		
-		if(!new File(path + URL.substring(URL.lastIndexOf("/") + 1, URL.length())).exists()) {
+		if(!new File(path + ForgeFileName.fileName).exists()) {
 			new FetchRemoteFile(URL, path, "");
 		}
 		

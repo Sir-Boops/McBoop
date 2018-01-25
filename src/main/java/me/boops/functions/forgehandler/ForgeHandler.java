@@ -7,7 +7,6 @@ import java.util.List;
 import org.json.JSONObject;
 
 import me.boops.Main;
-import me.boops.functions.VersionMeta;
 import me.boops.functions.network.FetchRemoteText;
 
 public class ForgeHandler {
@@ -24,11 +23,11 @@ public class ForgeHandler {
 			if(Main.args[i].equalsIgnoreCase("--with-forge")) {
 				ForgeHandler.jsonMaster = new JSONObject(new FetchRemoteText().fetch("https://files.minecraftforge.net/maven/net/minecraftforge/forge/json"));
 				ForgeHandler.versionID = Main.args[i + 1];
+				new ForgeFileName();
 				ForgeHandler.versionMeta = new GetVersionMeta().meta();
+				System.out.println(ForgeHandler.versionMeta);
 				ForgeHandler.libs = new FetchForgeLibs().fetch();
-				libs.add(Main.homeDir + "forge" + File.separator
-						+ ("forge-%mcID%-%forgeID%-%mcID%-universal.jar".replaceAll("(%mcID%)", VersionMeta.ID)
-						.replaceAll("(%forgeID%)", ForgeHandler.versionID)));
+				libs.add(Main.homeDir + "forge" + File.separator + ForgeFileName.fileName);
 				
 				System.out.println(libs);
 			}

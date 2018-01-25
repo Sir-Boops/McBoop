@@ -25,7 +25,7 @@ public class GenerateMCArgs {
 			for (int i = 0; i < arr.length(); i++) {
 				if (arr.get(i) instanceof String) {
 					if (arr.getString(i).indexOf("${") == 0) {
-						ans.add(getVar(arr.getString(i), metaFile));
+						ans.add(getVar(arr.getString(i)));
 					} else {
 						ans.add(arr.getString(i));
 					}
@@ -38,7 +38,7 @@ public class GenerateMCArgs {
 			String[] arr = metaFile.getString("minecraftArguments").split(" ");
 			for(int i = 0; i < arr.length; i++) {
 				if(arr[i].indexOf("${") == 0) {
-					ans.add(getVar(arr[i], metaFile));
+					ans.add(getVar(arr[i]));
 				} else {
 					ans.add(arr[i]);
 				}
@@ -48,7 +48,7 @@ public class GenerateMCArgs {
 		return ans;
 	}
 
-	private String getVar(String var, JSONObject metaFile) {
+	private String getVar(String var) {
 		String ans = "";
 
 		if (var.equalsIgnoreCase("${auth_player_name}")) {
@@ -68,7 +68,7 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${assets_index_name}")) {
-			ans = metaFile.getString("assets");
+			ans = VersionMeta.Meta.getString("assets");
 		}
 
 		if (var.equalsIgnoreCase("${auth_uuid}")) {
@@ -84,7 +84,7 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${version_type}")) {
-			ans = metaFile.getString("type");
+			ans = VersionMeta.Meta.getString("type");
 		}
 
 		return ans;
