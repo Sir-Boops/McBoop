@@ -10,6 +10,7 @@ import me.boops.functions.InstallLibs;
 import me.boops.functions.VersionMeta;
 import me.boops.functions.commands.CommandParser;
 import me.boops.functions.file.CreateFolder;
+import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.launchgame.LaunchGame;
 import me.boops.functions.profilemanager.ProfileManager;
 import me.boops.functions.userhandler.UserHandler;
@@ -72,6 +73,9 @@ public class Main {
 		
 		// Download the client
 		new DownloadClient();
+		
+		// Try to setup forge!
+		new ForgeHandler();
 		
 		// Launch the game!
 		new LaunchGame();
