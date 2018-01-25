@@ -28,7 +28,7 @@ public class ReadTextFromFile {
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			ans = "";
 		}
 		
 		return ans;

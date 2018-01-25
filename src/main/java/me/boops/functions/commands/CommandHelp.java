@@ -26,6 +26,8 @@ public class CommandHelp {
 		System.out.println("");
 		System.out.println("McBoop --list-forge-versions [MC version] => [MC Version is optional] Without this it will list all versions of MC that forge can on on");
 		System.out.println(" With the argument it will list only forge versions for the requested version!");
+		System.out.println("");
+		System.out.println("McBoop --list-profiles => List all profiles and what version they launch");
 		
 		System.out.println("");
 		System.out.println("");

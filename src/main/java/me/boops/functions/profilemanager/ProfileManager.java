@@ -27,10 +27,15 @@ public class ProfileManager {
 			}
 			
 			if(Main.args[i].equalsIgnoreCase("--profile")) {
-				String version = new ReadProfile().read();
+				String version = new ReadProfileMCVersion().read(Main.args[i + 1]);
 				ProfileManager.version = version;
 				ProfileManager.name = Main.args[i + 1];
-			}	
+			}
+			
+			if(Main.args[i].equalsIgnoreCase("--list-profiles")) {
+				new ListProfiles();
+				System.exit(0);
+			}
 		}
 		
 		// If no profile is defined use the

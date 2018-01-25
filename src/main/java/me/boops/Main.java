@@ -49,13 +49,13 @@ public class Main {
 		// If it dosn't exist create it
 		new CreateFolder(Main.homeDir);
 		
-		// Try to login or refresh auth for the requested user
-		new UserHandler();
-		
 		// Init the profile manager
 		// All a profile is, is a folder
 		// that launches a spefic version!
 		new ProfileManager();
+		
+		// Try to login or refresh auth for the requested user
+		new UserHandler();
 		
 		// Grab the version index
 		// This checks to see if the version the user
