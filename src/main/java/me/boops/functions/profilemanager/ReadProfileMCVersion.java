@@ -12,7 +12,13 @@ public class ReadProfileMCVersion {
 	public String read(String profileName) {
 		String path = Main.homeDir + "profiles" + File.separator;
 		
-		JSONObject profile = new JSONObject(new ReadTextFromFile().read(path + profileName + File.separator + "profile.json"));
-		return profile.getString("mcVersion");
+		String json = new ReadTextFromFile().read(path + profileName + File.separator + "profile.json");
+		
+		if(!json.isEmpty()) {
+			JSONObject profile = new JSONObject();
+			return profile.getString("mcVersion");
+		} else {
+			return "";
+		}
 	}
 }
