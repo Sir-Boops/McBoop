@@ -42,7 +42,7 @@ public class Main {
 		// Run game ( Reading from json? or hard coded launch args ?)
 		
 		// Run non-launcher related commands
-		new CommandParser(args);
+		new CommandParser();
 		
 		
 		// Check for a base dir
@@ -62,8 +62,6 @@ public class Main {
 		// Is trying to run and if it is returns the
 		// launcher meta URL
 		new VersionMeta();
-		
-		//System.out.println(versionMeta);
 		
 		// Install/check the assets for
 		// This version of MC
