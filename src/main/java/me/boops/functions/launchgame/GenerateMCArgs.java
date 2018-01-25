@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import me.boops.functions.InstallAssets;
 import me.boops.functions.VersionMeta;
@@ -12,19 +13,19 @@ import me.boops.functions.userhandler.UserHandler;
 
 public class GenerateMCArgs {
 	
-	public List<String> gen() {
+	public List<String> gen(JSONObject metaFile) {
 		List<String> ans = new ArrayList<String>();
 
 		// Newer versions use a JSONArray older versions use a string
 		// Just run through both and keep appending to ans!
 
 		// If newer
-		if (VersionMeta.Meta.has("arguments")) {
-			JSONArray arr = VersionMeta.Meta.getJSONObject("arguments").getJSONArray("game");
+		if (metaFile.has("arguments")) {
+			JSONArray arr = metaFile.getJSONObject("arguments").getJSONArray("game");
 			for (int i = 0; i < arr.length(); i++) {
 				if (arr.get(i) instanceof String) {
 					if (arr.getString(i).indexOf("${") == 0) {
-						ans.add(getVar(arr.getString(i)));
+						ans.add(getVar(arr.getString(i), metaFile));
 					} else {
 						ans.add(arr.getString(i));
 					}
@@ -33,11 +34,11 @@ public class GenerateMCArgs {
 		}
 		
 		// If the version is older
-		if(VersionMeta.Meta.has("minecraftArguments")) {
-			String[] arr = VersionMeta.Meta.getString("minecraftArguments").split(" ");
+		if(metaFile.has("minecraftArguments")) {
+			String[] arr = metaFile.getString("minecraftArguments").split(" ");
 			for(int i = 0; i < arr.length; i++) {
 				if(arr[i].indexOf("${") == 0) {
-					ans.add(getVar(arr[i]));
+					ans.add(getVar(arr[i], metaFile));
 				} else {
 					ans.add(arr[i]);
 				}
@@ -47,7 +48,7 @@ public class GenerateMCArgs {
 		return ans;
 	}
 
-	private String getVar(String var) {
+	private String getVar(String var, JSONObject metaFile) {
 		String ans = "";
 
 		if (var.equalsIgnoreCase("${auth_player_name}")) {
@@ -67,7 +68,7 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${assets_index_name}")) {
-			ans = VersionMeta.Meta.getString("assets");
+			ans = metaFile.getString("assets");
 		}
 
 		if (var.equalsIgnoreCase("${auth_uuid}")) {
@@ -83,7 +84,7 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${version_type}")) {
-			ans = VersionMeta.Meta.getString("type");
+			ans = metaFile.getString("type");
 		}
 
 		return ans;

@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import me.boops.functions.DownloadClient;
 import me.boops.functions.InstallLibs;
 import me.boops.functions.VersionMeta;
+import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.profilemanager.ProfileManager;
 
 public class LaunchGame {
@@ -19,15 +20,15 @@ public class LaunchGame {
 		
 		List<String> launchArr = new ArrayList<String>();
 
-		String cleanLibs = cleanLibsPaths(InstallLibs.libs);
+		String cleanLibs = cleanLibsPaths(InstallLibs.libs, ForgeHandler.libs);
 		launchArr.add("java");
 		launchArr.add("-Xms256M");
 		launchArr.add("-Xmx2G");
 		launchArr.add("-Djava.library.path=" + InstallLibs.nativesPath);
 		launchArr.add("-cp");
 		launchArr.add(cleanLibs + DownloadClient.jarPath);
-		launchArr.add(VersionMeta.Meta.getString("mainClass"));
-		launchArr.addAll(new GenerateMCArgs().gen());
+		launchArr.add(getLaunchClass());
+		launchArr.addAll(getMCArgs());
 
 		System.out.println(launchArr);
 
@@ -65,12 +66,40 @@ public class LaunchGame {
 
 	}
 
-	private String cleanLibsPaths(List<String> libs) {
-
+	private String cleanLibsPaths(List<String> basicLibs, List<String> forgeLibs) {
+		
+		List<String> libs = new ArrayList<String>();
+		libs.addAll(basicLibs);
+		libs.addAll(forgeLibs);
+		
 		String ans = "";
 		for (int i = 0; i < libs.size(); i++) {
 			ans += libs.get(i) + File.pathSeparator;
 		}
+		return ans;
+	}
+	
+	private String getLaunchClass() {
+		String ans = "";
+		
+		if(ForgeHandler.versionMeta.has("mainClass")) {
+			ans = ForgeHandler.versionMeta.getString("mainClass");
+		} else {
+			ans = VersionMeta.Meta.getString("mainClass");
+		}
+		
+		return ans;
+	}
+	
+	private List<String> getMCArgs(){
+		List<String> ans = new ArrayList<String>();
+		
+		if(ForgeHandler.versionMeta.has("minecraftArguments")) {
+			ans.addAll(new GenerateMCArgs().gen(ForgeHandler.versionMeta));
+		} else {
+			ans.addAll(new GenerateMCArgs().gen(VersionMeta.Meta));
+		}
+		
 		return ans;
 	}
 }

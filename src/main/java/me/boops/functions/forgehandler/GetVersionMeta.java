@@ -16,7 +16,6 @@ import me.boops.functions.network.FetchRemoteFile;
 public class GetVersionMeta {
 	
 	public JSONObject meta() {
-		JSONObject ans = new JSONObject();
 		
 		String URL = ("https://files.minecraftforge.net/maven/net/minecraftforge/forge/%mcID%-%forgeID%-%mcID%/forge-%mcID%-%forgeID%-%mcID%-universal.jar");
 		URL = URL.replaceAll("(%mcID%)", VersionMeta.ID);
@@ -30,10 +29,7 @@ public class GetVersionMeta {
 			new FetchRemoteFile(URL, path, "");
 		}
 		
-		ans = readVersionJSON(filePath);
-		
-		System.out.println(ans);
-		System.exit(0);
+		JSONObject ans = readVersionJSON(filePath);
 		
 		return ans;
 	}
