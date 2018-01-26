@@ -37,6 +37,10 @@ public class UserHandler {
 				System.exit(0);
 			}
 			
+			if(Main.args[i].equalsIgnoreCase("--remove-account")) {
+				new RemoveAccount(authFile, Main.args[i + 1]);
+				System.exit(0);
+			}
 		}
 		
 		// Grab the account to use!

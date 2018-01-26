@@ -26,7 +26,7 @@ public class Main {
 	// Home dir is the base dir that mcboop works in
 	static public String homeDir = System.getProperty("user.home") + File.separator + ".mcboop" + File.separator;
 	static public String version = "2.0.0";
-	static public String HttpUser = "Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0";
+	static public String HttpUser = "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0";
 	static public String randString = "";
 
 	public static void main(String[] args) throws Exception {

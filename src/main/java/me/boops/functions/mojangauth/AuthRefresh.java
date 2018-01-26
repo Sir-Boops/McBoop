@@ -53,7 +53,7 @@ public class AuthRefresh {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error refreshing your auth key!");
-			System.out.println("Perhaps try logging in again?");
+			System.out.println("Perhaps try removing your account and re-adding it?");
 			System.exit(1);
 		}
 		
