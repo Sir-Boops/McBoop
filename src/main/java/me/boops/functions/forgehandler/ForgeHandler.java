@@ -31,9 +31,12 @@ public class ForgeHandler {
 			}
 			
 			if(Main.args[i].equalsIgnoreCase("--profile") && !ProfileManager.forgeVersion.isEmpty()) {
+				System.out.println("Attempting to setup forge");
+				System.out.println("Loading forge meta json");
 				ForgeHandler.jsonMaster = new JSONObject(new FetchRemoteText().fetch("https://files.minecraftforge.net/maven/net/minecraftforge/forge/json"));
 				ForgeHandler.versionID = ProfileManager.forgeVersion;
 				new ForgeFileName();
+				System.out.println("Setting up envirment for forge");
 				ForgeHandler.versionMeta = new GetVersionMeta().meta();
 				ForgeHandler.libs = new FetchForgeLibs().fetch();
 				libs.add(Main.homeDir + "forge" + File.separator + ForgeFileName.fileName);

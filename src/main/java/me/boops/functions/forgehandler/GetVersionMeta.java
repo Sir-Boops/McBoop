@@ -23,6 +23,7 @@ public class GetVersionMeta {
 		new CreateFolder(path);
 		
 		if(!new File(path + ForgeFileName.fileName).exists()) {
+			System.out.println("Downloading forge jar");
 			new FetchRemoteFile(URL, path, "");
 		}
 		

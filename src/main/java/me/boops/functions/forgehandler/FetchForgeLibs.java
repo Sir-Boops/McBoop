@@ -8,8 +8,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import org.json.JSONArray;
 
 import me.boops.Main;
@@ -76,83 +74,55 @@ public class FetchForgeLibs {
 		
 		if(!new File(fullPath + fileName).exists()) {
 			
-			try {
-
-				URL url = new URL("https://libraries.minecraft.net/" + filePath + fileName);
-
-				HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-				conn.setReadTimeout(10 * 1000);
-				conn.setConnectTimeout(10 * 1000);
-				conn.setRequestMethod("GET");
-				conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux X11; x64; rv:59.0) Gecko/20100101 Firefox/59.0");
-
-				conn.connect();
-
-				InputStream is = conn.getInputStream();
-				FileOutputStream fos = new FileOutputStream(new File(fullPath + fileName));
-				int inByte;
-
-				while ((inByte = is.read()) != -1) {
-					fos.write(inByte);
-				}
-
-				is.close();
-				fos.close();
-
-			} catch (Exception e) {
-				try {
-					
-					URL url = new URL("https://repo.spongepowered.org/maven/" + filePath + fileName);
-
-					HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-					conn.setReadTimeout(10 * 1000);
-					conn.setConnectTimeout(10 * 1000);
-					conn.setRequestMethod("GET");
-					conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux X11; x64; rv:59.0) Gecko/20100101 Firefox/59.0");
-
-					conn.connect();
-
-					InputStream is = conn.getInputStream();
-					FileOutputStream fos = new FileOutputStream(new File(fullPath + fileName));
-					int inByte;
-
-					while ((inByte = is.read()) != -1) {
-						fos.write(inByte);
-					}
-
-					is.close();
-					fos.close();
-
-				} catch (Exception e2) {
-					try {
-
-						URL url = new URL("http://central.maven.org/maven2/" + filePath + fileName);
-
-						HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-						conn.setReadTimeout(10 * 1000);
-						conn.setConnectTimeout(10 * 1000);
-						conn.setRequestMethod("GET");
-						conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux X11; x64; rv:59.0) Gecko/20100101 Firefox/59.0");
-
-						conn.connect();
-
-						InputStream is = conn.getInputStream();
-						FileOutputStream fos = new FileOutputStream(new File(fullPath + fileName));
-						int inByte;
-
-						while ((inByte = is.read()) != -1) {
-							fos.write(inByte);
-						}
-
-						is.close();
-						fos.close();
-
-					} catch (Exception e3) {
-						System.out.println("Could not find " + fileName);
-					}
-				}
+			System.out.println("Downloading: " + fileName);
+			
+			String[] urls = new String[] {
+					"https://libraries.minecraft.net/" + filePath + fileName,
+					"https://repo.spongepowered.org/maven/" + filePath + fileName,
+					"http://central.maven.org/maven2/" + filePath + fileName
+			};
+			
+			boolean gotFile = false;
+			int attempts = 0;
+			while(!gotFile && attempts < 3) {
+				gotFile = tryDownload(urls[attempts], (fullPath + fileName));
+				attempts++;
 			}
 			
 		}
+	}
+	
+	private boolean tryDownload(String URL, String fullPath) {
+		boolean ans = true;
+		
+		try {
+
+			URL url = new URL(URL);
+
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setReadTimeout(10 * 1000);
+			conn.setConnectTimeout(10 * 1000);
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("User-Agent", Main.HttpUser);
+
+			conn.connect();
+			
+			InputStream is = conn.getInputStream();
+			FileOutputStream fos = new FileOutputStream(new File(fullPath));
+			int inByte;
+
+			while ((inByte = is.read()) != -1) {
+				fos.write(inByte);
+			}
+			
+
+			is.close();
+			fos.close();
+
+		} catch (Exception e) {
+			ans = false;
+		}
+		
+		return ans;
 	}
 }
