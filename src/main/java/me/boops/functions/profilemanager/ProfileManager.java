@@ -10,6 +10,7 @@ public class ProfileManager {
 	public static String version = "";
 	public static String name = "";
 	public static String path = "";
+	public static String forgeVersion = "";
 	
 	public ProfileManager() {
 		new CreateFolder(Main.homeDir + "profiles" + File.separator);
@@ -27,13 +28,24 @@ public class ProfileManager {
 			}
 			
 			if(Main.args[i].equalsIgnoreCase("--profile")) {
-				String version = new ReadProfileMCVersion().read(Main.args[i + 1]);
-				ProfileManager.version = version;
+				String[] data = new ReadProfileData().read(Main.args[i + 1]);
+				ProfileManager.version = data[0];
+				ProfileManager.forgeVersion = data[1];
 				ProfileManager.name = Main.args[i + 1];
 			}
 			
 			if(Main.args[i].equalsIgnoreCase("--list-profiles")) {
 				new ListProfiles();
+				System.exit(0);
+			}
+			
+			if(Main.args[i].equalsIgnoreCase("--set-profile-forge")) {
+				new AppendForgeVersion(Main.args[i + 1], Main.args[i + 2]);
+				System.exit(0);
+			}
+			
+			if(Main.args[i].equalsIgnoreCase("--update-profile-forge")) {
+				new AppendForgeVersion(Main.args[i + 1], Main.args[i + 2]);
 				System.exit(0);
 			}
 		}

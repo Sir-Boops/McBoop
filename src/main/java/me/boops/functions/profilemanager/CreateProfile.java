@@ -22,7 +22,7 @@ public class CreateProfile {
 			}
 		}
 		
-		String path = Main.homeDir + profileName + File.separator;
+		String path = Main.homeDir + "profiles" + File.separator + profileName + File.separator;
 		new CreateFolder(path);
 		
 		JSONObject profile = new JSONObject().put("mcVersion", profileMCVersion);

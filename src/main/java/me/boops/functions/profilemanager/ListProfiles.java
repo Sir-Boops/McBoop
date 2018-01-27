@@ -13,7 +13,7 @@ public class ListProfiles {
 		System.out.println("Here is a list of profiles:");
 		
 		for(int i = 0; i < profiles.length; i++) {
-			System.out.println(profiles[i] + " - " + new ReadProfileMCVersion().read(profiles[i]));
+			System.out.println(profiles[i] + " - " + new ReadProfileData().read(profiles[i]));
 		}
 		
 		System.out.println("");

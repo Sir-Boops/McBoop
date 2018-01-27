@@ -22,6 +22,10 @@ public class CommandHelp {
 		System.out.println("");
 		System.out.println("McBoop --update-profile <profile name> <version> => Update a profile to use X version");
 		System.out.println("");
+		System.out.println("McBoop --set-profile-forge <profile name> <version> => Update a profile to use X version");
+		System.out.println("");
+		System.out.println("McBoop --update-profile-forge <profile name> <version> => Update a profile to use X version");
+		System.out.println("");
 		System.out.println("McBoop --profile <profile nmae> => Launch said profile");
 		System.out.println("");
 		System.out.println("McBoop --list-forge-versions [MC version] => [MC Version is optional] Without this it will list all versions of MC that forge can on on");
