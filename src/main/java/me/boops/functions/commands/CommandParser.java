@@ -4,6 +4,8 @@ import me.boops.Main;
 
 public class CommandParser {
 	
+	public static String maxRAM = "";
+	
 	public CommandParser() {
 		
 		for(int i = 0; i < Main.args.length; i++) {
@@ -21,6 +23,10 @@ public class CommandParser {
 			if(Main.args[i].equalsIgnoreCase("--list-forge-versions")) {
 				new ListForgeVersions(Main.args);
 				System.exit(0);
+			}
+			
+			if(Main.args[i].equalsIgnoreCase("--max-ram")) {
+				CommandParser.maxRAM = Main.args[i + 1];
 			}
 			
 		}

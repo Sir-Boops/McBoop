@@ -36,6 +36,8 @@ public class CommandHelp {
 		System.out.println("McBoop --remove-account <username> => Remove the account assoiced with <username>");
 		System.out.println("");
 		System.out.println("McBoop --list-profiles => List all profiles and what version they launch");
+		System.out.println("McBoop --max-ram <amount> => Set the max amount of ram to use Default: 2G");
+		System.out.println("");
 		
 		System.out.println("");
 		System.out.println("");

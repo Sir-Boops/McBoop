@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import me.boops.functions.DownloadClient;
 import me.boops.functions.InstallLibs;
 import me.boops.functions.VersionMeta;
+import me.boops.functions.commands.CommandParser;
 import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.profilemanager.ProfileManager;
 
@@ -23,7 +24,7 @@ public class LaunchGame {
 		String cleanLibs = cleanLibsPaths(InstallLibs.libs, ForgeHandler.libs);
 		launchArr.add("java");
 		launchArr.add("-Xms256M");
-		launchArr.add("-Xmx2G");
+		launchArr.add(getMaxRAM());
 		launchArr.add("-Djava.library.path=" + InstallLibs.nativesPath);
 		launchArr.add("-cp");
 		launchArr.add(cleanLibs + DownloadClient.jarPath);
@@ -101,6 +102,17 @@ public class LaunchGame {
 			ans.addAll(new GenerateMCArgs().gen(ForgeHandler.versionMeta));
 		} else {
 			ans.addAll(new GenerateMCArgs().gen(VersionMeta.Meta));
+		}
+		
+		return ans;
+	}
+	
+	private String getMaxRAM() {
+		String ans = "";
+		if(CommandParser.maxRAM.isEmpty()) {
+			ans = "-Xmx2G";
+		} else {
+			ans = ("-Xmx" + CommandParser.maxRAM);
 		}
 		
 		return ans;
