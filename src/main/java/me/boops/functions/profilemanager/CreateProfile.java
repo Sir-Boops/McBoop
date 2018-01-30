@@ -10,24 +10,14 @@ import me.boops.functions.file.WriteTextToFile;
 
 public class CreateProfile {
 	
-	public CreateProfile() {
+	public CreateProfile(String name, String mcID) {
 		
-		String profileName = "";
-		String profileMCVersion = "";
-		
-		for(int i = 0; i < Main.args.length; i++) {
-			if(Main.args[i].equalsIgnoreCase("--create-profile")) {
-				profileName = Main.args[i +1];
-				profileMCVersion = Main.args[i + 2];
-			}
-		}
-		
-		String path = Main.homeDir + "profiles" + File.separator + profileName + File.separator;
+		String path = Main.homeDir + "profiles" + File.separator + name + File.separator;
 		new CreateFolder(path);
 		
-		JSONObject profile = new JSONObject().put("mcVersion", profileMCVersion);
+		JSONObject profile = new JSONObject().put("mcVersion", mcID);
 		new WriteTextToFile(path + "profile.json", profile.toString());
 		
-		System.out.println("Created new profile: " + profileName + ", That runs MC Version: " + profileMCVersion);
+		System.out.println("Created new profile: " + name + ", That runs MC Version: " + mcID);
 	}
 }

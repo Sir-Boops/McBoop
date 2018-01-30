@@ -18,12 +18,29 @@ public class ProfileManager {
 		for(int i = 0; i < Main.args.length; i++) {
 			
 			if(Main.args[i].equalsIgnoreCase("--create-profile")) {
-				new CreateProfile();
+				
+				if((i + 2) >= Main.args.length) {
+					System.out.println("");
+					System.out.println("Missing argument!");
+					System.out.println("--help for help!");
+					System.out.println("");
+					System.exit(1);
+				}
+				
+				new CreateProfile(Main.args[i + 1], Main.args[i + 2]);
 				System.exit(0);
 			}
 			
 			if(Main.args[i].equalsIgnoreCase("--update-profile")) {
-				new CreateProfile();
+				
+				if((i + 2) < Main.args.length) {
+					System.out.println("");
+					System.out.println("Missing argument!");
+					System.out.println("--help for help!");
+					System.out.println("");
+				}
+				
+				new CreateProfile(Main.args[i + 1], Main.args[i + 2]);
 				System.exit(0);
 			}
 			
