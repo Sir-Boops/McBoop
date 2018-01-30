@@ -48,6 +48,11 @@ public class ProfileManager {
 				new AppendForgeVersion(Main.args[i + 1], Main.args[i + 2]);
 				System.exit(0);
 			}
+			
+			if(Main.args[i].equalsIgnoreCase("--delete-profile")) {
+				new DeleteProfile(Main.args[i + 1]);
+				System.exit(0);
+			}
 		}
 		
 		// If no profile is defined use the

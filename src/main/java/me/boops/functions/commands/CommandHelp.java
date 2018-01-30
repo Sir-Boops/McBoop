@@ -39,6 +39,8 @@ public class CommandHelp {
 		System.out.println("");
 		System.out.println("McBoop --max-ram <amount> => Set the max amount of ram to use Default: 2G");
 		System.out.println("");
+		System.out.println("McBoop --delete-profile <profile name> => Deletes a profile from disk");
+		System.out.println("");
 		
 		System.out.println("");
 		System.out.println("");
