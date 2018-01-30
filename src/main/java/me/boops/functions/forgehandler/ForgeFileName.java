@@ -24,5 +24,14 @@ public class ForgeFileName {
 			ForgeFileName.fileName = (path.substring(path.lastIndexOf("/") + 1, path.length()));
 			ForgeFileName.filePath = (path.substring(0, path.lastIndexOf("/")) + File.separator);
 		}
+		
+		if(forgeVersion <= 164) {
+			System.out.println("");
+			System.out.println("Sorry, forge versions 1.6.4 and older are not supported!");
+			System.out.println("If you wish to attempt to add support for them open an issue");
+			System.out.println("and I'll explan what needs to be done!");
+			System.out.println("");
+			System.exit(1);
+		}
 	}
 }
