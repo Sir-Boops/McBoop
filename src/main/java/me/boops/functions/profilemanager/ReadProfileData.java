@@ -25,6 +25,9 @@ public class ReadProfileData {
 			} else {
 				ans = new String[] {profile.getString("mcVersion"), ""};
 			}
+		} else {
+			// This is the default profile
+			ans = new String[] {"none", "none"};
 		}
 		return ans;
 	}
