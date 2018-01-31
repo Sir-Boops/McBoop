@@ -38,7 +38,7 @@ public class VersionMeta {
 				mcVersion = metaFile.getJSONObject("latest").getString("release");
 			}
 			if (mcVersion.equalsIgnoreCase("snapshot")) {
-				mcVersion = metaFile.getJSONObject("latest").getString("snpashot");
+				mcVersion = metaFile.getJSONObject("latest").getString("snapshot");
 			}
 		}
 		
