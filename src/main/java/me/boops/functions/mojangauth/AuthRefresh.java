@@ -39,8 +39,6 @@ public class AuthRefresh {
 			wr.write(payload.toString());
 			wr.close();
 			
-			System.out.println(conn.getResponseCode());
-			
 			// Recive the answer
 			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			StringBuilder sb = new StringBuilder();
