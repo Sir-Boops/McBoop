@@ -23,7 +23,7 @@ public class AuthLogin {
 		
 		try {
 
-			JSONObject agent = new JSONObject().put("name", "Minecraft").put("version", 1);
+			JSONObject agent = new JSONObject().put("name", "Minecraft").put("version", 27);
 			JSONObject payload = new JSONObject().put("username", username).put("password", password).put("agent", agent);
 			URL url = new URL("https://authserver.mojang.com/authenticate");
 

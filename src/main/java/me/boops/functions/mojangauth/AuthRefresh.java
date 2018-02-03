@@ -38,7 +38,9 @@ public class AuthRefresh {
 			OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 			wr.write(payload.toString());
 			wr.close();
-
+			
+			System.out.println(conn.getResponseCode());
+			
 			// Recive the answer
 			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			StringBuilder sb = new StringBuilder();
@@ -51,7 +53,6 @@ public class AuthRefresh {
 			ans = new String[] {refAns.getString("accessToken"), refAns.getString("clientToken")};
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			System.out.println("Error refreshing your auth key!");
 			System.out.println("Perhaps try removing your account and re-adding it?");
 			System.exit(1);
