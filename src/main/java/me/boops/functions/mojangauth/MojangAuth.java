@@ -18,10 +18,12 @@ public class MojangAuth {
 		boolean shouldRefresh = new AuthValidate().validate(access, client);
 		
 		if(shouldRefresh) {
+			System.out.println("Refreshing access token");
 			String[] refAns = new AuthRefresh().refresh(access, client);
 			ans = new String[] {refAns[0], refAns[1]};
 			updateAuthFile(refAns);
 		} else {
+			System.out.println("Access token validated");
 			ans = new String[] {access, client};
 		}
 		return ans;
