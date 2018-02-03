@@ -17,6 +17,7 @@ public class AuthRefresh {
 		
 		// 0 => accessToken
 		// 1 => clientToken
+		// 2 => UUID
 		String[] ans = new String[] {};
 		
 		try {
@@ -48,7 +49,7 @@ public class AuthRefresh {
 			}
 			
 			JSONObject refAns = new JSONObject(sb.toString());
-			ans = new String[] {refAns.getString("accessToken"), refAns.getString("clientToken")};
+			ans = new String[] {refAns.getString("accessToken"), refAns.getString("clientToken"), refAns.getJSONObject("selectedProfile").getString("id")};
 
 		} catch (Exception e) {
 			System.out.println("Error refreshing your auth key!");

@@ -2,8 +2,6 @@ package me.boops.functions.userhandler;
 
 import org.json.JSONArray;
 
-import me.boops.Main;
-import me.boops.functions.file.WriteTextToFile;
 import me.boops.functions.mojangauth.MojangAuth;
 
 public class GetAccount {
@@ -42,19 +40,6 @@ public class GetAccount {
 		}
 		
 		String[] auth = new MojangAuth().getSession(accessToken, clientToken);
-		
-		// Check if we should write the token to the auth file
-		if(Boolean.getBoolean(auth[2])) {
-			for(int i = 0; i < authFile.length(); i++) {
-				if(authFile.getJSONObject(i).getString("username").equalsIgnoreCase(username)) {
-					authFile.getJSONObject(i).put("accessToken", auth[0]);
-					authFile.getJSONObject(i).put("clientToken", auth[1]);
-					new WriteTextToFile(Main.homeDir + "auth.json", authFile.toString());
-					i = (authFile.length() + 1);
-				}
-			}
-		}
-		
 		return new String[] {auth[0], auth[1], userUUID, properName};
 	}
 }
