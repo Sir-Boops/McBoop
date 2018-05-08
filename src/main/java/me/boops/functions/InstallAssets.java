@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.file.WriteTextToFile;
-import me.boops.functions.network.FetchRemoteFile;
 import me.boops.functions.network.FetchRemoteText;
 
 public class InstallAssets {
@@ -34,20 +33,33 @@ public class InstallAssets {
 	private void downloadLibs(JSONObject list, String dirS) {
 		
 		Iterator<?> keys = list.keys();
+		ThreadGroup DLGroup = new ThreadGroup("DLGroup");
 		
 		while(keys.hasNext()) {
 			
+			// Cap out at 10 threads
+			while(DLGroup.activeCount() > 10) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			// Create and start the new thread
 			String key = (String) keys.next();
-			String hash = list.getJSONObject(key).getString("hash");
-			String firstTwo = hash.substring(0, 2);
-			
-			String URL = ("https://resources.download.minecraft.net/" + firstTwo + "/" + hash);
-			String distDir = (dirS + firstTwo + File.separator);
-			
-			if(!new File(distDir + hash).exists()) {
-				System.out.println("Downloading: " + key.substring(key.lastIndexOf("/") + 1, key.length()));
-				new FetchRemoteFile(URL, distDir, "");
+			Thread thread = new Thread(DLGroup, new DownloadAssetsThread(key, list.getJSONObject(key).getString("hash"), dirS));
+			thread.start();
+		}
+		
+		// Wait for all threads to finish!
+		while(DLGroup.activeCount() > 0) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
+		
 	}
 }
