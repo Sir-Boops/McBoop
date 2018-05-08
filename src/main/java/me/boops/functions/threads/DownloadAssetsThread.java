@@ -1,4 +1,4 @@
-package me.boops.functions;
+package me.boops.functions.threads;
 
 import java.io.File;
 

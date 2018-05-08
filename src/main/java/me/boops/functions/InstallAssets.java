@@ -9,6 +9,7 @@ import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.file.WriteTextToFile;
 import me.boops.functions.network.FetchRemoteText;
+import me.boops.functions.threads.DownloadAssetsThread;
 
 public class InstallAssets {
 	
