@@ -1,33 +1,32 @@
 package me.boops.functions;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import org.json.JSONArray;
 
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.network.FetchRemoteFile;
+import me.boops.functions.threads.ExtractNativesThread;
 
 public class InstallLibs {
 	
 	public static List<String> libs = new ArrayList<String>();
 	public static String nativesPath = "";
+	public static List<String> already_extracted = new ArrayList<String>();
+	
+	private List<String> libURLS = new ArrayList<String>();
+	private List<String> libSUMS = new ArrayList<String>();
 	
 	public InstallLibs() {
 		
 		System.out.println("Attempting to download/verify libraries");
-		
-		List<String> libURLS = fetchURLS(VersionMeta.Meta.getJSONArray("libraries"));
+		// Grab all the URLs and sums
+		grabData(VersionMeta.Meta.getJSONArray("libraries"));
 		
 		startDownload(libURLS, Main.homeDir + "libraries" + File.separator);
-		
 		extractNatives(Main.homeDir, libURLS);
 		
 		for(int i = 0; i < libURLS.size(); i++) {
@@ -40,86 +39,70 @@ public class InstallLibs {
 		System.out.println("Libraries have been verifyed/downloaded");
 	}
 	
-	private List<String> fetchURLS(JSONArray libs){
-		List<String> ans = new ArrayList<String>();
-		
+	private void grabData(JSONArray libs){
 		for(int i = 0; i < libs.length(); i++) {
-			
+			// Do we have to DL it?
 			if(libs.getJSONObject(i).has("downloads")) {
-				
+				// Does this lib have a universal version?
 				if(libs.getJSONObject(i).getJSONObject("downloads").has("artifact")) {
-					
-					ans.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact").getString("url"));
+					// Save the universal version URL along with the sum
+					this.libURLS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact").getString("url"));
+					this.libSUMS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact").getString("sha1"));
 				}
 				
+				// Does this lib have a platform spefic version?
 				if(libs.getJSONObject(i).getJSONObject("downloads").has("classifiers")) {
+					// Are we running a platfrom supported by this lib?
 					if(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").has("natives-" + System.getProperty("os.name").toLowerCase())) {
-						
-						ans.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers")
-								.getJSONObject("natives-" + System.getProperty("os.name").toLowerCase()).getString("url"));
+						// Get the platform spefic version URL and sum!
+						this.libURLS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + System.getProperty("os.name").toLowerCase()).getString("url"));
+						this.libSUMS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + System.getProperty("os.name").toLowerCase()).getString("sha1"));
 					}
 				}
 			}
 		}
-		return ans;
 	}
 	
 	private void extractNatives(String dirS, List<String> libURLS) {
 		
 		System.out.println("Extracting native libraries");
 		
-		new CreateFolder(dirS + "natives-" + Main.randString + File.separator);
-		InstallLibs.nativesPath = (dirS + "natives-" + Main.randString + File.separator);
+		String natives_path = (dirS + "natives-" + Main.randString + File.separator);
+		new CreateFolder(natives_path);
+		InstallLibs.nativesPath = natives_path;
 		
 		List<String> natives = new ArrayList<String>();
 		
+		// Generate a list of native jar files
 		for(int i = 0; i < libURLS.size(); i++) {
-			
 			if(libURLS.get(i).contains("natives")) {
 				natives.add(dirS + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).length()));
 			}
-			
 		}
 		
-		List<String> nativeList = new ArrayList<String>();
-		
+		// Extract all the natives
+		ThreadGroup ExtractGroup = new ThreadGroup("ExtractGroup");
 		for(int i = 0; i < natives.size(); i++) {
 			
-			try {
-				
-				JarFile jar = new JarFile(natives.get(i));
-				Enumeration<JarEntry> files = jar.entries();
-				
-				while(files.hasMoreElements()) {
-					
-					JarEntry file = (JarEntry) files.nextElement();
-					if(file.getName().contains(".")) {
-						
-						String ext = file.getName().substring(file.getName().lastIndexOf("."), file.getName().length());
-						if(ext.equalsIgnoreCase(".so") || ext.equalsIgnoreCase(".dll")) {
-							
-							if(!nativeList.contains(file.getName())) {
-								
-								System.out.println("Extracting " + file.getName());
-								nativeList.add(file.getName());
-								
-								InputStream is = jar.getInputStream(file);
-								FileOutputStream fos = new FileOutputStream(dirS + "natives-" + Main.randString + File.separator + file.getName());
-								int inByte;
-								
-								while ((inByte = is.read()) != -1) {
-									fos.write(inByte);
-								}
-								
-								is.close();
-								fos.close();
-								
-							}
-						}
-					}
+			// Limit extraction thread count
+			while(ExtractGroup.activeCount() > 9) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-				jar.close();
-			} catch (Exception e) {
+			}
+			
+			// Start a new extraction thread
+			Thread thread = new Thread(ExtractGroup, new ExtractNativesThread(natives.get(i), natives_path));
+			thread.start();
+		}
+		
+		// Wait for all natives to be extracted!
+		while(ExtractGroup.activeCount() > 0) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}

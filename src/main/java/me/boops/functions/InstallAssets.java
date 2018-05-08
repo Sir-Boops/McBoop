@@ -39,7 +39,7 @@ public class InstallAssets {
 		while(keys.hasNext()) {
 			
 			// Cap out at 10 threads
-			while(DLGroup.activeCount() > 10) {
+			while(DLGroup.activeCount() > 9) {
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
