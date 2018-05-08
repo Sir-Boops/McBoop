@@ -1,10 +1,6 @@
 package me.boops.functions.forgehandler;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +8,7 @@ import org.json.JSONArray;
 
 import me.boops.Main;
 import me.boops.functions.VersionMeta;
-import me.boops.functions.file.CreateFolder;
+import me.boops.functions.threads.DownloadForgeLibs;
 
 public class FetchForgeLibs {
 	
@@ -20,17 +16,40 @@ public class FetchForgeLibs {
 		List<String> ans = new ArrayList<String>();
 		
 		JSONArray libList = ForgeHandler.versionMeta.getJSONArray("libraries");
+		ThreadGroup DLGroup = new ThreadGroup("DLGroup");
 		
 		// Download forge libs and add them to the final response!
 		for(int i = 0; i < libList.length(); i++) {
+			
+			// Only spin up X threads
+			while(DLGroup.activeCount() > 9) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			// Clean up the string to use
 			String rawName = libList.getJSONObject(i).getString("name");
 			if(!rawName.toLowerCase().contains("minecraftforge")) {
 				String fileName = (rawName.split(":")[1] + "-" + rawName.split(":")[2] + ".jar");
 				String filePath = (rawName.split(":")[0].replaceAll("\\.", File.separator) + File.separator + rawName.split(":")[1]
 						+ File.separator + rawName.split(":")[2] + File.separator);
 				String fullPath = (Main.homeDir + "libraries" + File.separator + filePath + fileName);
-				downloadLib(fileName, filePath);
+				// Launch the DL Thread
+				Thread thread = new Thread(DLGroup, new DownloadForgeLibs(fileName, filePath));
+				thread.start();
 				ans.add(fullPath);
+			}
+		}
+		
+		// Wait for all threads to finish
+		while(DLGroup.activeCount() > 0) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 		
@@ -62,65 +81,6 @@ public class FetchForgeLibs {
 			if(term.equalsIgnoreCase(name)) {
 				ans = false;
 			}
-		}
-		
-		return ans;
-	}
-	
-	private void downloadLib(String fileName, String filePath) {
-		
-		String fullPath = (Main.homeDir + "libraries" + File.separator + filePath);
-		new CreateFolder(fullPath);
-		
-		if(!new File(fullPath + fileName).exists()) {
-			
-			System.out.println("Downloading: " + fileName);
-			
-			String[] urls = new String[] {
-					"https://libraries.minecraft.net/" + filePath + fileName,
-					"https://repo.spongepowered.org/maven/" + filePath + fileName,
-					"http://central.maven.org/maven2/" + filePath + fileName
-			};
-			
-			boolean gotFile = false;
-			int attempts = 0;
-			while(!gotFile && attempts < 3) {
-				gotFile = tryDownload(urls[attempts], (fullPath + fileName));
-				attempts++;
-			}
-			
-		}
-	}
-	
-	private boolean tryDownload(String URL, String fullPath) {
-		boolean ans = true;
-		
-		try {
-
-			URL url = new URL(URL);
-
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setReadTimeout(10 * 1000);
-			conn.setConnectTimeout(10 * 1000);
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("User-Agent", Main.HttpUser);
-
-			conn.connect();
-			
-			InputStream is = conn.getInputStream();
-			FileOutputStream fos = new FileOutputStream(new File(fullPath));
-			int inByte;
-
-			while ((inByte = is.read()) != -1) {
-				fos.write(inByte);
-			}
-			
-
-			is.close();
-			fos.close();
-
-		} catch (Exception e) {
-			ans = false;
 		}
 		
 		return ans;
