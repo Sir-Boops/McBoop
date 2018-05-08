@@ -33,13 +33,21 @@ public class ExtractNativesThread implements Runnable {
 				// Check if the file is a .so file
 				if(file.getName().substring(file.getName().length() - 3, file.getName().length()).equals(".so")) {
 					// We found a .so file!
-					ExtractFile(jar, file);
+					// Make sure we don't extract the same file twice
+					if(!InstallLibs.extraced_filenames.contains(file.getName())) {
+						InstallLibs.extraced_filenames.add(file.getName());
+						ExtractFile(jar, file);
+					}
 				}
 				
 				// Check if a .dll file
 				if(file.getName().substring(file.getName().length() - 4, file.getName().length()).equals(".dll")) {
 					// We found a .dll file!
-					ExtractFile(jar, file);
+					// Make sure we don't extract the same file twice
+					if(!InstallLibs.extraced_filenames.contains(file.getName())) {
+						InstallLibs.extraced_filenames.add(file.getName());
+						ExtractFile(jar, file);
+					}
 				}
 			}
 			
