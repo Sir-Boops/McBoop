@@ -8,7 +8,7 @@ import org.json.JSONArray;
 
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
-import me.boops.functions.network.FetchRemoteFile;
+import me.boops.functions.threads.DownloadLibsThread;
 import me.boops.functions.threads.ExtractNativesThread;
 
 public class InstallLibs {
@@ -26,17 +26,45 @@ public class InstallLibs {
 		// Grab all the URLs and sums
 		grabData(VersionMeta.Meta.getJSONArray("libraries"));
 		
-		startDownload(libURLS, Main.homeDir + "libraries" + File.separator);
-		extractNatives(Main.homeDir, libURLS);
-		
-		for(int i = 0; i < libURLS.size(); i++) {
+		// Download libs
+		ThreadGroup DLGroup = new ThreadGroup("DLGroup");
+		for(int i = 0; i < this.libURLS.size(); i++) {
+			String distDir = (Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).lastIndexOf("/") + 1).replaceAll("/", File.separator));
 			
-			if(!libURLS.get(i).contains("natives")) {
-				InstallLibs.libs.add(Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).length()));
+			// Limit thread count to 10
+			while(DLGroup.activeCount() > 9) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			// Create and start the thread
+			Thread thread = new Thread(DLGroup, new DownloadLibsThread(distDir, this.libURLS.get(i), this.libSUMS.get(i)));
+			thread.start();
+		}
+		
+		// Wait for all libs to finish downloading!
+		while(DLGroup.activeCount() > 0) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 		
 		System.out.println("Libraries have been verifyed/downloaded");
+		System.out.println("");
+		
+		extractNatives(Main.homeDir, libURLS);
+		
+		// Append natives to libs array
+		for(int i = 0; i < libURLS.size(); i++) {
+			if(!libURLS.get(i).contains("natives")) {
+				InstallLibs.libs.add(Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).length()));
+			}
+		}
 	}
 	
 	private void grabData(JSONArray libs){
@@ -46,8 +74,11 @@ public class InstallLibs {
 				// Does this lib have a universal version?
 				if(libs.getJSONObject(i).getJSONObject("downloads").has("artifact")) {
 					// Save the universal version URL along with the sum
-					this.libURLS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact").getString("url"));
-					this.libSUMS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact").getString("sha1"));
+					// Make sure we don't add dupes!
+					if(!this.libURLS.contains(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact").getString("url"))) {
+						this.libURLS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact").getString("url"));
+						this.libSUMS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("artifact").getString("sha1"));
+					}
 				}
 				
 				// Does this lib have a platform spefic version?
@@ -55,8 +86,11 @@ public class InstallLibs {
 					// Are we running a platfrom supported by this lib?
 					if(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").has("natives-" + System.getProperty("os.name").toLowerCase())) {
 						// Get the platform spefic version URL and sum!
-						this.libURLS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + System.getProperty("os.name").toLowerCase()).getString("url"));
-						this.libSUMS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + System.getProperty("os.name").toLowerCase()).getString("sha1"));
+						// Make sure we don't have dupes!
+						if(!this.libURLS.contains(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + System.getProperty("os.name").toLowerCase()).getString("url"))) {
+							this.libURLS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + System.getProperty("os.name").toLowerCase()).getString("url"));
+							this.libSUMS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + System.getProperty("os.name").toLowerCase()).getString("sha1"));
+						}
 					}
 				}
 			}
@@ -108,19 +142,5 @@ public class InstallLibs {
 		}
 		
 		System.out.println("Native libraries extracted!");
-	}
-	
-	private void startDownload(List<String> libURLS, String dirS) {
-		
-		for(int i = 0; i < libURLS.size(); i++) {
-			
-			String distDir = (dirS + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).lastIndexOf("/") + 1).replaceAll("/", File.separator));
-			
-			if(!new File(distDir + libURLS.get(i).substring(libURLS.get(i).lastIndexOf("/") + 1, libURLS.get(i).length())).exists()) {
-				System.out.println("Downloading: " + libURLS.get(i).substring(libURLS.get(i).lastIndexOf("/") + 1, libURLS.get(i).length()));
-				new FetchRemoteFile(libURLS.get(i), distDir, "");
-			}
-			
-		}
 	}
 }
