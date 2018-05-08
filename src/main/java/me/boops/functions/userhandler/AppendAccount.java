@@ -58,5 +58,4 @@ public class AppendAccount {
 		System.out.println("Added the " + auth[3] + " account!");
 	}
 	
-	
 }

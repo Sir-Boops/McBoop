@@ -30,8 +30,13 @@ public class LaunchGame {
 		launchArr.add(cleanLibs + DownloadClient.jarPath);
 		launchArr.add(getLaunchClass());
 		launchArr.addAll(getMCArgs());
-
+		
+		System.out.println("Using launch args:");
+		System.out.println("");
 		System.out.println(launchArr);
+		System.out.println("");
+		System.out.println("Minecraft output begins here!");
+		System.out.println("");
 
 		try {
 
