@@ -13,6 +13,8 @@ public class VersionMeta {
 	
 	public VersionMeta() {
 		
+		System.out.println("Attempting to fetch version meta");
+		
 		// Grab the base meta file
 		JSONObject metaFile = new JSONObject(new FetchRemoteText().fetch("https://launchermeta.mojang.com/mc/game/version_manifest.json"));
 
@@ -67,5 +69,6 @@ public class VersionMeta {
 		
 		VersionMeta.Meta = new JSONObject(new FetchRemoteText().fetch(metaURL));
 		VersionMeta.ID = VersionMeta.Meta.getString("id");
+		System.out.println("Got the version meta for: " + VersionMeta.ID);
 	}
 }

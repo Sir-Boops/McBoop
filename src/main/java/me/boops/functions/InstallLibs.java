@@ -22,6 +22,8 @@ public class InstallLibs {
 	
 	public InstallLibs() {
 		
+		System.out.println("Attempting to download/verify libraries");
+		
 		List<String> libURLS = fetchURLS(VersionMeta.Meta.getJSONArray("libraries"));
 		
 		startDownload(libURLS, Main.homeDir + "libraries" + File.separator);
@@ -33,8 +35,9 @@ public class InstallLibs {
 			if(!libURLS.get(i).contains("natives")) {
 				InstallLibs.libs.add(Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).length()));
 			}
-			
 		}
+		
+		System.out.println("Libraries have been verifyed/downloaded");
 	}
 	
 	private List<String> fetchURLS(JSONArray libs){
@@ -62,6 +65,8 @@ public class InstallLibs {
 	}
 	
 	private void extractNatives(String dirS, List<String> libURLS) {
+		
+		System.out.println("Extracting native libraries");
 		
 		new CreateFolder(dirS + "natives-" + Main.randString + File.separator);
 		InstallLibs.nativesPath = (dirS + "natives-" + Main.randString + File.separator);
@@ -118,6 +123,8 @@ public class InstallLibs {
 				e.printStackTrace();
 			}
 		}
+		
+		System.out.println("Native libraries extracted!");
 	}
 	
 	private void startDownload(List<String> libURLS, String dirS) {

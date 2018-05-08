@@ -13,6 +13,8 @@ public class ProfileManager {
 	public static String forgeVersion = "";
 	
 	public ProfileManager() {
+		
+		System.out.println("Attempting to load profile");
 		new CreateFolder(Main.homeDir + "profiles" + File.separator);
 		
 		for(int i = 0; i < Main.args.length; i++) {
@@ -81,5 +83,6 @@ public class ProfileManager {
 		// Set the profile path
 		ProfileManager.path = (Main.homeDir + "profiles" + File.separator + ProfileManager.name + File.separator);
 		new CreateFolder(ProfileManager.path);
+		System.out.println("Loaded profile: " + ProfileManager.name);
 	}
 }

@@ -19,6 +19,8 @@ public class ForgeHandler {
 	
 	public ForgeHandler() {
 		
+		System.out.println("Checking if we should use forge");
+		
 		for(int i = 0; i < Main.args.length; i++) {
 			
 			if(Main.args[i].equalsIgnoreCase("--with-forge")) {
@@ -42,5 +44,12 @@ public class ForgeHandler {
 				libs.add(Main.homeDir + "forge" + File.separator + ForgeFileName.fileName);
 			}
 		}
+		
+		if(ForgeHandler.versionID.isEmpty()) {
+			System.out.println("Forge not requested");
+		} else {
+			System.out.print("Forge version installed!");
+		}
+		
 	}
 }

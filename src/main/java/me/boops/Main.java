@@ -53,32 +53,48 @@ public class Main {
 		// Init the profile manager
 		// All a profile is, is a folder
 		// that launches a spefic version!
+		System.out.println("");
 		new ProfileManager();
+		System.out.println("");
 		
 		// Try to login or refresh auth for the requested user
+		System.out.println("");
 		new UserHandler();
+		System.out.println("");
 		
 		// Grab the version index
 		// This checks to see if the version the user
 		// Is trying to run and if it is returns the
 		// launcher meta URL
+		System.out.println("");
 		new VersionMeta();
+		System.out.println("");
 		
 		// Install/check the assets for
 		// This version of MC
+		System.out.println("");
 		new InstallAssets();
+		System.out.println("");
 		
 		// Install libs / natives
+		System.out.println("");
 		new InstallLibs();
+		System.out.println("");
 		
 		// Download the client
+		System.out.println("");
 		new DownloadClient();
+		System.out.println("");
 		
 		// Try to setup forge!
+		System.out.println("");
 		new ForgeHandler();
+		System.out.println("");
 		
 		// Launch the game!
+		System.out.println("");
 		new LaunchGame();
+		System.out.println("");
 		
 		System.out.println("Run --help for help");
 

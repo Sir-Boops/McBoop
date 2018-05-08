@@ -11,6 +11,8 @@ public class DownloadClient {
 	
 	public DownloadClient() {
 		
+		System.out.println("Attempting to download/verify client jar");
+		
 		// Check if the client jar exists
 		// If it does do nothing else download
 		// a copy
@@ -21,5 +23,7 @@ public class DownloadClient {
 					Main.homeDir + "versions" + File.separator, VersionMeta.ID + ".jar");
 			
 		}
+		
+		System.out.println("Client jar has been downloaded/verfiyed!");
 	}	
 }

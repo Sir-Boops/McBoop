@@ -36,10 +36,21 @@ public class AppendAccount {
 			}
 		}
 		
-		if(authFile.length() <= 0) {
+		// Check if there is a default already set if not tell the user
+		boolean found_default = false;
+		for(int i = 0; i < authFile.length(); i++) {
+			if(authFile.getJSONObject(i).getBoolean("default")) {
+				found_default = true;
+			}
+		}
+		
+		// If we don't find a default already in there set this one to be default!
+		if(!found_default) { 
+			System.out.println("No default account has been found!");
+			System.out.println("This account will be set to your default.");
+			System.out.println("You can change this later if you wish");
 			entry.put("default", true);
-		} else {
-			entry.put("default", false);
+			System.out.println("");
 		}
 		
 		authFile.put(entry);

@@ -17,6 +17,8 @@ public class InstallAssets {
 
 	public InstallAssets() {
 		
+		System.out.println("Installing/Verifying assets");
+		
 		JSONObject assetIndex = VersionMeta.Meta.getJSONObject("assetIndex");
 		JSONObject assetList = new JSONObject(new FetchRemoteText().fetch(assetIndex.getString("url")));
 		
@@ -24,7 +26,9 @@ public class InstallAssets {
 		new WriteTextToFile(Main.homeDir + "assets" + File.separator + "indexes" + File.separatorChar + assetIndex.getString("id") + ".json", assetList.toString());
 		
 		downloadLibs(assetList.getJSONObject("objects"), (Main.homeDir + "assets" + File.separator + "objects" + File.separator));
-
+		
+		System.out.println("All assets verifyed/downloaded");
+		
 	}
 	
 	private void downloadLibs(JSONObject list, String dirS) {
