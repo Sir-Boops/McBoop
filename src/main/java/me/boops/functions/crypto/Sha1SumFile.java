@@ -25,7 +25,7 @@ public class Sha1SumFile {
 			}
 			
 			fis.close();
-			ans = digest.digest().toString();
+			ans = getMessageDigest(digest.digest());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -33,4 +33,13 @@ public class Sha1SumFile {
 		
 		return ans;
 	}
+	
+	private String getMessageDigest(byte[] bytes) {
+		String ans = "";
+		for(int i = 0; i < bytes.length; i++) {
+			ans += Integer.toString( ( bytes[i] & 0xff ) + 0x100, 16).substring( 1 );
+		}
+		return ans;
+	}
+	
 }
