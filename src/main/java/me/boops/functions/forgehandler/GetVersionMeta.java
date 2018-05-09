@@ -11,12 +11,13 @@ import org.json.JSONObject;
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.network.FetchRemoteFile;
+import me.boops.functions.string_utls.ReplaceChars;
 
 public class GetVersionMeta {
 	
 	public JSONObject meta() {
 		
-		String URL = ("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + ForgeFileName.filePath.replaceAll(File.separator, "/") + ForgeFileName.fileName);
+		String URL = ("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + new ReplaceChars().replace(ForgeFileName.filePath, File.separator, "/") + ForgeFileName.fileName);
 		
 		String path = Main.homeDir + "forge" + File.separator;
 		String filePath = (path + ForgeFileName.fileName);

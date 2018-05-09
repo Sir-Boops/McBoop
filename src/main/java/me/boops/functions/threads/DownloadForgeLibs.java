@@ -16,6 +16,7 @@ import me.boops.functions.file.ReadTextFromFile;
 import me.boops.functions.file.WriteTextToFile;
 import me.boops.functions.network.FetchRemoteFile;
 import me.boops.functions.network.FetchRemoteText;
+import me.boops.functions.string_utls.ReplaceChars;
 
 public class DownloadForgeLibs implements Runnable {
 
@@ -29,9 +30,9 @@ public class DownloadForgeLibs implements Runnable {
 		this.file_path = file_path;
 		this.full_path = (Main.homeDir + "libraries" + File.separator + this.file_path + this.file_name);
 		this.urls = new String[] {
-				"https://repo1.maven.org/maven2/" + this.file_path + this.file_name,
-				"https://repo.spongepowered.org/maven/" + this.file_path + this.file_name,
-				"https://libraries.minecraft.net/" + this.file_path + this.file_name};
+				"https://repo1.maven.org/maven2/" + new ReplaceChars().replace(this.file_path, File.separator, "/") + this.file_name,
+				"https://repo.spongepowered.org/maven/" + new ReplaceChars().replace(this.file_path, File.separator, "/") + this.file_name,
+				"https://libraries.minecraft.net/" + new ReplaceChars().replace(this.file_path, File.separator, "/") + this.file_name};
 	}
 	
 	@Override

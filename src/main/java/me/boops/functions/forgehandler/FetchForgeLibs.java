@@ -8,6 +8,7 @@ import org.json.JSONArray;
 
 import me.boops.Main;
 import me.boops.functions.VersionMeta;
+import me.boops.functions.string_utls.ReplaceChars;
 import me.boops.functions.threads.DownloadForgeLibs;
 
 public class FetchForgeLibs {
@@ -34,7 +35,7 @@ public class FetchForgeLibs {
 			String rawName = libList.getJSONObject(i).getString("name");
 			if(!rawName.toLowerCase().contains("minecraftforge")) {
 				String fileName = (rawName.split(":")[1] + "-" + rawName.split(":")[2] + ".jar");
-				String filePath = (rawName.split(":")[0].replaceAll("\\.", File.separator) + File.separator + rawName.split(":")[1]
+				String filePath = (new ReplaceChars().replace(rawName.split(":")[0], ".", File.separator) + File.separator + rawName.split(":")[1]
 						+ File.separator + rawName.split(":")[2] + File.separator);
 				String fullPath = (Main.homeDir + "libraries" + File.separator + filePath + fileName);
 				// Launch the DL Thread
@@ -60,7 +61,7 @@ public class FetchForgeLibs {
 			String name = (rawName.split(":")[1]);
 			if(shouldAdd(name)) {
 				String fileName = (rawName.split(":")[1] + "-" + rawName.split(":")[2] + ".jar");
-				String filePath = (rawName.split(":")[0].replaceAll("\\.", File.separator) + File.separator + rawName.split(":")[1]
+				String filePath = (new ReplaceChars().replace(rawName.split(":")[0], ".", File.separator) + File.separator + rawName.split(":")[1]
 						+ File.separator + rawName.split(":")[2] + File.separator);
 				String fullPath = (Main.homeDir + "libraries" + File.separator + filePath + fileName);
 				ans.add(fullPath);
