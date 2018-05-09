@@ -57,6 +57,8 @@ public class LaunchGame {
 				System.out.println(lineErr);
 			}
 
+			// Wait for the minecraft process to fully stop
+			pr.waitFor();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
