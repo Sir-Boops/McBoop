@@ -85,12 +85,12 @@ public class InstallLibs {
 				// Does this lib have a platform spefic version?
 				if(libs.getJSONObject(i).getJSONObject("downloads").has("classifiers")) {
 					// Are we running a platfrom supported by this lib?
-					if(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").has("natives-" + System.getProperty("os.name").toLowerCase())) {
+					if(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").has("natives-" + Main.base_os_name)) {
 						// Get the platform spefic version URL and sum!
 						// Make sure we don't have dupes!
-						if(!this.libURLS.contains(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + System.getProperty("os.name").toLowerCase()).getString("url"))) {
-							this.libURLS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + System.getProperty("os.name").toLowerCase()).getString("url"));
-							this.libSUMS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + System.getProperty("os.name").toLowerCase()).getString("sha1"));
+						if(!this.libURLS.contains(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + Main.base_os_name).getString("url"))) {
+							this.libURLS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + Main.base_os_name).getString("url"));
+							this.libSUMS.add(libs.getJSONObject(i).getJSONObject("downloads").getJSONObject("classifiers").getJSONObject("natives-" + Main.base_os_name).getString("sha1"));
 						}
 					}
 				}
