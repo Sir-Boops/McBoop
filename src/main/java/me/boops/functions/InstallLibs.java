@@ -30,7 +30,7 @@ public class InstallLibs {
 		// Download libs
 		ThreadGroup DLGroup = new ThreadGroup("DLGroup");
 		for(int i = 0; i < this.libURLS.size(); i++) {
-			String distDir = (Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).lastIndexOf("/") + 1).replaceAll("/", File.separator));
+			String distDir = (Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).lastIndexOf("/") + 1).replaceAll("//", File.separator));
 			
 			// Limit thread count to 10
 			while(DLGroup.activeCount() > 9) {
