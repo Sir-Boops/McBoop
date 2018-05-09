@@ -8,6 +8,7 @@ import org.json.JSONArray;
 
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
+import me.boops.functions.string_utls.ReplaceChars;
 import me.boops.functions.threads.DownloadLibsThread;
 import me.boops.functions.threads.ExtractNativesThread;
 
@@ -30,7 +31,7 @@ public class InstallLibs {
 		// Download libs
 		ThreadGroup DLGroup = new ThreadGroup("DLGroup");
 		for(int i = 0; i < this.libURLS.size(); i++) {
-			String distDir = new ReplaceAChar().replace(Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).lastIndexOf("/") + 1),
+			String distDir = new ReplaceChars().replace(Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).lastIndexOf("/") + 1),
 					"/", File.separator);
 			
 			// Limit thread count to 10

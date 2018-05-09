@@ -1,6 +1,6 @@
-package me.boops.functions;
+package me.boops.functions.string_utls;
 
-public class ReplaceAChar {
+public class ReplaceChars {
 	
 	public String replace(String string, String to_replace, String replacement) {
 		new String();
