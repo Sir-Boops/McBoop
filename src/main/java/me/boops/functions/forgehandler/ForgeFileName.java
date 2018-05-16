@@ -32,7 +32,7 @@ public class ForgeFileName {
 		}
 		
 		// If starting a forge version older then 1.9 but newer then 1.6
-		if(forge_version <= 19 && forge_version > 16) {
+		if(forge_version <= 19 && forge_version > 16.4) {
 			String path = ("%mcID%-%forgeID%-%mcID%/forge-%mcID%-%forgeID%-%mcID%-universal.jar".replaceAll("(%mcID%)", VersionMeta.ID).replaceAll("(%forgeID%)", forgeID));
 			ForgeFileName.fileName = (path.substring(path.lastIndexOf("/") + 1, path.length()));
 			ForgeFileName.filePath = (path.substring(0, path.lastIndexOf("/")) + File.separator);
