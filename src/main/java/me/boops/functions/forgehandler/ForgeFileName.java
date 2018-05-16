@@ -11,7 +11,10 @@ public class ForgeFileName {
 	
 	public ForgeFileName() {
 		
-		int forgeVersion = Integer.valueOf(VersionMeta.ID.replaceAll("\\.", ""));
+		// Take the first three numbers from the MC version
+		String[] forge_id_split = VersionMeta.ID.split("\\.");
+		int forge_version = Integer.valueOf(forge_id_split[0] + forge_id_split[1]);
+		
 		String forgeID = (ForgeHandler.versionID);
 		
 		//Fix forgeID if it needs it!
@@ -19,19 +22,21 @@ public class ForgeFileName {
 			forgeID = (ForgeHandler.versionID.split("-")[1]);
 		}
 		
-		if(forgeVersion > 190 && forgeVersion != 1710) {
+		// If starting a forge version newer then 1.9.0
+		if(forge_version > 19) {
 			String path = ("%mcID%-%forgeID%/forge-%mcID%-%forgeID%-universal.jar".replaceAll("(%mcID%)", VersionMeta.ID).replaceAll("(%forgeID%)", forgeID));
 			ForgeFileName.fileName = (path.substring(path.lastIndexOf("/") + 1, path.length()));
 			ForgeFileName.filePath = (path.substring(0, path.lastIndexOf("/")) + File.separator);
 		}
 		
-		if(forgeVersion <= 190 || forgeVersion == 1710) {
+		// If starting a forge version older then 1.9.0 but newer then 1.6
+		if(forge_version <= 19 && forge_version > 16) {
 			String path = ("%mcID%-%forgeID%-%mcID%/forge-%mcID%-%forgeID%-%mcID%-universal.jar".replaceAll("(%mcID%)", VersionMeta.ID).replaceAll("(%forgeID%)", forgeID));
 			ForgeFileName.fileName = (path.substring(path.lastIndexOf("/") + 1, path.length()));
 			ForgeFileName.filePath = (path.substring(0, path.lastIndexOf("/")) + File.separator);
 		}
 		
-		if(forgeVersion <= 164) {
+		if(forge_version <= 16) {
 			System.out.println("");
 			System.out.println("Sorry, forge versions 1.6.4 and older are not supported!");
 			System.out.println("If you wish to attempt to add support for them open an issue");

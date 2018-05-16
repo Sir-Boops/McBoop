@@ -46,7 +46,6 @@ public class Main {
 		// Run non-launcher related commands
 		new CommandParser();
 		
-		
 		// Check for a base dir
 		// If it dosn't exist create it
 		new CreateFolder(Main.homeDir);
