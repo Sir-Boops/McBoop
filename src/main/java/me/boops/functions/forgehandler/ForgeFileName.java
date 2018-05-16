@@ -13,23 +13,25 @@ public class ForgeFileName {
 		
 		// Take the first three numbers from the MC version
 		String[] forge_id_split = VersionMeta.ID.split("\\.");
-		int forge_version = Integer.valueOf(forge_id_split[0] + forge_id_split[1]);
-		
-		String forgeID = (ForgeHandler.versionID);
+		double forge_version = Integer.valueOf(forge_id_split[0] + forge_id_split[1]);
+		if(forge_id_split.length >= 3) {
+			forge_version = (forge_version + ((double) Integer.valueOf(forge_id_split[2]) / 10));
+		}
 		
 		//Fix forgeID if it needs it!
+		String forgeID = (ForgeHandler.versionID);
 		if(ForgeHandler.versionID.contains("-")) {
 			forgeID = (ForgeHandler.versionID.split("-")[1]);
 		}
 		
-		// If starting a forge version newer then 1.9.0
+		// If starting a forge version newer then 1.9
 		if(forge_version > 19) {
 			String path = ("%mcID%-%forgeID%/forge-%mcID%-%forgeID%-universal.jar".replaceAll("(%mcID%)", VersionMeta.ID).replaceAll("(%forgeID%)", forgeID));
 			ForgeFileName.fileName = (path.substring(path.lastIndexOf("/") + 1, path.length()));
 			ForgeFileName.filePath = (path.substring(0, path.lastIndexOf("/")) + File.separator);
 		}
 		
-		// If starting a forge version older then 1.9.0 but newer then 1.6
+		// If starting a forge version older then 1.9 but newer then 1.6
 		if(forge_version <= 19 && forge_version > 16) {
 			String path = ("%mcID%-%forgeID%-%mcID%/forge-%mcID%-%forgeID%-%mcID%-universal.jar".replaceAll("(%mcID%)", VersionMeta.ID).replaceAll("(%forgeID%)", forgeID));
 			ForgeFileName.fileName = (path.substring(path.lastIndexOf("/") + 1, path.length()));
