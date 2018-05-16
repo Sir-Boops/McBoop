@@ -1,11 +1,6 @@
 package me.boops.functions.threads;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONObject;
 
@@ -36,7 +31,6 @@ public class DownloadForgeLibs implements Runnable {
 	
 	@Override
 	public void run() {
-		
 		new CreateFolder(Main.homeDir + "libraries" + File.separator + this.file_path);
 		
 		// Check to see if we have the lib already!
@@ -51,7 +45,10 @@ public class DownloadForgeLibs implements Runnable {
 			
 			// While we have tried less then 3 times and still have not found the file
 			while(!got_file && attempts < 3) {
-				got_file = downloadFile(this.urls[attempts]);
+				boolean did_fail = new FetchRemoteContent().fileStatus(this.urls[attempts], Main.homeDir + "libraries" + File.separator + this.file_path, "");
+				if(!did_fail) {
+					got_file = true;
+				}
 				attempts++;
 			}
 			
@@ -77,39 +74,6 @@ public class DownloadForgeLibs implements Runnable {
 			checkFile();
 			
 		}
-	}
-	
-	private boolean downloadFile(String url) {
-		boolean ans = true;
-		
-		try {
-			
-			URL URL = new URL(url);
-			
-			HttpsURLConnection conn = (HttpsURLConnection) URL.openConnection();
-			conn.setReadTimeout(10 * 1000);
-			conn.setConnectTimeout(10 * 1000);
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("User-Agent", Main.HttpUser);
-			
-			conn.connect();
-			
-			InputStream is = conn.getInputStream();
-			FileOutputStream fos = new FileOutputStream(new File(this.full_path));
-			int inByte;
-
-			while ((inByte = is.read()) != -1) {
-				fos.write(inByte);
-			}
-			
-			fos.close();
-			is.close();
-			
-		} catch (Exception e) {
-			ans = false;
-		}
-		
-		return ans;
 	}
 	
 	private void checkFile() {

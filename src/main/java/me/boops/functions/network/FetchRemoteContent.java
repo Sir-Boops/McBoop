@@ -28,6 +28,23 @@ public class FetchRemoteContent {
 		return fetch(URL, "", "");
 	}
 	
+	// If you need to know if it failed call this
+	public boolean fileStatus(String URL, String destDir, String fileName) {
+
+		if (fileName.isEmpty()) {
+			fileName = URL.substring(URL.lastIndexOf("/") + 1, URL.length());
+		}
+		new CreateFolder(destDir);
+		String status = fetch(URL, destDir, fileName);
+		
+		boolean ans = false;
+		
+		if(!status.isEmpty()) {
+			ans = true;
+		}
+		return ans;
+	}
+	
 	// Internal downloader
 	private String fetch(String URL, String dist_dir, String file_name) {
 		
@@ -79,7 +96,7 @@ public class FetchRemoteContent {
 			bos.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			ans = "true";
 		}
 		
 		return ans;
