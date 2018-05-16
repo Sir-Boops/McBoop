@@ -1,6 +1,17 @@
 # McBoop
 
-McBoop is a Minecraft launcher that is designed to replace the old java based launcher.
+The fastest ( I've seen ) Minecraft launcher
+
+This launcher is designed around using commands, This allows easy scripting letting you to have for example a shell script/batch file on your desktop that when run would always launch the latest snapshot/stable version even as it get updated!
+
+This launcher also fully supports forge for MC 1.6.4+ and profiles allowing you to easily run your or your friends modpacks without having to use the cursed launcher that shall not be named! ( For pulling packs off curseforge see [CurseDownloader](https://git.sergal.org/Sir-Boops/CurseDownloader) )
+
+Things the launcher can do:
+* Run any version of MC offically listed
+* Use multiple accounts at once
+* Run multiple copies of Minecraft at once
+* Run using predefined profiles
+* Run Forge modpacks
 
 How to use
 ---
