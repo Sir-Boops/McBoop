@@ -7,6 +7,7 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
 
 public class FetchRemoteFile {
@@ -27,7 +28,7 @@ public class FetchRemoteFile {
 			conn.setReadTimeout(10 * 1000);
 			conn.setConnectTimeout(10 * 1000);
 			conn.setRequestMethod("GET");
-			conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux X11; x64; rv:59.0) Gecko/20100101 Firefox/59.0");
+			conn.setRequestProperty("User-Agent", Main.HttpUser);
 
 			conn.connect();
 
