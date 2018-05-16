@@ -1,5 +1,6 @@
 package me.boops.functions.network;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -22,26 +23,36 @@ public class FetchRemoteFile {
 
 		try {
 
+			// Turn the URL into a URL
 			URL url = new URL(URL);
 
+			// Set the client options
 			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 			conn.setReadTimeout(10 * 1000);
 			conn.setConnectTimeout(10 * 1000);
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("User-Agent", Main.HttpUser);
 
+			// Connect to the remote server
 			conn.connect();
 
+			// Open all the needed streams
 			InputStream is = conn.getInputStream();
 			FileOutputStream fos = new FileOutputStream(new File(destDir + fileName));
-			int inByte;
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
+			// Copy the file from the remote server
+			int inByte;
 			while ((inByte = is.read()) != -1) {
-				fos.write(inByte);
+				bos.write(inByte);
 			}
+
+			// Write the file
+			fos.write(bos.toByteArray());
 
 			is.close();
 			fos.close();
+			bos.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
