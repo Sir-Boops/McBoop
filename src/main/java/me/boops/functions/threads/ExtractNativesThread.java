@@ -1,5 +1,6 @@
 package me.boops.functions.threads;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -69,12 +70,15 @@ public class ExtractNativesThread implements Runnable {
 			
 			InputStream is = jar.getInputStream(file);
 			FileOutputStream fos = new FileOutputStream(this.native_path + file.getName());
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			
 			int inByte;
 			while((inByte = is.read()) != -1) {
-				fos.write(inByte);
+				bos.write(inByte);
 			}
 			
+			fos.write(bos.toByteArray());
+
 			fos.close();
 			is.close();
 			
