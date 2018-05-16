@@ -24,7 +24,8 @@ public class ForgeHandler {
 		for(int i = 0; i < Main.args.length; i++) {
 			
 			if(Main.args[i].equalsIgnoreCase("--with-forge")) {
-				ForgeHandler.jsonMaster = new JSONObject(new FetchRemoteContent().text("https://files.minecraftforge.net/maven/net/minecraftforge/forge/json"));
+				ForgeHandler.jsonMaster = new ForgeJSONMaster().json();
+				System.out.println("Have json");
 				ForgeHandler.versionID = Main.args[i + 1];
 				new ForgeFileName();
 				ForgeHandler.versionMeta = new GetVersionMeta().meta();
@@ -35,7 +36,7 @@ public class ForgeHandler {
 			if(Main.args[i].equalsIgnoreCase("--profile") && !ProfileManager.forgeVersion.isEmpty()) {
 				System.out.println("Attempting to setup forge");
 				System.out.println("Loading forge meta json");
-				ForgeHandler.jsonMaster = new JSONObject(new FetchRemoteContent().text("https://files.minecraftforge.net/maven/net/minecraftforge/forge/json"));
+				ForgeHandler.jsonMaster = new ForgeJSONMaster().json();
 				ForgeHandler.versionID = ProfileManager.forgeVersion;
 				new ForgeFileName();
 				System.out.println("Setting up envirment for forge");	
