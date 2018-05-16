@@ -38,7 +38,7 @@ public class ForgeFileName {
 			ForgeFileName.filePath = (path.substring(0, path.lastIndexOf("/")) + File.separator);
 		}
 		
-		if(forge_version <= 16) {
+		if(forge_version <= 16.4) {
 			System.out.println("");
 			System.out.println("Sorry, forge versions 1.6.4 and older are not supported!");
 			System.out.println("If you wish to attempt to add support for them open an issue");
