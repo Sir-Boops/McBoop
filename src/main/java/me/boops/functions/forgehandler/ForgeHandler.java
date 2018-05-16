@@ -7,13 +7,11 @@ import java.util.List;
 import org.json.JSONObject;
 
 import me.boops.Main;
-import me.boops.functions.network.FetchRemoteContent;
 import me.boops.functions.profilemanager.ProfileManager;
 
 public class ForgeHandler {
 	
-	public static JSONObject jsonMaster = new JSONObject();
-	public static String versionID = "";
+	// These are also used in launching the game
 	public static JSONObject versionMeta = new JSONObject();
 	public static List<String> libs = new ArrayList<String>();
 	
@@ -24,33 +22,34 @@ public class ForgeHandler {
 		for(int i = 0; i < Main.args.length; i++) {
 			
 			if(Main.args[i].equalsIgnoreCase("--with-forge")) {
-				ForgeHandler.jsonMaster = new ForgeJSONMaster().json();
-				System.out.println("Have json");
-				ForgeHandler.versionID = Main.args[i + 1];
-				new ForgeFileName();
-				ForgeHandler.versionMeta = new GetVersionMeta().meta();
-				ForgeHandler.libs = new FetchForgeLibs().fetch();
-				libs.add(Main.homeDir + "forge" + File.separator + ForgeFileName.fileName);
+				runList(Main.args[i + 1]);
 			}
 			
 			if(Main.args[i].equalsIgnoreCase("--profile") && !ProfileManager.forgeVersion.isEmpty()) {
-				System.out.println("Attempting to setup forge");
-				System.out.println("Loading forge meta json");
-				ForgeHandler.jsonMaster = new ForgeJSONMaster().json();
-				ForgeHandler.versionID = ProfileManager.forgeVersion;
-				new ForgeFileName();
-				System.out.println("Setting up envirment for forge");	
-				ForgeHandler.versionMeta = new GetVersionMeta().meta();
-				ForgeHandler.libs = new FetchForgeLibs().fetch();
-				libs.add(Main.homeDir + "forge" + File.separator + ForgeFileName.fileName);
+				runList(ProfileManager.forgeVersion);
 			}
 		}
+	}
+	
+	private void runList(String version_id) {
 		
-		if(ForgeHandler.versionID.isEmpty()) {
-			System.out.println("Forge not requested");
-		} else {
-			System.out.print("Forge version installed!");
-		}
+		System.out.println("Attempting to setup forge");
+		System.out.println("");
+		System.out.println("Attempting to figure out the forge file name");
+		System.out.println("");
+		// file_info[0] = file_name
+		// file_info[1] = file_path
+		String[] file_info = new ForgeFileName().getInfo(version_id);
 		
+		System.out.println("Getting forge version meta");
+		System.out.println("");
+		ForgeHandler.versionMeta = new GetVersionMeta().meta(file_info[0], file_info[1]);
+		System.out.println("");
+		
+		System.out.println("Installing forge libs");
+		ForgeHandler.libs = new FetchForgeLibs().fetch();
+		libs.add(Main.homeDir + "forge" + File.separator + file_info[0]);
+		System.out.println("");
+		System.out.println("Forge hs been installed!");
 	}
 }

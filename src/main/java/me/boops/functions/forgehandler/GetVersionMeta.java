@@ -15,22 +15,20 @@ import me.boops.functions.string_utls.ReplaceChars;
 
 public class GetVersionMeta {
 	
-	public JSONObject meta() {
+	public JSONObject meta(String file_name, String file_path) {
 		
-		String URL = ("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + new ReplaceChars().replace(ForgeFileName.filePath, File.separator, "/") + ForgeFileName.fileName);
+		String URL = ("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + new ReplaceChars().replace(file_path, File.separator, "/") + file_name);
 		
 		String path = Main.homeDir + "forge" + File.separator;
-		String filePath = (path + ForgeFileName.fileName);
+		String filePath = (path + file_name);
 		new CreateFolder(path);
 		
-		if(!new File(path + ForgeFileName.fileName).exists()) {
+		if(!new File(path + file_name).exists()) {
 			System.out.println("Downloading forge jar");
 			new FetchRemoteContent().file(URL, path, "");
 		}
 		
-		JSONObject ans = readVersionJSON(filePath);
-		
-		return ans;
+		return readVersionJSON(filePath);
 	}
 	
 	private JSONObject readVersionJSON(String forgeFile) {
