@@ -11,16 +11,28 @@ import javax.net.ssl.HttpsURLConnection;
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
 
-public class FetchRemoteFile {
+public class FetchRemoteContent {
 
-	public FetchRemoteFile(String URL, String destDir, String fileName) {
+	// If downloading a file call this
+	public void file(String URL, String destDir, String fileName) {
 
 		if (fileName.isEmpty()) {
 			fileName = URL.substring(URL.lastIndexOf("/") + 1, URL.length());
 		}
-
 		new CreateFolder(destDir);
-
+		fetch(URL, destDir, fileName);
+	}
+	
+	// If reading text call this
+	public String text(String URL) {
+		return fetch(URL, "", "");
+	}
+	
+	// Internal downloader
+	private String fetch(String URL, String dist_dir, String file_name) {
+		
+		String ans = "";
+		
 		try {
 
 			// Turn the URL into a URL
@@ -38,26 +50,40 @@ public class FetchRemoteFile {
 
 			// Open all the needed streams
 			InputStream is = conn.getInputStream();
-			FileOutputStream fos = new FileOutputStream(new File(destDir + fileName));
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			
+			// If we are downloading text don't open it just define
+			FileOutputStream fos = null;
+			if(!dist_dir.isEmpty() && !file_name.isEmpty()) {
+				fos = new FileOutputStream(new File(dist_dir + file_name));
+			}
 
-			// Copy the file from the remote server
+			// Copy the content from the remote server
 			int inByte;
 			while ((inByte = is.read()) != -1) {
 				bos.write(inByte);
 			}
 
-			// Write the file
-			fos.write(bos.toByteArray());
+			// If we are writing to a file do that now
+			if(!dist_dir.isEmpty() && !file_name.isEmpty()) {
+				fos.write(bos.toByteArray());
+				fos.close();
+			}
+			
+			// If we are reading text return that to ans here
+			if(dist_dir.isEmpty() && file_name.isEmpty()) {
+				ans = new String(bos.toByteArray());
+			}
 
 			is.close();
-			fos.close();
 			bos.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+		return ans;
+		
 	}
 
 }

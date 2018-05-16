@@ -8,11 +8,11 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
-import me.boops.functions.DownloadClient;
 import me.boops.functions.InstallLibs;
 import me.boops.functions.VersionMeta;
 import me.boops.functions.commands.CommandParser;
 import me.boops.functions.forgehandler.ForgeHandler;
+import me.boops.functions.network.DownloadClient;
 import me.boops.functions.profilemanager.ProfileManager;
 
 public class LaunchGame {

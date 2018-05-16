@@ -3,7 +3,7 @@ package me.boops.functions;
 import org.json.JSONObject;
 
 import me.boops.Main;
-import me.boops.functions.network.FetchRemoteText;
+import me.boops.functions.network.FetchRemoteContent;
 import me.boops.functions.profilemanager.ProfileManager;
 
 public class VersionMeta {
@@ -16,7 +16,7 @@ public class VersionMeta {
 		System.out.println("Attempting to fetch version meta");
 		
 		// Grab the base meta file
-		JSONObject metaFile = new JSONObject(new FetchRemoteText().fetch("https://launchermeta.mojang.com/mc/game/version_manifest.json"));
+		JSONObject metaFile = new JSONObject(new FetchRemoteContent().text("https://launchermeta.mojang.com/mc/game/version_manifest.json"));
 
 		String mcVersion = "";
 		
@@ -67,7 +67,7 @@ public class VersionMeta {
 		// So we know it's a proper version so just
 		// Fetch the version META and we are good to go!
 		
-		VersionMeta.Meta = new JSONObject(new FetchRemoteText().fetch(metaURL));
+		VersionMeta.Meta = new JSONObject(new FetchRemoteContent().text(metaURL));
 		VersionMeta.ID = VersionMeta.Meta.getString("id");
 		System.out.println("Got the version meta for: " + VersionMeta.ID);
 	}

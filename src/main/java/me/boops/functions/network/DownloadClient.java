@@ -1,9 +1,9 @@
-package me.boops.functions;
+package me.boops.functions.network;
 
 import java.io.File;
 
 import me.boops.Main;
-import me.boops.functions.network.FetchRemoteFile;
+import me.boops.functions.VersionMeta;
 
 public class DownloadClient {
 	
@@ -19,7 +19,7 @@ public class DownloadClient {
 		
 		if(!new File(Main.homeDir + "versions" + File.separator + VersionMeta.ID + ".jar").exists()) {
 			System.out.println("Downloading " + VersionMeta.ID + ".jar");
-			new FetchRemoteFile(VersionMeta.Meta.getJSONObject("downloads").getJSONObject("client").getString("url"),
+			new FetchRemoteContent().file(VersionMeta.Meta.getJSONObject("downloads").getJSONObject("client").getString("url"),
 					Main.homeDir + "versions" + File.separator, VersionMeta.ID + ".jar");
 			
 		}

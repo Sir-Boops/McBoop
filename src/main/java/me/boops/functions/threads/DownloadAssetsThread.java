@@ -3,7 +3,7 @@ package me.boops.functions.threads;
 import java.io.File;
 
 import me.boops.functions.crypto.Sha1SumFile;
-import me.boops.functions.network.FetchRemoteFile;
+import me.boops.functions.network.FetchRemoteContent;
 
 public class DownloadAssetsThread implements Runnable {
 	
@@ -48,7 +48,7 @@ public class DownloadAssetsThread implements Runnable {
 	
 	private void downloadRemote() {
 		// Try to download
-		new FetchRemoteFile(this.url, this.dist_dir, "");
+		new FetchRemoteContent().file(this.url, this.dist_dir, "");
 		
 		// Calc the sum
 		String sum = new Sha1SumFile().sum(this.dist_dir + this.hash);

@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
-import me.boops.functions.network.FetchRemoteFile;
+import me.boops.functions.network.FetchRemoteContent;
 import me.boops.functions.string_utls.ReplaceChars;
 
 public class GetVersionMeta {
@@ -25,7 +25,7 @@ public class GetVersionMeta {
 		
 		if(!new File(path + ForgeFileName.fileName).exists()) {
 			System.out.println("Downloading forge jar");
-			new FetchRemoteFile(URL, path, "");
+			new FetchRemoteContent().file(URL, path, "");
 		}
 		
 		JSONObject ans = readVersionJSON(filePath);

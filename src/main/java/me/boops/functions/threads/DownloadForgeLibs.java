@@ -14,8 +14,7 @@ import me.boops.functions.crypto.Sha1SumFile;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.file.ReadTextFromFile;
 import me.boops.functions.file.WriteTextToFile;
-import me.boops.functions.network.FetchRemoteFile;
-import me.boops.functions.network.FetchRemoteText;
+import me.boops.functions.network.FetchRemoteContent;
 import me.boops.functions.string_utls.ReplaceChars;
 
 public class DownloadForgeLibs implements Runnable {
@@ -58,7 +57,7 @@ public class DownloadForgeLibs implements Runnable {
 			
 			// At this point we should have the file
 			// Get the sha1sum
-			String sum = new FetchRemoteText().fetch(this.urls[attempts - 1] + ".sha1");
+			String sum = new FetchRemoteContent().text(this.urls[attempts - 1] + ".sha1");
 			
 			// Put the sum and the url it was downloaded from into a JSON object to be
 			// saved next to the file incase of need to redownload
@@ -133,7 +132,7 @@ public class DownloadForgeLibs implements Runnable {
 		JSONObject json_file = new JSONObject(new ReadTextFromFile().read(this.full_path + ".json"));
 		
 		// Download the file again!
-		new FetchRemoteFile(json_file.getString("url"), Main.homeDir + "libraries" + File.separator + this.file_path, "");
+		new FetchRemoteContent().file(json_file.getString("url"), Main.homeDir + "libraries" + File.separator + this.file_path, "");
 		System.out.println(json_file.getString("url"));
 		
 		// Now sum and check the sum

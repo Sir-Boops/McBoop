@@ -2,7 +2,7 @@ package me.boops.functions.commands;
 
 import org.json.JSONObject;
 
-import me.boops.functions.network.FetchRemoteText;
+import me.boops.functions.network.FetchRemoteContent;
 
 public class CommandListAllVersions {
 	
@@ -10,7 +10,7 @@ public class CommandListAllVersions {
 		
 		System.out.println("Here is a list of versions you can run");
 		
-		JSONObject versionList = new JSONObject(new FetchRemoteText().fetch("https://launchermeta.mojang.com/mc/game/version_manifest.json"));
+		JSONObject versionList = new JSONObject(new FetchRemoteContent().text("https://launchermeta.mojang.com/mc/game/version_manifest.json"));
 		
 		for(int i = 0; i < versionList.getJSONArray("versions").length(); i++) {
 			System.out.println(versionList.getJSONArray("versions").getJSONObject(i).getString("id"));

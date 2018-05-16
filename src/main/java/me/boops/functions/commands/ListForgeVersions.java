@@ -5,13 +5,13 @@ import java.util.Iterator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import me.boops.functions.network.FetchRemoteText;
+import me.boops.functions.network.FetchRemoteContent;
 
 public class ListForgeVersions {
 
 	public ListForgeVersions(String[] args) {
 
-		JSONObject forgeJSON = new JSONObject(new FetchRemoteText().fetch("https://files.minecraftforge.net/maven/net/minecraftforge/forge/json"));
+		JSONObject forgeJSON = new JSONObject(new FetchRemoteContent().text("https://files.minecraftforge.net/maven/net/minecraftforge/forge/json"));
 
 		String reqVersion = "";
 

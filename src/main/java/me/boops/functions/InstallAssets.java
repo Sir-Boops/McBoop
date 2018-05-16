@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.file.WriteTextToFile;
-import me.boops.functions.network.FetchRemoteText;
+import me.boops.functions.network.FetchRemoteContent;
 import me.boops.functions.threads.DownloadAssetsThread;
 
 public class InstallAssets {
@@ -20,7 +20,7 @@ public class InstallAssets {
 		System.out.println("Installing/Verifying assets");
 		
 		JSONObject assetIndex = VersionMeta.Meta.getJSONObject("assetIndex");
-		JSONObject assetList = new JSONObject(new FetchRemoteText().fetch(assetIndex.getString("url")));
+		JSONObject assetList = new JSONObject(new FetchRemoteContent().text(assetIndex.getString("url")));
 		
 		new CreateFolder(Main.homeDir + "versions");
 		new WriteTextToFile(Main.homeDir + "assets" + File.separator + "indexes" + File.separatorChar + assetIndex.getString("id") + ".json", assetList.toString());
