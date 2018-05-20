@@ -42,12 +42,12 @@ public class InstallAssets {
 
         Iterator<?> keys = list.keys();
         while (keys.hasNext()) {
-            System.out.print((float) (processed_assets * 100) / total_assets + "\r");
+            System.out.print(" " + new DecimalFormat("#.00").format((float) (processed_assets * 100) / total_assets) + "% Complete               \r");
             // Cap out at 10 threads
             while (DLGroup.activeCount() > 9) {
                 try {
-                    Thread.sleep(10);
                     System.out.print(" " + new DecimalFormat("#.00").format((float) (processed_assets * 100) / total_assets) + "% Complete               \r");
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
