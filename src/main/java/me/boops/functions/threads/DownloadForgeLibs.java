@@ -22,7 +22,7 @@ public class DownloadForgeLibs implements Runnable {
 	public DownloadForgeLibs(String file_name, String file_path) {
 		this.file_name = file_name;
 		this.file_path = file_path;
-		this.full_path = (Main.homeDir + "libraries" + File.separator + this.file_path + this.file_name);
+		this.full_path = (Main.home_dir + "libraries" + File.separator + this.file_path + this.file_name);
 		this.urls = new String[] {
 				"https://repo1.maven.org/maven2/" + new ReplaceChars().replace(this.file_path, File.separator, "/") + this.file_name,
 				"https://repo.spongepowered.org/maven/" + new ReplaceChars().replace(this.file_path, File.separator, "/") + this.file_name,
@@ -31,7 +31,7 @@ public class DownloadForgeLibs implements Runnable {
 	
 	@Override
 	public void run() {
-		new CreateFolder(Main.homeDir + "libraries" + File.separator + this.file_path);
+		new CreateFolder(Main.home_dir + "libraries" + File.separator + this.file_path);
 		
 		// Check to see if we have the lib already!
 		if(!new File(this.full_path).exists()) {
@@ -45,7 +45,7 @@ public class DownloadForgeLibs implements Runnable {
 			
 			// While we have tried less then 3 times and still have not found the file
 			while(!got_file && attempts < 3) {
-				boolean did_fail = new FetchRemoteContent().fileStatus(this.urls[attempts], Main.homeDir + "libraries" + File.separator + this.file_path, "");
+				boolean did_fail = new FetchRemoteContent().fileStatus(this.urls[attempts], Main.home_dir + "libraries" + File.separator + this.file_path, "");
 				if(!did_fail) {
 					got_file = true;
 				}
@@ -96,7 +96,7 @@ public class DownloadForgeLibs implements Runnable {
 		JSONObject json_file = new JSONObject(new ReadTextFromFile().read(this.full_path + ".json"));
 		
 		// Download the file again!
-		new FetchRemoteContent().file(json_file.getString("url"), Main.homeDir + "libraries" + File.separator + this.file_path, "");
+		new FetchRemoteContent().file(json_file.getString("url"), Main.home_dir + "libraries" + File.separator + this.file_path, "");
 		System.out.println(json_file.getString("url"));
 		
 		// Now sum and check the sum

@@ -31,7 +31,7 @@ public class AuthLogin {
 			conn.setReadTimeout(10 * 1000);
 			conn.setConnectTimeout(10 * 1000);
 			conn.setRequestMethod("POST");
-			conn.setRequestProperty("User-Agent", Main.HttpUser);
+			conn.setRequestProperty("User-Agent", Main.http_user);
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setDoOutput(true);
 

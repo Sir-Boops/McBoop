@@ -10,7 +10,7 @@ public class DeleteProfile {
 
 	public DeleteProfile(String profileName) {
 
-		String path = (Main.homeDir + "profiles" + File.separator + profileName);
+		String path = (Main.home_dir + "profiles" + File.separator + profileName);
 
 		if (new File(path).exists()) {
 			try {

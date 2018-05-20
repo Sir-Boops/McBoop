@@ -19,7 +19,7 @@ public class GetVersionMeta {
 		
 		String URL = ("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + new ReplaceChars().replace(file_path, File.separator, "/") + file_name);
 		
-		String path = Main.homeDir + "forge" + File.separator;
+		String path = Main.home_dir + "forge" + File.separator;
 		String filePath = (path + file_name);
 		new CreateFolder(path);
 		

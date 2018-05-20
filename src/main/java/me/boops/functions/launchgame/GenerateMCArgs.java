@@ -64,7 +64,7 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${assets_root}") || var.equalsIgnoreCase("${game_assets}")) {
-			ans = InstallAssets.path;
+			ans = InstallAssets.assets_path;
 		}
 
 		if (var.equalsIgnoreCase("${assets_index_name}")) {

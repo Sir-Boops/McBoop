@@ -37,7 +37,7 @@ public class FetchForgeLibs {
 				String fileName = (rawName.split(":")[1] + "-" + rawName.split(":")[2] + ".jar");
 				String filePath = (new ReplaceChars().replace(rawName.split(":")[0], ".", File.separator) + File.separator + rawName.split(":")[1]
 						+ File.separator + rawName.split(":")[2] + File.separator);
-				String fullPath = (Main.homeDir + "libraries" + File.separator + filePath + fileName);
+				String fullPath = (Main.home_dir + "libraries" + File.separator + filePath + fileName);
 				// Launch the DL Thread
 				Thread thread = new Thread(DLGroup, new DownloadForgeLibs(fileName, filePath));
 				thread.start();
@@ -63,7 +63,7 @@ public class FetchForgeLibs {
 				String fileName = (rawName.split(":")[1] + "-" + rawName.split(":")[2] + ".jar");
 				String filePath = (new ReplaceChars().replace(rawName.split(":")[0], ".", File.separator) + File.separator + rawName.split(":")[1]
 						+ File.separator + rawName.split(":")[2] + File.separator);
-				String fullPath = (Main.homeDir + "libraries" + File.separator + filePath + fileName);
+				String fullPath = (Main.home_dir + "libraries" + File.separator + filePath + fileName);
 				ans.add(fullPath);
 			}
 		}

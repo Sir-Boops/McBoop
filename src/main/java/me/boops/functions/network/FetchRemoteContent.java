@@ -60,7 +60,7 @@ public class FetchRemoteContent {
 			conn.setReadTimeout(10 * 1000);
 			conn.setConnectTimeout(10 * 1000);
 			conn.setRequestMethod("GET");
-			conn.setRequestProperty("User-Agent", Main.HttpUser);
+			conn.setRequestProperty("User-Agent", Main.http_user);
 
 			// Connect to the remote server
 			conn.connect();

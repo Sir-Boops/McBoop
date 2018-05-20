@@ -8,7 +8,7 @@ public class ListProfiles {
 	
 	public ListProfiles() {
 		
-		String[] profiles = new File(Main.homeDir + "profiles" + File.separator).list();
+		String[] profiles = new File(Main.home_dir + "profiles" + File.separator).list();
 		
 		System.out.println("Here is a list of profiles:");
 		System.out.println("");

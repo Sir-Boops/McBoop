@@ -29,7 +29,7 @@ public class SetDefault {
 			}
 		}
 		
-		new WriteTextToFile(Main.homeDir + "auth.json", authFile.toString());
+		new WriteTextToFile(Main.home_dir + "auth.json", authFile.toString());
 		System.out.println("Set the default account to " + username);
 	}
 }

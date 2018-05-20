@@ -19,7 +19,7 @@ public class RemoveAccount {
 			}
 		}
 		
-		new WriteTextToFile(Main.homeDir + "auth.json", ans.toString());
+		new WriteTextToFile(Main.home_dir + "auth.json", ans.toString());
 		
 	}	
 }

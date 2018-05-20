@@ -14,7 +14,7 @@ public class ReadProfileData {
 		// 1 => forge version ID
 		String[] ans = new String[] {};
 		
-		String path = Main.homeDir + "profiles" + File.separator;
+		String path = Main.home_dir + "profiles" + File.separator;
 		
 		String json = new ReadTextFromFile().read(path + profileName + File.separator + "profile.json");
 		

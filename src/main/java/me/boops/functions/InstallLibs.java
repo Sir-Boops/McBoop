@@ -31,7 +31,7 @@ public class InstallLibs {
 		// Download libs
 		ThreadGroup DLGroup = new ThreadGroup("DLGroup");
 		for(int i = 0; i < this.libURLS.size(); i++) {
-			String distDir = new ReplaceChars().replace(Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).lastIndexOf("/") + 1),
+			String distDir = new ReplaceChars().replace(Main.home_dir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).lastIndexOf("/") + 1),
 					"/", File.separator);
 			
 			// Limit thread count to 10
@@ -60,12 +60,12 @@ public class InstallLibs {
 		System.out.println("Libraries have been verifyed/downloaded");
 		System.out.println("");
 		
-		extractNatives(Main.homeDir, libURLS);
+		extractNatives(Main.home_dir, libURLS);
 		
 		// Append natives to libs array
 		for(int i = 0; i < libURLS.size(); i++) {
 			if(!libURLS.get(i).contains("natives")) {
-				InstallLibs.libs.add(Main.homeDir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).length()));
+				InstallLibs.libs.add(Main.home_dir + "libraries" + File.separator + libURLS.get(i).substring(libURLS.get(i).indexOf(".net/") + 5, libURLS.get(i).length()));
 			}
 		}
 	}
@@ -104,7 +104,7 @@ public class InstallLibs {
 		
 		System.out.println("Extracting native libraries");
 		
-		String natives_path = (dirS + "natives-" + Main.randString + File.separator);
+		String natives_path = (dirS + "natives-" + Main.rand_string + File.separator);
 		new CreateFolder(natives_path);
 		InstallLibs.nativesPath = natives_path;
 		

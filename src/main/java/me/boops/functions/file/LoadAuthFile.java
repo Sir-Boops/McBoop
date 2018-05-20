@@ -10,7 +10,7 @@ public class LoadAuthFile {
 
 	public JSONArray load() {
 
-		File authFile = new File(Main.homeDir + "auth.json");
+		File authFile = new File(Main.home_dir + "auth.json");
 		JSONArray ans = new JSONArray();
 
 		// Make sure the auth file is there!

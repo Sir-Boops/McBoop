@@ -7,7 +7,7 @@ import me.boops.functions.VersionMeta;
 
 public class DownloadClient {
 	
-	static public String jarPath = (Main.homeDir + "versions" + File.separator + VersionMeta.ID + ".jar");
+	static public String jarPath = (Main.home_dir + "versions" + File.separator + VersionMeta.ID + ".jar");
 	
 	public DownloadClient() {
 		
@@ -17,10 +17,10 @@ public class DownloadClient {
 		// If it does do nothing else download
 		// a copy
 		
-		if(!new File(Main.homeDir + "versions" + File.separator + VersionMeta.ID + ".jar").exists()) {
+		if(!new File(Main.home_dir + "versions" + File.separator + VersionMeta.ID + ".jar").exists()) {
 			System.out.println("Downloading " + VersionMeta.ID + ".jar");
 			new FetchRemoteContent().file(VersionMeta.Meta.getJSONObject("downloads").getJSONObject("client").getString("url"),
-					Main.homeDir + "versions" + File.separator, VersionMeta.ID + ".jar");
+					Main.home_dir + "versions" + File.separator, VersionMeta.ID + ".jar");
 			
 		}
 		

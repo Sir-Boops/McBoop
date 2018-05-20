@@ -48,7 +48,7 @@ public class ForgeHandler {
 		
 		System.out.println("Installing forge libs");
 		ForgeHandler.libs = new FetchForgeLibs().fetch();
-		libs.add(Main.homeDir + "forge" + File.separator + file_info[0]);
+		libs.add(Main.home_dir + "forge" + File.separator + file_info[0]);
 		System.out.println("");
 		System.out.println("Forge hs been installed!");
 	}

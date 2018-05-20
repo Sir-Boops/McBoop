@@ -11,7 +11,7 @@ public class AppendForgeVersion {
 	
 	public AppendForgeVersion(String name, String version) {
 		
-		String path = Main.homeDir + "profiles" + File.separator + name + File.separator;
+		String path = Main.home_dir + "profiles" + File.separator + name + File.separator;
 		
 		String MCVersion = new ReadProfileData().read(name)[0];
 		

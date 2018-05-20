@@ -12,7 +12,7 @@ public class CreateProfile {
 	
 	public CreateProfile(String name, String mcID) {
 		
-		String path = Main.homeDir + "profiles" + File.separator + name + File.separator;
+		String path = Main.home_dir + "profiles" + File.separator + name + File.separator;
 		new CreateFolder(path);
 		
 		JSONObject profile = new JSONObject().put("mcVersion", mcID);

@@ -37,7 +37,7 @@ public class MojangAuth {
 			if(authFile.getJSONObject(i).getString("id").equalsIgnoreCase(auth[2])) {
 				authFile.getJSONObject(i).put("accessToken", auth[0]);
 				authFile.getJSONObject(i).put("clientToken", auth[1]);
-				new WriteTextToFile(Main.homeDir + "auth.json", authFile.toString());
+				new WriteTextToFile(Main.home_dir + "auth.json", authFile.toString());
 				i = (authFile.length() + 1);
 			}
 		}
