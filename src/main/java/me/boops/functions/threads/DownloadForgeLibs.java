@@ -52,6 +52,13 @@ public class DownloadForgeLibs implements Runnable {
 				attempts++;
 			}
 			
+			// If we have the file keep going
+			// Else just exit this thread
+			if(!new File(this.full_path).exists()) {
+			    // We didn't get the file assume we don't need it
+			    return;
+			}
+			
 			// At this point we should have the file
 			// Get the sha1sum
 			String sum = new FetchRemoteContent().text(this.urls[attempts - 1] + ".sha1");
@@ -86,12 +93,12 @@ public class DownloadForgeLibs implements Runnable {
 			if(!sum.equals(json_file.get("sum"))){
 				// The sum does not match
 				System.out.println("Found bad lib: " + this.file_name + " Redownloading...");
-				reDownload();
+				re_download();
 			}
 		}
 	}
 	
-	private void reDownload() {
+	private void re_download() {
 		// Load json_file
 		JSONObject json_file = new JSONObject(new ReadTextFromFile().read(this.full_path + ".json"));
 		
@@ -103,7 +110,7 @@ public class DownloadForgeLibs implements Runnable {
 		String sum = new Sha1SumFile().sum(this.full_path);
 		if(!sum.equals(json_file.get("sum"))) {
 			// Failed again try again
-			reDownload();
+			re_download();
 		}
 		
 	}

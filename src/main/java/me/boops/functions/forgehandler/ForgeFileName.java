@@ -20,6 +20,8 @@ public class ForgeFileName {
 			forgeID = (version_id.split("-")[1]);
 		}
 		
+		ForgeHandler.forge_version = forge_version;
+		
 		String file_name = "";
 		String file_path = "";
 		
@@ -37,14 +39,17 @@ public class ForgeFileName {
 			file_path = (path.substring(0, path.lastIndexOf("/")) + File.separator);
 		}
 		
-		if(forge_version <= 16.4) {
-			System.out.println("");
-			System.out.println("Sorry, forge versions 1.6.4 and older are not supported!");
-			System.out.println("If you wish to attempt to add support for them open an issue");
-			System.out.println("and I'll explan what needs to be done!");
-			System.out.println("");
-			System.exit(1);
+		if(forge_version <= 16.4 && forge_version > 15.2) {
+		    String path = ("%mcID%-%forgeID%/forge-%mcID%-%forgeID%-universal.jar".replaceAll("(%mcID%)", VersionMeta.ID).replaceAll("(%forgeID%)", forgeID));
+		    file_name = (path.substring(path.lastIndexOf("/") + 1, path.length()));
+            file_path = (path.substring(0, path.lastIndexOf("/")) + File.separator);
 		}
+		
+		if(forge_version <= 15.2 && forge_version > 12.5) {
+            String path = ("%mcID%-%forgeID%/forge-%mcID%-%forgeID%-universal.zip".replaceAll("(%mcID%)", VersionMeta.ID).replaceAll("(%forgeID%)", forgeID));
+            file_name = (path.substring(path.lastIndexOf("/") + 1, path.length()));
+            file_path = (path.substring(0, path.lastIndexOf("/")) + File.separator);
+        }
 		return new String[] {file_name, file_path};
 	}
 }

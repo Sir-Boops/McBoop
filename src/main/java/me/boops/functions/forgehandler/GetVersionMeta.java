@@ -28,10 +28,14 @@ public class GetVersionMeta {
 			new FetchRemoteContent().file(URL, path, "");
 		}
 		
-		return readVersionJSON(filePath);
+		JSONObject ans = new JSONObject();
+		if(ForgeHandler.forge_version > 15.2) {
+		    ans = read_version_JSON(filePath);
+		}
+		return ans;
 	}
 	
-	private JSONObject readVersionJSON(String forgeFile) {
+	private JSONObject read_version_JSON(String forgeFile) {
 		
 		JSONObject ans = new JSONObject();
 		
