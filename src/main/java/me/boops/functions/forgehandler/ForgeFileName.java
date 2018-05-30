@@ -45,14 +45,14 @@ public class ForgeFileName {
             file_path = (path.substring(0, path.lastIndexOf("/")) + File.separator);
         }
 
-        if (forge_version == 15.2) {
+        if (forge_version <= 15.2 && forge_version >= 13.2) {
             String path = ("%mcID%-%forgeID%/forge-%mcID%-%forgeID%-universal.zip".replaceAll("(%mcID%)", VersionMeta.ID).replaceAll("(%forgeID%)", forgeID));
             file_name = (path.substring(path.lastIndexOf("/") + 1, path.length()));
             file_path = (path.substring(0, path.lastIndexOf("/")) + File.separator);
         }
 
-        if (forge_version < 15.2) {
-            System.out.println("Sorry, Forge for Minecraft older then 1.6.4 are currently unsupported");
+        if (forge_version < 13.2) {
+            System.out.println("Sorry, Forge for Minecraft older then 1.2.5 are currently unsupported");
             System.out.println("If you wish to help add support for this please open an issue here -> https://git.sergal.org/Sir-Boops/McBoop/issues");
             System.exit(1);
         }
