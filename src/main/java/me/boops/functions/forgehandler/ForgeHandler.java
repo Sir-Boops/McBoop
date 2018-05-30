@@ -59,7 +59,7 @@ public class ForgeHandler {
         // The user requested older versions
         // As they require...a bit of extra work
 
-        if (ForgeHandler.forge_version <= 15.2 && ForgeHandler.forge_version >= 12.5) {
+        if (ForgeHandler.forge_version <= 15.2 && ForgeHandler.forge_version >= 13.2) {
             new Forge13to152(file_info[0], version_id);
         }
         
