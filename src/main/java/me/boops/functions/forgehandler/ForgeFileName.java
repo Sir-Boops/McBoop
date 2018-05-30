@@ -46,7 +46,7 @@ public class ForgeFileName {
         }
 
         if (forge_version == 15.2) {
-            String path = ("%mcID%-%forgeID%/forge-%mcID%-%forgeID%-installer.jar".replaceAll("(%mcID%)", VersionMeta.ID).replaceAll("(%forgeID%)", forgeID));
+            String path = ("%mcID%-%forgeID%/forge-%mcID%-%forgeID%-universal.zip".replaceAll("(%mcID%)", VersionMeta.ID).replaceAll("(%forgeID%)", forgeID));
             file_name = (path.substring(path.lastIndexOf("/") + 1, path.length()));
             file_path = (path.substring(0, path.lastIndexOf("/")) + File.separator);
         }
