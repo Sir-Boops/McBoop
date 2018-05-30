@@ -45,7 +45,6 @@ public class ForgeHandler {
         String[] file_info = new ForgeFileName().getInfo(version_id);
 
         System.out.println("Getting forge version meta");
-        System.out.println("");
         ForgeHandler.versionMeta = new GetVersionMeta().meta(file_info[0], file_info[1]);
         System.out.println("");
 
