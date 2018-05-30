@@ -27,7 +27,7 @@ public class LaunchGame {
 		launchArr.add(getMaxRAM());
 		launchArr.add("-Djava.library.path=" + InstallLibs.nativesPath);
 		launchArr.add("-cp");
-		launchArr.add(cleanLibs + DownloadClient.jarPath);
+		launchArr.add(cleanLibs + getRuntimeJar());
 		launchArr.add(getLaunchClass());
 		launchArr.addAll(getMCArgs());
 		
@@ -123,5 +123,13 @@ public class LaunchGame {
 		}
 		
 		return ans;
+	}
+	
+	private String getRuntimeJar() {
+	    String ans = DownloadClient.jarPath;
+	    if(!ForgeHandler.custom_runtime_jar.isEmpty()) {
+	        ans = ForgeHandler.custom_runtime_jar;
+	    }
+	    return ans;
 	}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 import me.boops.Main;
+import me.boops.functions.forge_version_handlers.Forge152;
 import me.boops.functions.profilemanager.ProfileManager;
 
 public class ForgeHandler {
@@ -15,6 +16,7 @@ public class ForgeHandler {
     public static JSONObject versionMeta = new JSONObject();
     public static List<String> libs = new ArrayList<String>();
     public static double forge_version;
+    public static String custom_runtime_jar = "";
 
     public ForgeHandler() {
 
@@ -42,10 +44,12 @@ public class ForgeHandler {
         // file_info[1] = file_path
         String[] file_info = new ForgeFileName().getInfo(version_id);
 
-        System.out.println("Getting forge version meta");
-        System.out.println("");
-        ForgeHandler.versionMeta = new GetVersionMeta().meta(file_info[0], file_info[1]);
-        System.out.println("");
+        if (ForgeHandler.forge_version >= 15.2) {
+            System.out.println("Getting forge version meta");
+            System.out.println("");
+            ForgeHandler.versionMeta = new GetVersionMeta().meta(file_info[0], file_info[1]);
+            System.out.println("");
+        }
 
         if (ForgeHandler.forge_version > 15.2) {
             System.out.println("Installing forge libs");
@@ -53,6 +57,15 @@ public class ForgeHandler {
             libs.add(Main.home_dir + "forge" + File.separator + file_info[0]);
             System.out.println("");
         }
+
+        // And here we check to see if
+        // The user requested older versions
+        // As they require...a bit of extra work
+
+        if (ForgeHandler.forge_version == 15.2) {
+            new Forge152(file_info[0], version_id);
+        }
+        
         System.out.println("Forge hs been installed!");
     }
 }

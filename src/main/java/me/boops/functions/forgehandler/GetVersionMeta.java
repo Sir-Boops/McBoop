@@ -20,7 +20,7 @@ public class GetVersionMeta {
 		String URL = ("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + new ReplaceChars().replace(file_path, File.separator, "/") + file_name);
 		
 		String path = Main.home_dir + "forge" + File.separator;
-		String filePath = (path + file_name);
+		String dl_path = (path + file_name);
 		new CreateFolder(path);
 		
 		if(!new File(path + file_name).exists()) {
@@ -30,7 +30,7 @@ public class GetVersionMeta {
 		
 		JSONObject ans = new JSONObject();
 		if(ForgeHandler.forge_version > 15.2) {
-		    ans = read_version_JSON(filePath);
+		    ans = read_version_JSON(dl_path);
 		}
 		return ans;
 	}
