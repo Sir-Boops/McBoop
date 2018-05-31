@@ -97,7 +97,7 @@ public class InstallAssets {
     }
     
     private String gen_asset_path(boolean is_legacy) {
-        String ans = (Main.home_dir + "assets" + File.separator + "objects" + File.separator);
+        String ans = (Main.home_dir + "assets" + File.separator);
         if(is_legacy) {
             ans = (Main.home_dir + "assets" + File.separator + "legacy" + File.separator);
         }
