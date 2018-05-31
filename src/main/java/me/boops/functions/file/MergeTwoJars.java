@@ -61,7 +61,8 @@ public class MergeTwoJars {
                 bos.write(inByte);
             }
 
-            zos.putNextEntry(file_to_copy);
+            ZipEntry new_entry = new ZipEntry(file_to_copy.getName());
+            zos.putNextEntry(new_entry);
             zos.write(bos.toByteArray());
             zos.closeEntry();
 

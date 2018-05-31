@@ -7,6 +7,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 import me.boops.Main;
+import me.boops.functions.forge_version_handlers.Forge11to124;
 import me.boops.functions.forge_version_handlers.Forge125to152;
 import me.boops.functions.profilemanager.ProfileManager;
 
@@ -61,6 +62,10 @@ public class ForgeHandler {
 
         if (ForgeHandler.forge_version <= 15.2 && ForgeHandler.forge_version >= 12.5) {
             new Forge125to152(file_info[0], version_id);
+        }
+        
+        if(ForgeHandler.forge_version <= 12.4) {
+            new Forge11to124(file_info[0], version_id);
         }
         
         System.out.println("Forge hs been installed!");
