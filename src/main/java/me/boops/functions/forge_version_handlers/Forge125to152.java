@@ -11,8 +11,8 @@ import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.network.DownloadClient;
 import me.boops.functions.network.FetchRemoteContent;
 
-public class Forge13to152 {
-    public Forge13to152(String file_name, String forge_id) {
+public class Forge125to152 {
+    public Forge125to152(String file_name, String forge_id) {
 
         String forge_path = (Main.home_dir + "forge" + File.separator);
         String new_jar = (VersionMeta.ID + "-forge-" + forge_id + ".jar");
