@@ -11,11 +11,13 @@ import me.boops.functions.file.CreateFolder;
 import me.boops.functions.file.WriteTextToFile;
 import me.boops.functions.network.FetchRemoteContent;
 import me.boops.functions.threads.DownloadAssetsThread;
+import me.boops.functions.threads.DownloadLegacyAssetsThread;
 
 public class InstallAssets {
 
-    public static String assets_path = (Main.home_dir + "assets" + File.separator);
+    public static String assets_path = "";
     public static double processed_assets = 0;
+    private boolean is_legacy = false;
 
     public InstallAssets() {
 
@@ -23,14 +25,24 @@ public class InstallAssets {
 
         JSONObject asset_index = VersionMeta.Meta.getJSONObject("assetIndex");
         JSONObject asset_list = new JSONObject(new FetchRemoteContent().text(asset_index.getString("url")));
+        
+        if(asset_index.getString("id").equalsIgnoreCase("legacy")) {
+            this.is_legacy = true;
+        }
 
         // Create versions folder and write the version meta into it
         new CreateFolder(Main.home_dir + "versions");
         new WriteTextToFile(Main.home_dir + "assets" + File.separator + "indexes" + File.separatorChar + asset_index.getString("id") + ".json", asset_list.toString());
 
         // Downloading the libs also verfies them
-        downloadLibs(asset_list.getJSONObject("objects"), (Main.home_dir + "assets" + File.separator + "objects" + File.separator));
+        // If legacy use the resources folder
+        if(this.is_legacy) {
+            downloadLibs(asset_list.getJSONObject("objects"), (Main.home_dir + "assets" + File.separator + "legacy" + File.separator));
+        } else {
+            downloadLibs(asset_list.getJSONObject("objects"), (Main.home_dir + "assets" + File.separator + "objects" + File.separator));
+        }
 
+        InstallAssets.assets_path = gen_asset_path(this.is_legacy);
         System.out.println("All assets verifyed/downloaded");
 
     }
@@ -55,7 +67,12 @@ public class InstallAssets {
 
             // Create and start the new thread
             String key = (String) keys.next();
-            Thread thread = new Thread(DLGroup, new DownloadAssetsThread(key, list.getJSONObject(key).getString("hash"), dirS));
+            Thread thread = null;
+            if(this.is_legacy) {
+                thread = new Thread(DLGroup, new DownloadLegacyAssetsThread(key, list.getJSONObject(key).getString("hash"), dirS));
+            } else {
+                thread = new Thread(DLGroup, new DownloadAssetsThread(key, list.getJSONObject(key).getString("hash"), dirS));
+            }
             thread.start();
         }
 
@@ -75,6 +92,14 @@ public class InstallAssets {
         while (keys.hasNext()) {
             keys.next();
             ans++;
+        }
+        return ans;
+    }
+    
+    private String gen_asset_path(boolean is_legacy) {
+        String ans = (Main.home_dir + "assets" + File.separator + "objects" + File.separator);
+        if(is_legacy) {
+            ans = (Main.home_dir + "assets" + File.separator + "legacy" + File.separator);
         }
         return ans;
     }
