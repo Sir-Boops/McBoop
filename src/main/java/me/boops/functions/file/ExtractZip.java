@@ -19,26 +19,29 @@ public class ExtractZip {
 
             for (int i = 0; i < zip_list.size(); i++) {
                 if (!new File(dist_dir + zip_list.get(i).getName()).exists()) {
+                    if (!zip_list.get(i).getName().endsWith("/")) {
+                        System.out.println("Extracting Lib: " + zip_list.get(i).getName());
 
-                    System.out.println("Extracting Lib: " + zip_list.get(i).getName());
+                        InputStream is = zip_file.getInputStream(zip_list.get(i));
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        FileOutputStream fos = new FileOutputStream(dist_dir + zip_list.get(i).getName());
 
-                    InputStream is = zip_file.getInputStream(zip_list.get(i));
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    FileOutputStream fos = new FileOutputStream(dist_dir + zip_list.get(i).getName());
+                        int inByte;
+                        while ((inByte = is.read()) != -1) {
+                            bos.write(inByte);
+                        }
 
-                    int inByte;
-                    while ((inByte = is.read()) != -1) {
-                        bos.write(inByte);
+                        fos.write(bos.toByteArray());
+
+                        fos.close();
+                        bos.close();
+                        is.close();
+                    } else {
+                        new CreateFolder(dist_dir + zip_list.get(i).getName());
                     }
-                    
-                    fos.write(bos.toByteArray());
-                    
-                    fos.close();
-                    bos.close();
-                    is.close();
                 }
             }
-            
+
             zip_file.close();
 
         } catch (Exception e) {

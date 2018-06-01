@@ -40,10 +40,7 @@ public class LaunchGame {
 
 		try {
 
-			Process pr = null;
-			ProcessBuilder pb = new ProcessBuilder(launchArr);
-			pb.directory(new File(ProfileManager.path));
-			pr = pb.start();
+			Process pr = new ProcessBuilder(launchArr).directory(new File(ProfileManager.path)).start();
 
 			BufferedReader brErr = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
 			BufferedReader br = new BufferedReader(new InputStreamReader(pr.getInputStream()));
@@ -52,12 +49,14 @@ public class LaunchGame {
 			while ((line = br.readLine()) != null) {
 				System.out.println(line);
 			}
+			
 			String lineErr = null;
 			while ((lineErr = brErr.readLine()) != null) {
 				System.out.println(lineErr);
 			}
 
 			// Wait for the minecraft process to fully stop
+			pr.destroy();
 			pr.waitFor();
 		} catch (Exception e) {
 			e.printStackTrace();

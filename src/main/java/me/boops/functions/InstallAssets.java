@@ -8,8 +8,11 @@ import org.json.JSONObject;
 
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
+import me.boops.functions.file.ExtractZip;
+import me.boops.functions.file.GetDotMCPath;
 import me.boops.functions.file.WriteTextToFile;
 import me.boops.functions.network.FetchRemoteContent;
+import me.boops.functions.profilemanager.ProfileManager;
 import me.boops.functions.threads.DownloadAssetsThread;
 import me.boops.functions.threads.DownloadLegacyAssetsThread;
 
@@ -40,6 +43,30 @@ public class InstallAssets {
             downloadLibs(asset_list.getJSONObject("objects"), (Main.home_dir + "assets" + File.separator + "legacy" + File.separator));
         } else {
             downloadLibs(asset_list.getJSONObject("objects"), (Main.home_dir + "assets" + File.separator + "objects" + File.separator));
+        }
+        
+        // If legacy hack in the old sounds
+        if(this.is_legacy) {
+            // First install to the profile dir /resources
+            // Then install to the .minecraft dir /resources
+            
+            // First download the old MC sounds and save them to
+            // the assets dir
+            if(!new File(Main.home_dir + "assets" + File.separator + "old_sounds.zip").exists()) {
+                System.out.println("Downloading old_sounds.zip");
+                new FetchRemoteContent().file("https://git.sergal.org/Sir-Boops/McBoop-Support-Files/raw/branch/master/mojang_files/old_sounds.zip", Main.home_dir + "assets" + File.separator, "");
+            }
+            
+            System.out.println("Extracting and checking old MC sounds in the profile folder");
+            new CreateFolder(ProfileManager.path + "resources" + File.separator);
+            new ExtractZip(Main.home_dir + "assets" + File.separator + "old_sounds.zip", ProfileManager.path + "resources" + File.separator);
+            System.out.println("");
+            
+            System.out.println("Extracting and checking old MC sounds in the .minecraft folder");
+            new CreateFolder(new GetDotMCPath().path());
+            new CreateFolder(new GetDotMCPath().path() + "resources" + File.separator);
+            new ExtractZip(Main.home_dir + "assets" + File.separator + "old_sounds.zip", new GetDotMCPath().path() + "resources" + File.separator);
+            System.out.println("");
         }
 
         InstallAssets.assets_path = gen_asset_path(this.is_legacy);
@@ -75,6 +102,8 @@ public class InstallAssets {
             }
             thread.start();
         }
+        
+        System.out.println(" 100% Complete               \r");
 
         // Wait for all threads to finish!
         while (DLGroup.activeCount() > 0) {

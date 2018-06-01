@@ -6,6 +6,7 @@ import me.boops.Main;
 import me.boops.functions.VersionMeta;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.file.ExtractZip;
+import me.boops.functions.file.GetDotMCPath;
 import me.boops.functions.file.MergeTwoJars;
 import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.network.DownloadClient;
@@ -16,7 +17,7 @@ public class Forge125to152 {
 
         String forge_path = (Main.home_dir + "forge" + File.separator);
         String new_jar = (VersionMeta.ID + "-forge-" + forge_id + ".jar");
-        String dot_mc = get_dot_minecraft_path();
+        String dot_mc = new GetDotMCPath().path();
         String lib_path = (dot_mc + "lib" + File.separator);
 
         String url_base = "https://files.minecraftforge.net/fmllibs/";
@@ -67,13 +68,5 @@ public class Forge125to152 {
         }
 
         ForgeHandler.custom_runtime_jar = (forge_path + new_jar);
-    }
-
-    private String get_dot_minecraft_path() {
-        String ans = System.getProperty("user.home") + File.separator + ".minecraft" + File.separator;
-        if (Main.base_os_name.equals("windows")) {
-            ans = (System.getenv("APPDATA") + File.separator + ".minecraft" + File.separator);
-        }
-        return ans;
     }
 }
