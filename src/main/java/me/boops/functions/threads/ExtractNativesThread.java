@@ -1,13 +1,12 @@
 package me.boops.functions.threads;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import me.boops.functions.InstallLibs;
 
 public class ExtractNativesThread implements Runnable {
 	
@@ -34,21 +33,13 @@ public class ExtractNativesThread implements Runnable {
 				// Check if the file is a .so file
 				if(file.getName().substring(file.getName().length() - 3, file.getName().length()).equals(".so")) {
 					// We found a .so file!
-					// Make sure we don't extract the same file twice
-					if(!InstallLibs.extraced_filenames.contains(file.getName())) {
-						InstallLibs.extraced_filenames.add(file.getName());
-						ExtractFile(jar, file);
-					}
+				    ExtractFile(jar, file);
 				}
 				
 				// Check if a .dll file
 				if(file.getName().substring(file.getName().length() - 4, file.getName().length()).equals(".dll")) {
 					// We found a .dll file!
-					// Make sure we don't extract the same file twice
-					if(!InstallLibs.extraced_filenames.contains(file.getName())) {
-						InstallLibs.extraced_filenames.add(file.getName());
-						ExtractFile(jar, file);
-					}
+				    ExtractFile(jar, file);
 				}
 			}
 			
@@ -62,11 +53,10 @@ public class ExtractNativesThread implements Runnable {
 	private void ExtractFile(JarFile jar, JarEntry file) throws Exception {
 		
 		// Make sure we havn't extracted this already!
-		if(!InstallLibs.already_extracted.contains(file.getName())) {
+		if(!new File(this.native_path + file.getName()).exists()) {
 			
 			// We have not extracted this file yet!
 			System.out.println("Extracting: " + file.getName());
-			InstallLibs.already_extracted.add(file.getName());
 			
 			InputStream is = jar.getInputStream(file);
 			FileOutputStream fos = new FileOutputStream(this.native_path + file.getName());

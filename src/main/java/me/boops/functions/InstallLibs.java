@@ -16,8 +16,6 @@ public class InstallLibs {
 
     public static List<String> libs = new ArrayList<String>();
     public static String nativesPath = "";
-    public static List<String> already_extracted = new ArrayList<String>();
-    public static List<String> extraced_filenames = new ArrayList<String>();
 
     private List<String> libURLS = new ArrayList<String>();
     private List<String> libSUMS = new ArrayList<String>();
