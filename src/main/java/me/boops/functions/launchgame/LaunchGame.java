@@ -56,6 +56,7 @@ public class LaunchGame {
 			}
 
 			// Wait for the minecraft process to fully stop
+			Thread.sleep(2 * 1000);
 			pr.destroy();
 			pr.waitFor();
 		} catch (Exception e) {
