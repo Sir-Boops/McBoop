@@ -1,8 +1,6 @@
 package me.boops.functions.launchgame;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +11,7 @@ import me.boops.functions.VersionMeta;
 import me.boops.functions.commands.CommandParser;
 import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.network.DownloadClient;
-import me.boops.functions.profilemanager.ProfileManager;
+import me.boops.functions.threads.LaunchGameThread;
 
 public class LaunchGame {
 
@@ -37,30 +35,18 @@ public class LaunchGame {
 		System.out.println("");
 		System.out.println("Minecraft output begins here!");
 		System.out.println("");
-
-		try {
-
-			Process pr = new ProcessBuilder(launchArr).directory(new File(ProfileManager.path)).start();
-
-			BufferedReader brErr = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
-			BufferedReader br = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-
-			String line = null;
-			while ((line = br.readLine()) != null) {
-				System.out.println(line);
-			}
-			
-			String lineErr = null;
-			while ((lineErr = brErr.readLine()) != null) {
-				System.out.println(lineErr);
-			}
-
-			// Wait for the minecraft process to fully stop
-			Thread.sleep(2 * 1000);
-			pr.destroy();
-			pr.waitFor();
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		// Start the game thread
+		Thread thread = new Thread(new LaunchGameThread(launchArr));
+		thread.start();
+		
+		// Wait for thread to stop
+		while(thread.isAlive()) {
+		    try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 		}
 		
 		// Delete the natives dir on exit
