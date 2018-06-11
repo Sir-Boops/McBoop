@@ -12,6 +12,7 @@ Things the launcher can do:
 * Run multiple copies of Minecraft at once
 * Run using predefined profiles
 * Run Forge modpacks
+* Run older versions of Minecraft with sound
 
 How to use
 ---
