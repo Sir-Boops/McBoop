@@ -6,13 +6,7 @@ import me.boops.functions.file.LoadAuthFile;
 
 public class UserHandler {
 	
-	// 0 => accessToken
-	// 1 => clientToken
-	// 2 => UUID
-	// 3 => username
-	public static String[] user = {};
-	
-	public UserHandler(String[] launcher_args) {
+	public String[] user(String[] launcher_args) {
 		
 		// Load the auth file
 		JSONArray authFile = new LoadAuthFile().load();
@@ -43,8 +37,8 @@ public class UserHandler {
 		}
 		
 		// Grab the account to use!
-		user = new GetAccount().get(authFile, launcher_args);
-		System.out.println("Logged in as: " + UserHandler.user[3]);
-		
+		String[] user = new GetAccount().get(authFile, launcher_args);
+		System.out.println("Logged in as: " + user[3]);
+		return user;
 	}
 }

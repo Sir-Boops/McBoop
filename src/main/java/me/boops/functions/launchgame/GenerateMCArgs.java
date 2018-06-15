@@ -8,11 +8,10 @@ import org.json.JSONObject;
 
 import me.boops.functions.InstallAssets;
 import me.boops.functions.VersionMeta;
-import me.boops.functions.userhandler.UserHandler;
 
 public class GenerateMCArgs {
 	
-	public List<String> gen(JSONObject metaFile, String profile_path) {
+	public List<String> gen(JSONObject metaFile, String profile_path, String[] user) {
 		List<String> ans = new ArrayList<String>();
 
 		// Newer versions use a JSONArray older versions use a string
@@ -24,7 +23,7 @@ public class GenerateMCArgs {
 			for (int i = 0; i < arr.length(); i++) {
 				if (arr.get(i) instanceof String) {
 					if (arr.getString(i).indexOf("${") == 0) {
-						ans.add(getVar(arr.getString(i), profile_path));
+						ans.add(getVar(arr.getString(i), profile_path, user));
 					} else {
 						ans.add(arr.getString(i));
 					}
@@ -37,7 +36,7 @@ public class GenerateMCArgs {
 			String[] arr = metaFile.getString("minecraftArguments").split(" ");
 			for(int i = 0; i < arr.length; i++) {
 				if(arr[i].indexOf("${") == 0) {
-					ans.add(getVar(arr[i], profile_path));
+					ans.add(getVar(arr[i], profile_path, user));
 				} else {
 					ans.add(arr[i]);
 				}
@@ -47,11 +46,11 @@ public class GenerateMCArgs {
 		return ans;
 	}
 
-	private String getVar(String var, String profile_path) {
+	private String getVar(String var, String profile_path, String[] user) {
 		String ans = "";
 
 		if (var.equalsIgnoreCase("${auth_player_name}")) {
-			ans = UserHandler.user[3];
+			ans = user[3];
 		}
 
 		if (var.equalsIgnoreCase("${version_name}")) {
@@ -71,11 +70,11 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${auth_uuid}")) {
-			ans = UserHandler.user[2];
+			ans = user[2];
 		}
 
 		if (var.equalsIgnoreCase("${auth_access_token}") || var.equalsIgnoreCase("${auth_session}")) {
-			ans = UserHandler.user[0];
+			ans = user[0];
 		}
 
 		if (var.equalsIgnoreCase("${user_type}") || var.equalsIgnoreCase("${user_properties}")) {

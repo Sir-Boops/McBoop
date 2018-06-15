@@ -39,7 +39,7 @@ public class Main {
         // Run game
 
         // Run non-mc realted commands
-        new CommandParser(args);
+        new CommandParser(args); // Cleaned
 
         // Check for a base dir
         // If it dosn't exist create it
@@ -49,7 +49,7 @@ public class Main {
         // All a profile is, is a folder
         // that launches a spefic version!
         System.out.println("");
-        String[] profile = new ProfileManager().check(args);
+        String[] profile = new ProfileManager().check(args); // Clean
         // 0 = MC Version
         // 1 = Profile Name
         // 2 = Profile Path
@@ -58,7 +58,11 @@ public class Main {
 
         // Try to login or refresh auth for the requested user
         System.out.println("");
-        new UserHandler(args);
+        String[] user = new UserHandler().user(args); // Clean
+        // 0 => accessToken
+        // 1 => clientToken
+        // 2 => UUID
+        // 3 => username
         System.out.println("");
 
         // Grab the version index
@@ -92,7 +96,7 @@ public class Main {
 
         // Launch the game!
         System.out.println("");
-        new LaunchGame(args, profile[2]);
+        new LaunchGame(args, profile[2], user);
         System.out.println("");
 
         System.out.println("Run --help for help");

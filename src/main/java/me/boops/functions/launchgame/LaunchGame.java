@@ -15,7 +15,7 @@ import me.boops.functions.network.DownloadClient;
 
 public class LaunchGame {
 
-	public LaunchGame(String[] launcher_args, String profile_path) {
+	public LaunchGame(String[] launcher_args, String profile_path, String[] user) {
 		
 		List<String> launchArr = new ArrayList<String>();
 
@@ -28,7 +28,7 @@ public class LaunchGame {
 		launchArr.add("-cp");
 		launchArr.add(cleanLibs + getRuntimeJar());
 		launchArr.add(getLaunchClass());
-		launchArr.addAll(getMCArgs(profile_path));
+		launchArr.addAll(getMCArgs(profile_path, user));
 		
 		System.out.println("Using launch args:");
 		System.out.println("");
@@ -100,13 +100,13 @@ public class LaunchGame {
 		return ans;
 	}
 	
-	private List<String> getMCArgs(String profile_path){
+	private List<String> getMCArgs(String profile_path, String[] user){
 		List<String> ans = new ArrayList<String>();
 		
 		if(ForgeHandler.versionMeta.has("minecraftArguments")) {
-			ans.addAll(new GenerateMCArgs().gen(ForgeHandler.versionMeta, profile_path));
+			ans.addAll(new GenerateMCArgs().gen(ForgeHandler.versionMeta, profile_path, user));
 		} else {
-			ans.addAll(new GenerateMCArgs().gen(VersionMeta.Meta, profile_path));
+			ans.addAll(new GenerateMCArgs().gen(VersionMeta.Meta, profile_path, user));
 		}
 		
 		return ans;
