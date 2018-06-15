@@ -20,9 +20,6 @@ public class Main {
     // Get A Random String for natives
     private static SecureRandom random = new SecureRandom();
 
-    // Set the args here so anywhere can access them!
-    public static String[] args = {};
-
     // Home dir is the base dir that mcboop works in
     static public String home_dir = System.getProperty("user.home") + File.separator + ".mcboop" + File.separator;
     static public String http_user = "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0";
@@ -32,7 +29,6 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         Main.rand_string = new BigInteger(32, Main.random).toString();
-        Main.args = args;
 
         // List of things to do
         // Check/Create a hidden dir to use
@@ -42,8 +38,8 @@ public class Main {
         // Extract natives
         // Run game
 
-        // Run non-launcher related commands
-        new CommandParser();
+        // Run non-mc realted commands
+        new CommandParser(args);
 
         // Check for a base dir
         // If it dosn't exist create it
@@ -53,12 +49,12 @@ public class Main {
         // All a profile is, is a folder
         // that launches a spefic version!
         System.out.println("");
-        new ProfileManager();
+        new ProfileManager(args);
         System.out.println("");
 
         // Try to login or refresh auth for the requested user
         System.out.println("");
-        new UserHandler();
+        new UserHandler(args);
         System.out.println("");
 
         // Grab the version index
@@ -66,7 +62,7 @@ public class Main {
         // Is trying to run and if it is returns the
         // launcher meta URL
         System.out.println("");
-        new VersionMeta();
+        new VersionMeta(args);
         System.out.println("");
 
         // Install/check the assets for
@@ -87,12 +83,12 @@ public class Main {
 
         // Try to setup forge!
         System.out.println("");
-        new ForgeHandler();
+        new ForgeHandler(args);
         System.out.println("");
 
         // Launch the game!
         System.out.println("");
-        new LaunchGame();
+        new LaunchGame(args);
         System.out.println("");
 
         System.out.println("Run --help for help");

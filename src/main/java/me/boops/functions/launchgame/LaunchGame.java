@@ -7,16 +7,16 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import me.boops.Main;
+import me.boops.functions.GetCLIArg;
 import me.boops.functions.InstallLibs;
 import me.boops.functions.VersionMeta;
-import me.boops.functions.commands.CommandParser;
 import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.network.DownloadClient;
 import me.boops.functions.profilemanager.ProfileManager;
 
 public class LaunchGame {
 
-	public LaunchGame() {
+	public LaunchGame(String[] launcher_args) {
 		
 		List<String> launchArr = new ArrayList<String>();
 
@@ -24,7 +24,7 @@ public class LaunchGame {
 		launchArr.addAll(get_system_launch_args());
 		launchArr.add("java");
 		launchArr.add("-Xms256M");
-		launchArr.add(getMaxRAM());
+		launchArr.add(getMaxRAM(launcher_args));
 		launchArr.add("-Djava.library.path=" + InstallLibs.nativesPath);
 		launchArr.add("-cp");
 		launchArr.add(cleanLibs + getRuntimeJar());
@@ -113,14 +113,11 @@ public class LaunchGame {
 		return ans;
 	}
 	
-	private String getMaxRAM() {
-		String ans = "";
-		if(CommandParser.maxRAM.isEmpty()) {
+	private String getMaxRAM(String[] launcher_args) {
+		String ans = new GetCLIArg().get(launcher_args, "--max-ram");
+		if(ans.isEmpty()) {
 			ans = "-Xmx2G";
-		} else {
-			ans = ("-Xmx" + CommandParser.maxRAM);
 		}
-		
 		return ans;
 	}
 	

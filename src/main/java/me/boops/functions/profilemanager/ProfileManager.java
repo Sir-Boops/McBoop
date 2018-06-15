@@ -12,16 +12,16 @@ public class ProfileManager {
 	public static String path = "";
 	public static String forgeVersion = "";
 	
-	public ProfileManager() {
+	public ProfileManager(String[] launcher_args) {
 		
 		System.out.println("Attempting to load profile");
 		new CreateFolder(Main.home_dir + "profiles" + File.separator);
 		
-		for(int i = 0; i < Main.args.length; i++) {
+		for(int i = 0; i < launcher_args.length; i++) {
 			
-			if(Main.args[i].equalsIgnoreCase("--create-profile")) {
+			if(launcher_args[i].equalsIgnoreCase("--create-profile")) {
 				
-				if((i + 2) >= Main.args.length) {
+				if((i + 2) >= launcher_args.length) {
 					System.out.println("");
 					System.out.println("Missing argument!");
 					System.out.println("--help for help!");
@@ -29,47 +29,47 @@ public class ProfileManager {
 					System.exit(1);
 				}
 				
-				new CreateProfile(Main.args[i + 1], Main.args[i + 2]);
+				new CreateProfile(launcher_args[i + 1], launcher_args[i + 2]);
 				System.exit(0);
 			}
 			
-			if(Main.args[i].equalsIgnoreCase("--update-profile")) {
+			if(launcher_args[i].equalsIgnoreCase("--update-profile")) {
 				
-				if((i + 2) < Main.args.length) {
+				if((i + 2) < launcher_args.length) {
 					System.out.println("");
 					System.out.println("Missing argument!");
 					System.out.println("--help for help!");
 					System.out.println("");
 				}
 				
-				new CreateProfile(Main.args[i + 1], Main.args[i + 2]);
+				new CreateProfile(launcher_args[i + 1], launcher_args[i + 2]);
 				System.exit(0);
 			}
 			
-			if(Main.args[i].equalsIgnoreCase("--profile")) {
-				String[] data = new ReadProfileData().read(Main.args[i + 1]);
+			if(launcher_args[i].equalsIgnoreCase("--profile")) {
+				String[] data = new ReadProfileData().read(launcher_args[i + 1]);
 				ProfileManager.version = data[0];
 				ProfileManager.forgeVersion = data[1];
-				ProfileManager.name = Main.args[i + 1];
+				ProfileManager.name = launcher_args[i + 1];
 			}
 			
-			if(Main.args[i].equalsIgnoreCase("--list-profiles")) {
+			if(launcher_args[i].equalsIgnoreCase("--list-profiles")) {
 				new ListProfiles();
 				System.exit(0);
 			}
 			
-			if(Main.args[i].equalsIgnoreCase("--set-profile-forge")) {
-				new AppendForgeVersion(Main.args[i + 1], Main.args[i + 2]);
+			if(launcher_args[i].equalsIgnoreCase("--set-profile-forge")) {
+				new AppendForgeVersion(launcher_args[i + 1], launcher_args[i + 2]);
 				System.exit(0);
 			}
 			
-			if(Main.args[i].equalsIgnoreCase("--update-profile-forge")) {
-				new AppendForgeVersion(Main.args[i + 1], Main.args[i + 2]);
+			if(launcher_args[i].equalsIgnoreCase("--update-profile-forge")) {
+				new AppendForgeVersion(launcher_args[i + 1], launcher_args[i + 2]);
 				System.exit(0);
 			}
 			
-			if(Main.args[i].equalsIgnoreCase("--delete-profile")) {
-				new DeleteProfile(Main.args[i + 1]);
+			if(launcher_args[i].equalsIgnoreCase("--delete-profile")) {
+				new DeleteProfile(launcher_args[i + 1]);
 				System.exit(0);
 			}
 		}

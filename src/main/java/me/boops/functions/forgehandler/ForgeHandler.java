@@ -19,17 +19,17 @@ public class ForgeHandler {
     public static double forge_version;
     public static String custom_runtime_jar = "";
 
-    public ForgeHandler() {
+    public ForgeHandler(String[] launcher_args) {
 
         System.out.println("Checking if we should use forge");
 
-        for (int i = 0; i < Main.args.length; i++) {
+        for (int i = 0; i < launcher_args.length; i++) {
 
-            if (Main.args[i].equalsIgnoreCase("--with-forge")) {
-                runList(Main.args[i + 1]);
+            if (launcher_args[i].equalsIgnoreCase("--with-forge")) {
+                runList(launcher_args[i + 1]);
             }
 
-            if (Main.args[i].equalsIgnoreCase("--profile") && !ProfileManager.forgeVersion.isEmpty()) {
+            if (launcher_args[i].equalsIgnoreCase("--profile") && !ProfileManager.forgeVersion.isEmpty()) {
                 runList(ProfileManager.forgeVersion);
             }
         }

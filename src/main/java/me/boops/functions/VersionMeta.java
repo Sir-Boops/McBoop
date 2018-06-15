@@ -2,7 +2,6 @@ package me.boops.functions;
 
 import org.json.JSONObject;
 
-import me.boops.Main;
 import me.boops.functions.network.FetchRemoteContent;
 import me.boops.functions.profilemanager.ProfileManager;
 
@@ -11,7 +10,7 @@ public class VersionMeta {
 	public static String ID = "";
 	public static JSONObject Meta = new JSONObject();
 	
-	public VersionMeta() {
+	public VersionMeta(String[] launcher_args) {
 		
 		System.out.println("Attempting to fetch version meta");
 		
@@ -24,10 +23,10 @@ public class VersionMeta {
 		// Or if we should use the --run <version>
 		if (ProfileManager.version.isEmpty()) {
 
-			for (int i = 0; i < Main.args.length; i++) {
-				if (Main.args[i].equalsIgnoreCase("--run")) {
-					mcVersion = Main.args[i + 1];
-					i = (Main.args.length + 1);
+			for (int i = 0; i < launcher_args.length; i++) {
+				if (launcher_args[i].equalsIgnoreCase("--run")) {
+					mcVersion = launcher_args[i + 1];
+					i = (launcher_args.length + 1);
 				}
 			}
 
