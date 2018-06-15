@@ -6,12 +6,13 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+import me.boops.Main;
 import me.boops.functions.InstallLibs;
 import me.boops.functions.VersionMeta;
 import me.boops.functions.commands.CommandParser;
 import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.network.DownloadClient;
-import me.boops.functions.threads.LaunchGameThread;
+import me.boops.functions.profilemanager.ProfileManager;
 
 public class LaunchGame {
 
@@ -20,6 +21,7 @@ public class LaunchGame {
 		List<String> launchArr = new ArrayList<String>();
 
 		String cleanLibs = cleanLibsPaths(InstallLibs.libs, ForgeHandler.libs);
+		launchArr.addAll(get_system_launch_args());
 		launchArr.add("java");
 		launchArr.add("-Xms256M");
 		launchArr.add(getMaxRAM());
@@ -32,32 +34,39 @@ public class LaunchGame {
 		System.out.println("Using launch args:");
 		System.out.println("");
 		System.out.println(launchArr);
-		System.out.println("");
-		System.out.println("Minecraft output begins here!");
-		System.out.println("");
 		
-		// Start the game thread
-		Thread thread = new Thread(new LaunchGameThread(launchArr));
-		thread.start();
-		
-		// Wait for thread to stop
-		while(thread.isAlive()) {
-		    try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-		}
-		
-		// Delete the natives dir on exit
+		// Start the game
 		try {
-			FileUtils.deleteDirectory(new File(InstallLibs.nativesPath));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		    
+		    
+		    Process pr = new ProcessBuilder(launchArr).directory(new File(ProfileManager.path)).start();
+		    
+		    System.out.println("");
+		    System.out.println("Starting Minecraft");
+		    
+		    while(pr.isAlive()) {
+		        Thread.sleep(10);
+		    }
+		    
+		    FileUtils.deleteDirectory(new File(InstallLibs.nativesPath));
+            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 		
 		System.exit(0);
 
+	}
+	
+	private List<String> get_system_launch_args() {
+	    List<String> ans = new ArrayList<String>();
+	    if(Main.base_os_name.equalsIgnoreCase("windows")) {
+	        ans.add("cmd.exe");
+	        ans.add("/C");
+	        ans.add("start /wait");
+	    }
+	    return ans;
 	}
 
 	private String cleanLibsPaths(List<String> basicLibs, List<String> forgeLibs) {
