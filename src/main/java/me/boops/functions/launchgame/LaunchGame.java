@@ -12,11 +12,10 @@ import me.boops.functions.InstallLibs;
 import me.boops.functions.VersionMeta;
 import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.network.DownloadClient;
-import me.boops.functions.profilemanager.ProfileManager;
 
 public class LaunchGame {
 
-	public LaunchGame(String[] launcher_args) {
+	public LaunchGame(String[] launcher_args, String profile_path) {
 		
 		List<String> launchArr = new ArrayList<String>();
 
@@ -29,7 +28,7 @@ public class LaunchGame {
 		launchArr.add("-cp");
 		launchArr.add(cleanLibs + getRuntimeJar());
 		launchArr.add(getLaunchClass());
-		launchArr.addAll(getMCArgs());
+		launchArr.addAll(getMCArgs(profile_path));
 		
 		System.out.println("Using launch args:");
 		System.out.println("");
@@ -39,7 +38,7 @@ public class LaunchGame {
 		try {
 		    
 		    
-		    Process pr = new ProcessBuilder(launchArr).directory(new File(ProfileManager.path)).start();
+		    Process pr = new ProcessBuilder(launchArr).directory(new File(profile_path)).start();
 		    
 		    System.out.println("");
 		    System.out.println("Starting Minecraft");
@@ -101,13 +100,13 @@ public class LaunchGame {
 		return ans;
 	}
 	
-	private List<String> getMCArgs(){
+	private List<String> getMCArgs(String profile_path){
 		List<String> ans = new ArrayList<String>();
 		
 		if(ForgeHandler.versionMeta.has("minecraftArguments")) {
-			ans.addAll(new GenerateMCArgs().gen(ForgeHandler.versionMeta));
+			ans.addAll(new GenerateMCArgs().gen(ForgeHandler.versionMeta, profile_path));
 		} else {
-			ans.addAll(new GenerateMCArgs().gen(VersionMeta.Meta));
+			ans.addAll(new GenerateMCArgs().gen(VersionMeta.Meta, profile_path));
 		}
 		
 		return ans;

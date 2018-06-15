@@ -27,7 +27,7 @@ public class ReadProfileData {
 			}
 		} else {
 			// This is the default profile
-			ans = new String[] {"none", "none"};
+			ans = new String[] {"", ""};
 		}
 		return ans;
 	}

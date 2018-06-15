@@ -3,14 +3,13 @@ package me.boops.functions;
 import org.json.JSONObject;
 
 import me.boops.functions.network.FetchRemoteContent;
-import me.boops.functions.profilemanager.ProfileManager;
 
 public class VersionMeta {
 
 	public static String ID = "";
 	public static JSONObject Meta = new JSONObject();
 	
-	public VersionMeta(String[] launcher_args) {
+	public VersionMeta(String[] launcher_args, String profile_mc_version) {
 		
 		System.out.println("Attempting to fetch version meta");
 		
@@ -21,7 +20,7 @@ public class VersionMeta {
 		
 		// Check if we should use profile version
 		// Or if we should use the --run <version>
-		if (ProfileManager.version.isEmpty()) {
+		if (profile_mc_version.isEmpty()) {
 
 			for (int i = 0; i < launcher_args.length; i++) {
 				if (launcher_args[i].equalsIgnoreCase("--run")) {
@@ -31,7 +30,7 @@ public class VersionMeta {
 			}
 
 		} else {
-			mcVersion = ProfileManager.version;
+			mcVersion = profile_mc_version;
 		}
 
 		if (mcVersion.equalsIgnoreCase("stable") || mcVersion.equalsIgnoreCase("snapshot")) {

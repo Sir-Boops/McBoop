@@ -49,7 +49,11 @@ public class Main {
         // All a profile is, is a folder
         // that launches a spefic version!
         System.out.println("");
-        new ProfileManager(args);
+        String[] profile = new ProfileManager().check(args);
+        // 0 = MC Version
+        // 1 = Profile Name
+        // 2 = Profile Path
+        // 3 = Forge Version
         System.out.println("");
 
         // Try to login or refresh auth for the requested user
@@ -62,13 +66,13 @@ public class Main {
         // Is trying to run and if it is returns the
         // launcher meta URL
         System.out.println("");
-        new VersionMeta(args);
+        new VersionMeta(args, profile[0]);
         System.out.println("");
 
         // Install/check the assets for
         // This version of MC
         System.out.println("");
-        new InstallAssets();
+        new InstallAssets(profile[2]);
         System.out.println("");
 
         // Install libs / natives
@@ -83,12 +87,12 @@ public class Main {
 
         // Try to setup forge!
         System.out.println("");
-        new ForgeHandler(args);
+        new ForgeHandler(args, profile[3]);
         System.out.println("");
 
         // Launch the game!
         System.out.println("");
-        new LaunchGame(args);
+        new LaunchGame(args, profile[2]);
         System.out.println("");
 
         System.out.println("Run --help for help");

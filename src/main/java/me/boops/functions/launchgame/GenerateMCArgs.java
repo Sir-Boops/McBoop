@@ -8,12 +8,11 @@ import org.json.JSONObject;
 
 import me.boops.functions.InstallAssets;
 import me.boops.functions.VersionMeta;
-import me.boops.functions.profilemanager.ProfileManager;
 import me.boops.functions.userhandler.UserHandler;
 
 public class GenerateMCArgs {
 	
-	public List<String> gen(JSONObject metaFile) {
+	public List<String> gen(JSONObject metaFile, String profile_path) {
 		List<String> ans = new ArrayList<String>();
 
 		// Newer versions use a JSONArray older versions use a string
@@ -25,7 +24,7 @@ public class GenerateMCArgs {
 			for (int i = 0; i < arr.length(); i++) {
 				if (arr.get(i) instanceof String) {
 					if (arr.getString(i).indexOf("${") == 0) {
-						ans.add(getVar(arr.getString(i)));
+						ans.add(getVar(arr.getString(i), profile_path));
 					} else {
 						ans.add(arr.getString(i));
 					}
@@ -38,7 +37,7 @@ public class GenerateMCArgs {
 			String[] arr = metaFile.getString("minecraftArguments").split(" ");
 			for(int i = 0; i < arr.length; i++) {
 				if(arr[i].indexOf("${") == 0) {
-					ans.add(getVar(arr[i]));
+					ans.add(getVar(arr[i], profile_path));
 				} else {
 					ans.add(arr[i]);
 				}
@@ -48,7 +47,7 @@ public class GenerateMCArgs {
 		return ans;
 	}
 
-	private String getVar(String var) {
+	private String getVar(String var, String profile_path) {
 		String ans = "";
 
 		if (var.equalsIgnoreCase("${auth_player_name}")) {
@@ -60,7 +59,7 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${game_directory}")) {
-			ans = (ProfileManager.path);
+			ans = (profile_path);
 		}
 
 		if (var.equalsIgnoreCase("${assets_root}") || var.equalsIgnoreCase("${game_assets}")) {

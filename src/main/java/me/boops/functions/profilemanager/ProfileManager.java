@@ -7,12 +7,12 @@ import me.boops.functions.file.CreateFolder;
 
 public class ProfileManager {
 	
-	public static String version = "";
-	public static String name = "";
-	public static String path = "";
-	public static String forgeVersion = "";
-	
-	public ProfileManager(String[] launcher_args) {
+	public String[] check(String[] launcher_args) {
+	    
+	    String version = "";
+	    String name = "";
+	    String path = "";
+	    String forge_version = "";
 		
 		System.out.println("Attempting to load profile");
 		new CreateFolder(Main.home_dir + "profiles" + File.separator);
@@ -48,9 +48,9 @@ public class ProfileManager {
 			
 			if(launcher_args[i].equalsIgnoreCase("--profile")) {
 				String[] data = new ReadProfileData().read(launcher_args[i + 1]);
-				ProfileManager.version = data[0];
-				ProfileManager.forgeVersion = data[1];
-				ProfileManager.name = launcher_args[i + 1];
+				version = data[0];
+				forge_version = data[1];
+				name = launcher_args[i + 1];
 			}
 			
 			if(launcher_args[i].equalsIgnoreCase("--list-profiles")) {
@@ -76,13 +76,14 @@ public class ProfileManager {
 		
 		// If no profile is defined use the
 		// `default` profile
-		if(ProfileManager.name.isEmpty()) {
-			ProfileManager.name = "default";
+		if(name.isEmpty()) {
+			name = "default";
 		}
 		
 		// Set the profile path
-		ProfileManager.path = (Main.home_dir + "profiles" + File.separator + ProfileManager.name + File.separator);
-		new CreateFolder(ProfileManager.path);
-		System.out.println("Loaded profile: " + ProfileManager.name);
+		path = (Main.home_dir + "profiles" + File.separator + name + File.separator);
+		new CreateFolder(path);
+		System.out.println("Loaded profile: " + name);
+		return new String[] {version, name, path, forge_version};
 	}
 }

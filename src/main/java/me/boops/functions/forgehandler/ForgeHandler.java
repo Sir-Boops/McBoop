@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import me.boops.Main;
 import me.boops.functions.forge_version_handlers.Forge11to124;
 import me.boops.functions.forge_version_handlers.Forge125to152;
-import me.boops.functions.profilemanager.ProfileManager;
 
 public class ForgeHandler {
 
@@ -19,7 +18,7 @@ public class ForgeHandler {
     public static double forge_version;
     public static String custom_runtime_jar = "";
 
-    public ForgeHandler(String[] launcher_args) {
+    public ForgeHandler(String[] launcher_args, String profile_forge_version) {
 
         System.out.println("Checking if we should use forge");
 
@@ -29,8 +28,8 @@ public class ForgeHandler {
                 runList(launcher_args[i + 1]);
             }
 
-            if (launcher_args[i].equalsIgnoreCase("--profile") && !ProfileManager.forgeVersion.isEmpty()) {
-                runList(ProfileManager.forgeVersion);
+            if (launcher_args[i].equalsIgnoreCase("--profile") && !profile_forge_version.isEmpty()) {
+                runList(profile_forge_version);
             }
         }
     }

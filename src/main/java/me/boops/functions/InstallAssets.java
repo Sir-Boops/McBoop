@@ -15,7 +15,6 @@ import me.boops.functions.file.GetDotMCPath;
 import me.boops.functions.file.ReadTextFromFile;
 import me.boops.functions.file.WriteTextToFile;
 import me.boops.functions.network.FetchRemoteContent;
-import me.boops.functions.profilemanager.ProfileManager;
 import me.boops.functions.threads.DownloadAssetsThread;
 import me.boops.functions.threads.DownloadLegacyAssetsThread;
 
@@ -27,7 +26,7 @@ public class InstallAssets {
     private boolean is_legacy = false;
     private boolean is_alpha = false;
 
-    public InstallAssets() {
+    public InstallAssets(String profile_path) {
 
         System.out.println("Starting asset download and verification");
 
@@ -77,34 +76,34 @@ public class InstallAssets {
                 String last_type = new ReadTextFromFile().read(Main.home_dir + "assets" + File.separator + "resource_type.txt");
                 if (last_type.equals("alpha") && !this.is_alpha) {
                     // Last ran alpha currently running legacy
-                    clean_resource_dirs();
+                    clean_resource_dirs(profile_path);
                 }
 
                 if (last_type.equals("legacy") && this.is_alpha) {
                     // Last run is legacy and currently running alpha
-                    clean_resource_dirs();
+                    clean_resource_dirs(profile_path);
                 }
             } else {
 
                 // User has never run older versions
                 // Create and clean the dirs just to make sure
-                new CreateFolder(ProfileManager.path + "resources" + File.separator);
+                new CreateFolder(profile_path + "resources" + File.separator);
                 new CreateFolder(new GetDotMCPath().path());
                 new CreateFolder(new GetDotMCPath().path() + "resources" + File.separator);
-                clean_resource_dirs();
+                clean_resource_dirs(profile_path);
 
             }
 
             System.out.println("Extracting and checking old MC sounds in the profile folder");
             if (this.is_alpha) {
-                new ExtractZip(Main.home_dir + "assets" + File.separator + "alpha_sounds.zip", ProfileManager.path + "resources" + File.separator);
+                new ExtractZip(Main.home_dir + "assets" + File.separator + "alpha_sounds.zip", profile_path + "resources" + File.separator);
             }
-            new ExtractZip(Main.home_dir + "assets" + File.separator + "old_sounds.zip", ProfileManager.path + "resources" + File.separator);
+            new ExtractZip(Main.home_dir + "assets" + File.separator + "old_sounds.zip", profile_path + "resources" + File.separator);
             System.out.println("");
 
             System.out.println("copying to the .minecraft folder");
             try {
-                FileUtils.copyDirectory(new File(ProfileManager.path + "resources" + File.separator), new File(new GetDotMCPath().path() + "resources" + File.separator));
+                FileUtils.copyDirectory(new File(profile_path + "resources" + File.separator), new File(new GetDotMCPath().path() + "resources" + File.separator));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -123,9 +122,9 @@ public class InstallAssets {
 
     }
 
-    private void clean_resource_dirs() {
+    private void clean_resource_dirs(String profile_path) {
         try {
-            FileUtils.cleanDirectory(new File(ProfileManager.path + "resources" + File.separator));
+            FileUtils.cleanDirectory(new File(profile_path + "resources" + File.separator));
             FileUtils.cleanDirectory(new File(new GetDotMCPath().path() + "resources" + File.separator));
         } catch (IOException e) {
             e.printStackTrace();
