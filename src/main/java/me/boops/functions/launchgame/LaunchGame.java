@@ -66,6 +66,10 @@ public class LaunchGame {
 	        ans.add("/C");
 	        ans.add("start /wait");
 	    }
+	    if(Main.base_os_name.equalsIgnoreCase("linux")) {
+	        ans.add("xterm");
+	        ans.add("-e");
+	    }
 	    return ans;
 	}
 
