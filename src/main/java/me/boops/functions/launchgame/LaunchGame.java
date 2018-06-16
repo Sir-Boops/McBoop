@@ -5,17 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
 
 import me.boops.Main;
 import me.boops.functions.GetCLIArg;
 import me.boops.functions.InstallLibs;
-import me.boops.functions.VersionMeta;
 import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.network.DownloadClient;
 
 public class LaunchGame {
+    
+    private String[] mc_meta;
 
-	public LaunchGame(String[] launcher_args, String profile_path, String[] user) {
+	public LaunchGame(String[] launcher_args, String profile_path, String[] user, String[] meta) {
+	    
+	    this.mc_meta = meta;
 		
 		List<String> launchArr = new ArrayList<String>();
 
@@ -63,7 +67,8 @@ public class LaunchGame {
 	    if(Main.base_os_name.equalsIgnoreCase("windows")) {
 	        ans.add("cmd.exe");
 	        ans.add("/C");
-	        ans.add("start /wait");
+	        ans.add("start");
+	        ans.add("/wait");
 	    }
 	    if(Main.base_os_name.equalsIgnoreCase("linux")) {
 	        ans.add("xterm");
@@ -94,7 +99,7 @@ public class LaunchGame {
 		if(ForgeHandler.versionMeta.has("mainClass")) {
 			ans = ForgeHandler.versionMeta.getString("mainClass");
 		} else {
-			ans = VersionMeta.Meta.getString("mainClass");
+			ans = new JSONObject(this.mc_meta[1]).getString("mainClass");
 		}
 		
 		return ans;
@@ -104,9 +109,9 @@ public class LaunchGame {
 		List<String> ans = new ArrayList<String>();
 		
 		if(ForgeHandler.versionMeta.has("minecraftArguments")) {
-			ans.addAll(new GenerateMCArgs().gen(ForgeHandler.versionMeta, profile_path, user));
+			ans.addAll(new GenerateMCArgs().gen(ForgeHandler.versionMeta, profile_path, user, this.mc_meta[0]));
 		} else {
-			ans.addAll(new GenerateMCArgs().gen(VersionMeta.Meta, profile_path, user));
+			ans.addAll(new GenerateMCArgs().gen(new JSONObject(this.mc_meta[1]), profile_path, user, this.mc_meta[0]));
 		}
 		
 		return ans;

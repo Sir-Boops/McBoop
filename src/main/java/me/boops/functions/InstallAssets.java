@@ -26,18 +26,18 @@ public class InstallAssets {
     private boolean is_legacy = false;
     private boolean is_alpha = false;
 
-    public InstallAssets(String profile_path) {
+    public InstallAssets(String profile_path, JSONObject version_meta) {
 
         System.out.println("Starting asset download and verification");
 
-        JSONObject asset_index = VersionMeta.Meta.getJSONObject("assetIndex");
+        JSONObject asset_index = version_meta.getJSONObject("assetIndex");
         JSONObject asset_list = new JSONObject(new FetchRemoteContent().text(asset_index.getString("url")));
 
         if (asset_index.getString("id").equalsIgnoreCase("legacy")) {
             this.is_legacy = true;
         }
 
-        if (VersionMeta.Meta.getString("type").equals("old_alpha")) {
+        if (version_meta.getString("type").equals("old_alpha")) {
             this.is_alpha = true;
         }
 

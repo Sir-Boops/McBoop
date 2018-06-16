@@ -4,6 +4,8 @@ import java.io.File;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
+import org.json.JSONObject;
+
 import me.boops.functions.InstallAssets;
 import me.boops.functions.InstallLibs;
 import me.boops.functions.VersionMeta;
@@ -70,33 +72,35 @@ public class Main {
         // Is trying to run and if it is returns the
         // launcher meta URL
         System.out.println("");
-        new VersionMeta(args, profile[0]);
+        String[] meta = new VersionMeta().get(args, profile[0]); // Clean
+        // 0 -> Version ID
+        // 1 -> Version Meta JSON
         System.out.println("");
 
         // Install/check the assets for
         // This version of MC
         System.out.println("");
-        new InstallAssets(profile[2]);
+        new InstallAssets(profile[2], new JSONObject(meta[1]));
         System.out.println("");
 
         // Install libs / natives
         System.out.println("");
-        new InstallLibs();
+        new InstallLibs(new JSONObject(meta[1]));
         System.out.println("");
 
         // Download the client
         System.out.println("");
-        new DownloadClient();
+        new DownloadClient(meta);
         System.out.println("");
 
         // Try to setup forge!
         System.out.println("");
-        new ForgeHandler(args, profile[3]);
+        new ForgeHandler(args, profile[3], meta);
         System.out.println("");
 
         // Launch the game!
         System.out.println("");
-        new LaunchGame(args, profile[2], user);
+        new LaunchGame(args, profile[2], user, meta);
         System.out.println("");
 
         System.out.println("Run --help for help");

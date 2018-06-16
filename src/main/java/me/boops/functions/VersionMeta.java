@@ -6,10 +6,10 @@ import me.boops.functions.network.FetchRemoteContent;
 
 public class VersionMeta {
 
-	public static String ID = "";
-	public static JSONObject Meta = new JSONObject();
+	//public static String ID = "";
+	//public static JSONObject Meta = new JSONObject();
 	
-	public VersionMeta(String[] launcher_args, String profile_mc_version) {
+	public String[] get(String[] launcher_args, String profile_mc_version) {
 		
 		System.out.println("Attempting to fetch version meta");
 		
@@ -65,8 +65,9 @@ public class VersionMeta {
 		// So we know it's a proper version so just
 		// Fetch the version META and we are good to go!
 		
-		VersionMeta.Meta = new JSONObject(new FetchRemoteContent().text(metaURL));
-		VersionMeta.ID = VersionMeta.Meta.getString("id");
-		System.out.println("Got the version meta for: " + VersionMeta.ID);
+		JSONObject Meta = new JSONObject(new FetchRemoteContent().text(metaURL));
+		String ID = Meta.getString("id");
+		System.out.println("Got the version meta for: " + ID);
+		return new String[] {ID, Meta.toString()};
 	}
 }

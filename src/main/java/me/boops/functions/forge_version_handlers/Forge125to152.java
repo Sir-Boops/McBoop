@@ -3,7 +3,6 @@ package me.boops.functions.forge_version_handlers;
 import java.io.File;
 
 import me.boops.Main;
-import me.boops.functions.VersionMeta;
 import me.boops.functions.file.CreateFolder;
 import me.boops.functions.file.ExtractZip;
 import me.boops.functions.file.GetDotMCPath;
@@ -13,10 +12,10 @@ import me.boops.functions.network.DownloadClient;
 import me.boops.functions.network.FetchRemoteContent;
 
 public class Forge125to152 {
-    public Forge125to152(String file_name, String forge_id) {
+    public Forge125to152(String file_name, String forge_id, String mc_version_id) {
 
         String forge_path = (Main.home_dir + "forge" + File.separator);
-        String new_jar = (VersionMeta.ID + "-forge-" + forge_id + ".jar");
+        String new_jar = (mc_version_id + "-forge-" + forge_id + ".jar");
         String dot_mc = new GetDotMCPath().path();
         String lib_path = (dot_mc + "lib" + File.separator);
 
@@ -45,9 +44,9 @@ public class Forge125to152 {
             System.out.println("");
 
             // Finally grab the deobvs zip
-            if (!new File(lib_path + "deobfuscation_data_" + VersionMeta.ID + ".zip").exists()) {
-                System.out.println("Downloading: deobfuscation_data_" + VersionMeta.ID + ".zip");
-                new FetchRemoteContent().file((url_base + "deobfuscation_data_" + VersionMeta.ID + ".zip"), lib_path, "");
+            if (!new File(lib_path + "deobfuscation_data_" + mc_version_id + ".zip").exists()) {
+                System.out.println("Downloading: deobfuscation_data_" + mc_version_id + ".zip");
+                new FetchRemoteContent().file((url_base + "deobfuscation_data_" + mc_version_id + ".zip"), lib_path, "");
                 System.out.println("");
             }
         }

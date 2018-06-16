@@ -7,12 +7,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import me.boops.functions.InstallAssets;
-import me.boops.functions.VersionMeta;
 
 public class GenerateMCArgs {
 	
-	public List<String> gen(JSONObject metaFile, String profile_path, String[] user) {
+    private String mc_version_id;
+    private JSONObject mc_meta;
+    
+	public List<String> gen(JSONObject metaFile, String profile_path, String[] user, String version_id) {
 		List<String> ans = new ArrayList<String>();
+		this.mc_version_id = version_id;
+		this.mc_meta = metaFile;
 
 		// Newer versions use a JSONArray older versions use a string
 		// Just run through both and keep appending to ans!
@@ -54,7 +58,7 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${version_name}")) {
-			ans = VersionMeta.ID;
+			ans = this.mc_version_id;
 		}
 
 		if (var.equalsIgnoreCase("${game_directory}")) {
@@ -66,7 +70,7 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${assets_index_name}")) {
-			ans = VersionMeta.Meta.getString("assets");
+			ans = this.mc_meta.getString("assets");
 		}
 
 		if (var.equalsIgnoreCase("${auth_uuid}")) {
@@ -82,7 +86,7 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${version_type}")) {
-			ans = VersionMeta.Meta.getString("type");
+			ans = this.mc_meta.getString("type");
 		}
 
 		return ans;

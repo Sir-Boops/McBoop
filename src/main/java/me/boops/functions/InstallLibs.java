@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import me.boops.Main;
 import me.boops.functions.file.CreateFolder;
@@ -20,11 +21,11 @@ public class InstallLibs {
     private List<String> libURLS = new ArrayList<String>();
     private List<String> libSUMS = new ArrayList<String>();
 
-    public InstallLibs() {
+    public InstallLibs(JSONObject version_meta) {
 
         System.out.println("Attempting to download/verify libraries");
         // Grab all the URLs and sums
-        grabData(VersionMeta.Meta.getJSONArray("libraries"));
+        grabData(version_meta.getJSONArray("libraries"));
 
         // Download libs
         ThreadGroup DLGroup = new ThreadGroup("DLGroup");

@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import me.boops.Main;
-import me.boops.functions.VersionMeta;
 import me.boops.functions.string_utls.ReplaceChars;
 import me.boops.functions.threads.DownloadForgeLibs;
 
 public class FetchForgeLibs {
 
-    public List<String> fetch() {
+    public List<String> fetch(JSONObject mc_version_meta) {
         List<String> ans = new ArrayList<String>();
 
         JSONArray libList = ForgeHandler.versionMeta.getJSONArray("libraries");
@@ -53,7 +53,7 @@ public class FetchForgeLibs {
         }
 
         // Add all the default libs that forge dosn't override
-        JSONArray defaultArr = VersionMeta.Meta.getJSONArray("libraries");
+        JSONArray defaultArr = mc_version_meta.getJSONArray("libraries");
         for (int i = 0; i < defaultArr.length(); i++) {
             String rawName = defaultArr.getJSONObject(i).getString("name");
             String name = (rawName.split(":")[1]);
