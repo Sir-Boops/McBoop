@@ -12,49 +12,30 @@ public class GenerateMCArgs {
 	
     private String mc_version_id;
     private JSONObject mc_meta;
+    private String profile_path;
+    private String[] user;
     
-	public List<String> gen(JSONObject metaFile, String profile_path, String[] user, String version_id) {
+	public List<String> gen(String[] meta, String profile_path, String[] user, JSONObject forge_meta) {
 		List<String> ans = new ArrayList<String>();
-		this.mc_version_id = version_id;
-		this.mc_meta = metaFile;
-
-		// Newer versions use a JSONArray older versions use a string
-		// Just run through both and keep appending to ans!
-
-		// If newer
-		if (metaFile.has("arguments")) {
-			JSONArray arr = metaFile.getJSONObject("arguments").getJSONArray("game");
-			for (int i = 0; i < arr.length(); i++) {
-				if (arr.get(i) instanceof String) {
-					if (arr.getString(i).indexOf("${") == 0) {
-						ans.add(getVar(arr.getString(i), profile_path, user));
-					} else {
-						ans.add(arr.getString(i));
-					}
-				}
-			}
+		this.mc_version_id = meta[0];
+		this.mc_meta = new JSONObject(meta[1]);
+		this.profile_path = profile_path;
+		this.user = user;
+		
+		if(forge_meta.has("minecraftArguments")) {
+		    ans.addAll(parse_meta(forge_meta));
+		} else {
+		    ans.addAll(parse_meta(this.mc_meta));
 		}
 		
-		// If the version is older
-		if(metaFile.has("minecraftArguments")) {
-			String[] arr = metaFile.getString("minecraftArguments").split(" ");
-			for(int i = 0; i < arr.length; i++) {
-				if(arr[i].indexOf("${") == 0) {
-					ans.add(getVar(arr[i], profile_path, user));
-				} else {
-					ans.add(arr[i]);
-				}
-			}
-		}
-
 		return ans;
 	}
 
-	private String getVar(String var, String profile_path, String[] user) {
+	private String getVar(String var) {
 		String ans = "";
 
 		if (var.equalsIgnoreCase("${auth_player_name}")) {
-			ans = user[3];
+			ans = this.user[3];
 		}
 
 		if (var.equalsIgnoreCase("${version_name}")) {
@@ -62,7 +43,7 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${game_directory}")) {
-			ans = (profile_path);
+			ans = (this.profile_path);
 		}
 
 		if (var.equalsIgnoreCase("${assets_root}") || var.equalsIgnoreCase("${game_assets}")) {
@@ -74,11 +55,11 @@ public class GenerateMCArgs {
 		}
 
 		if (var.equalsIgnoreCase("${auth_uuid}")) {
-			ans = user[2];
+			ans = this.user[2];
 		}
 
 		if (var.equalsIgnoreCase("${auth_access_token}") || var.equalsIgnoreCase("${auth_session}")) {
-			ans = user[0];
+			ans = this.user[0];
 		}
 
 		if (var.equalsIgnoreCase("${user_type}") || var.equalsIgnoreCase("${user_properties}")) {
@@ -90,6 +71,40 @@ public class GenerateMCArgs {
 		}
 
 		return ans;
+	}
+	
+	private List<String> parse_meta(JSONObject meta) {
+	       List<String> ans = new ArrayList<String>();
+
+	        // Newer versions use a JSONArray older versions use a string
+	        // Just run through both and keep appending to ans!
+
+	        // If newer
+	        if (meta.has("arguments")) {
+	            JSONArray arr = meta.getJSONObject("arguments").getJSONArray("game");
+	            for (int i = 0; i < arr.length(); i++) {
+	                if (arr.get(i) instanceof String) {
+	                    if (arr.getString(i).indexOf("${") == 0) {
+	                        ans.add(getVar(arr.getString(i)));
+	                    } else {
+	                        ans.add(arr.getString(i));
+	                    }
+	                }
+	            }
+	        }
+	        
+	        // If the version is older
+	        if(meta.has("minecraftArguments")) {
+	            String[] arr = meta.getString("minecraftArguments").split(" ");
+	            for(int i = 0; i < arr.length; i++) {
+	                if(arr[i].indexOf("${") == 0) {
+	                    ans.add(getVar(arr[i]));
+	                } else {
+	                    ans.add(arr[i]);
+	                }
+	            }
+	        }
+	        return ans;
 	}
 	
 }

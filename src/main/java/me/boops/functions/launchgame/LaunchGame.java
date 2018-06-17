@@ -107,13 +107,7 @@ public class LaunchGame {
 	
 	private List<String> getMCArgs(String profile_path, String[] user){
 		List<String> ans = new ArrayList<String>();
-		
-		if(ForgeHandler.versionMeta.has("minecraftArguments")) {
-			ans.addAll(new GenerateMCArgs().gen(ForgeHandler.versionMeta, profile_path, user, this.mc_meta[0]));
-		} else {
-			ans.addAll(new GenerateMCArgs().gen(new JSONObject(this.mc_meta[1]), profile_path, user, this.mc_meta[0]));
-		}
-		
+		ans.addAll(new GenerateMCArgs().gen(this.mc_meta, profile_path, user, ForgeHandler.versionMeta));
 		return ans;
 	}
 	
