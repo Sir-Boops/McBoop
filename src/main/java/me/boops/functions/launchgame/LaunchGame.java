@@ -113,7 +113,7 @@ public class LaunchGame {
 	
 	private String getMaxRAM(String[] launcher_args) {
 		String ans = ("-Xmx" + new GetCLIArg().get(launcher_args, "--max-ram"));
-		if(ans.isEmpty()) {
+		if((new GetCLIArg().get(launcher_args, "--max-ram")).isEmpty()) {
 			ans = "-Xmx2G";
 		}
 		return ans;
