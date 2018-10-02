@@ -7,12 +7,12 @@ pipeline:
     image: openjdk:8-jdk
     commands:
       - ./gradlew build
-      - mv build/libs/Mcboop.jar .
+      - mv build/libs/McBoop.jar .
   deploy:
     image: plugins/s3
     bucket: boops-deploy
     acl: public-read
     region: us-east-1
     source: McBoop.jar
-    target: McBoop
+    target: /McBoop
     secrets: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY]
