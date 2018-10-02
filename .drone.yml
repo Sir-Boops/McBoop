@@ -12,7 +12,7 @@ pipeline:
     bucket: boops-deploy
     acl: public-read
     region: us-east-1
-    source: build/libs/McBoop.jar
     strip_prefix: build/libs/
-    target: /McBoop
+    source: build/libs/McBoop.jar
+    target: McBoop
     secrets: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY]
