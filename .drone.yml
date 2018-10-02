@@ -1,9 +1,18 @@
 pipeline:
-  jdk8build:
-    image: openjdk:8-jdk
-    commands:
-      - ./gradlew build
   jdk11build:
     image: openjdk:11-jdk
     commands:
       - ./gradlew build
+  jdk8build:
+    image: openjdk:8-jdk
+    commands:
+      - ./gradlew build
+  deploy:
+    image: plugins/s3
+    bucket: boops-deploy
+    acl: public-read
+    region: us-east-1
+    source: build/libs/McBoop.jar
+    strip_prefix: build/libs/
+    target: /McBoop
+    secrets: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY]
