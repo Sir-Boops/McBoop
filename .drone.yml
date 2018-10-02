@@ -1,5 +1,9 @@
 pipeline:
-  build:
+  jdk8build:
     image: openjdk:8-jdk
+    commands:
+      - ./gradlew build
+  jdk11build:
+    image: openjdk:11-jdk
     commands:
       - ./gradlew build
