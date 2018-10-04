@@ -8,11 +8,12 @@ pipeline:
     commands:
       - ./gradlew build
       - mv build/libs/McBoop.jar .
+      - sha256sum McBoop.jar > McBoop.jar.sha256
   deploy:
     image: plugins/s3
     bucket: boops-deploy
     acl: public-read
     region: us-east-1
-    source: McBoop.jar
+    source: McBoop.*
     target: /McBoop
     secrets: [ aws_access_key_id, aws_secret_access_key ]
