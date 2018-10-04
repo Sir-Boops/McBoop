@@ -41,6 +41,7 @@ public class CommandHelp {
 		System.out.println("");
 		System.out.println("McBoop --max-ram <amount> => Set the max amount of ram to use Default: 2G");
 		System.out.println("");
+		System.out.println("McBoop --update => Update McBoop");
 		
 		System.out.println("");
 		System.out.println("");

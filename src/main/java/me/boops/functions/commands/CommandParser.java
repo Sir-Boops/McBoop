@@ -11,6 +11,11 @@ public class CommandParser {
 				System.exit(0);
 			}
 			
+			if(launcher_args[i].equalsIgnoreCase("--update")) {
+				new CommandUpdate();
+				System.exit(0);
+			}
+			
 			if(launcher_args[i].equalsIgnoreCase("--list-all-versions")) {
 				new CommandListAllVersions();
 				System.exit(0);
