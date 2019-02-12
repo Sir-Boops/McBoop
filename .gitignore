@@ -1,11 +1,1 @@
-bin/*
-build/*
-.classpath
-.settings/*
-.project
-.gradle/*
-.classpath
-/.gradle/
-/bin/
-/build/
-logs/
+McBoop
