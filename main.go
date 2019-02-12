@@ -1,10 +1,14 @@
 package main
 
+import "os"
 import "fmt"
 
 func main() () {
 
   // TODO: Add support for windows
+
+  // Args are read left to right first ones get parsed first
+  args_parse(os.Args)
 
   // Init folder check
   // if $HOME/.mcboop is not there create it
