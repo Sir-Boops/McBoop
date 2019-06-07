@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 
 import me.boops.Main;
 import me.boops.functions.GetCLIArg;
 import me.boops.functions.InstallLibs;
+import me.boops.functions.file.WriteTextToFile;
 import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.network.DownloadClient;
 
@@ -24,8 +24,6 @@ public class LaunchGame {
 		List<String> launchArr = new ArrayList<String>();
 
 		String cleanLibs = cleanLibsPaths(InstallLibs.libs, ForgeHandler.libs);
-		launchArr.addAll(get_system_launch_args());
-		launchArr.add("java");
 		launchArr.add("-Xms256M");
 		launchArr.add(getMaxRAM(launcher_args));
 		launchArr.add("-Djava.library.path=" + InstallLibs.nativesPath);
@@ -34,47 +32,21 @@ public class LaunchGame {
 		launchArr.add(getLaunchClass());
 		launchArr.addAll(getMCArgs(profile_path, user));
 		
+		// Pass the args out the the golang launcher
 		System.out.println("Using launch args:");
 		System.out.println("");
-		System.out.println(launchArr);
-		
-		// Start the game
-		try {
-		    
-		    
-		    Process pr = new ProcessBuilder(launchArr).directory(new File(profile_path)).start();
-		    
-		    System.out.println("");
-		    System.out.println("Starting Minecraft");
-		    
-		    while(pr.isAlive()) {
-		        Thread.sleep(10);
-		    }
-		    
-		    FileUtils.deleteDirectory(new File(InstallLibs.nativesPath));
-            
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-		
+		String FinalArr = "";
+		for (int i = 0; i < launchArr.size(); i++) {
+			if ((i + 1) >= launchArr.size()) {
+				FinalArr += launchArr.get(i);
+			} else {
+				FinalArr += launchArr.get(i) + " ";
+			}
+		}
+		System.out.println(FinalArr);
+		new WriteTextToFile(Main.home_dir + ".launch", FinalArr);
 		System.exit(0);
 
-	}
-	
-	private List<String> get_system_launch_args() {
-	    List<String> ans = new ArrayList<String>();
-	    if(Main.base_os_name.equalsIgnoreCase("windows")) {
-	        ans.add("cmd.exe");
-	        ans.add("/C");
-	        ans.add("start");
-	        ans.add("/wait");
-	    }
-	    if(Main.base_os_name.equalsIgnoreCase("linux")) {
-	        ans.add("xterm");
-	        ans.add("-e");
-	    }
-	    return ans;
 	}
 
 	private String cleanLibsPaths(List<String> basicLibs, List<String> forgeLibs) {
