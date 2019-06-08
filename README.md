@@ -16,7 +16,7 @@ Things the launcher can do:
 
 How to use
 ---
-* Download the latest build here -> https://s3.amazonaws.com/boops-deploy/McBoop/McBoop.jar
+* Download the latest build here (Linux only) -> https://s3.amazonaws.com/boops-deploy/McBoop/McBoop
 * To update the launcher `java -jar McBoop.jar --update`
 * Add the default user to the launcher `java -jar McBoop.jar --add-account <email> <password>`
 * Finally run a version of Minecraft! `java -jar McBoop.jar --run stable`
