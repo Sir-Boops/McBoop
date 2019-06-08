@@ -15,19 +15,14 @@ public class GenerateMCArgs {
     private String profile_path;
     private String[] user;
     
-	public List<String> gen(String[] meta, String profile_path, String[] user, JSONObject forge_meta) {
+	public List<String> gen(String[] meta, String profile_path, String[] user) {
 		List<String> ans = new ArrayList<String>();
 		this.mc_version_id = meta[0];
 		this.mc_meta = new JSONObject(meta[1]);
 		this.profile_path = profile_path;
 		this.user = user;
 		
-		if(forge_meta.has("minecraftArguments")) {
-		    ans.addAll(parse_meta(forge_meta));
-		} else {
-		    ans.addAll(parse_meta(this.mc_meta));
-		}
-		
+		ans.addAll(parse_meta(this.mc_meta));
 		return ans;
 	}
 

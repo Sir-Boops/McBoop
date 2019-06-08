@@ -10,7 +10,6 @@ import me.boops.Main;
 import me.boops.functions.GetCLIArg;
 import me.boops.functions.InstallLibs;
 import me.boops.functions.file.WriteTextToFile;
-import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.network.DownloadClient;
 
 public class LaunchGame {
@@ -23,13 +22,13 @@ public class LaunchGame {
 		
 		List<String> launchArr = new ArrayList<String>();
 
-		String cleanLibs = cleanLibsPaths(InstallLibs.libs, ForgeHandler.libs);
+		String cleanLibs = cleanLibsPaths(InstallLibs.libs);
 		launchArr.add("-Xms256M");
 		launchArr.add(getMaxRAM(launcher_args));
 		launchArr.add("-Djava.library.path=" + InstallLibs.nativesPath);
 		launchArr.add("-cp");
-		launchArr.add(cleanLibs + getRuntimeJar());
-		launchArr.add(getLaunchClass());
+		launchArr.add(cleanLibs + DownloadClient.jarPath);
+		launchArr.add(new JSONObject(this.mc_meta[1]).getString("mainClass"));
 		launchArr.addAll(getMCArgs(profile_path, user));
 		
 		// Pass the args out the the golang launcher
@@ -49,37 +48,18 @@ public class LaunchGame {
 
 	}
 
-	private String cleanLibsPaths(List<String> basicLibs, List<String> forgeLibs) {
-		
-		List<String> libs = new ArrayList<String>();
-		if(!forgeLibs.isEmpty()) {
-			libs.addAll(forgeLibs);
-		} else {
-			libs.addAll(basicLibs);
-		}
+	private String cleanLibsPaths(List<String> basicLibs) {
 		
 		String ans = "";
-		for (int i = 0; i < libs.size(); i++) {
-			ans += libs.get(i) + File.pathSeparator;
+		for (int i = 0; i < basicLibs.size(); i++) {
+			ans += basicLibs.get(i) + File.pathSeparator;
 		}
-		return ans;
-	}
-	
-	private String getLaunchClass() {
-		String ans = "";
-		
-		if(ForgeHandler.versionMeta.has("mainClass")) {
-			ans = ForgeHandler.versionMeta.getString("mainClass");
-		} else {
-			ans = new JSONObject(this.mc_meta[1]).getString("mainClass");
-		}
-		
 		return ans;
 	}
 	
 	private List<String> getMCArgs(String profile_path, String[] user){
 		List<String> ans = new ArrayList<String>();
-		ans.addAll(new GenerateMCArgs().gen(this.mc_meta, profile_path, user, ForgeHandler.versionMeta));
+		ans.addAll(new GenerateMCArgs().gen(this.mc_meta, profile_path, user));
 		return ans;
 	}
 	
@@ -89,13 +69,5 @@ public class LaunchGame {
 			ans = "-Xmx2G";
 		}
 		return ans;
-	}
-	
-	private String getRuntimeJar() {
-	    String ans = DownloadClient.jarPath;
-	    if(!ForgeHandler.custom_runtime_jar.isEmpty()) {
-	        ans = ForgeHandler.custom_runtime_jar;
-	    }
-	    return ans;
 	}
 }

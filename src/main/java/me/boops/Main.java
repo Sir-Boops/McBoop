@@ -11,7 +11,6 @@ import me.boops.functions.InstallLibs;
 import me.boops.functions.VersionMeta;
 import me.boops.functions.commands.CommandParser;
 import me.boops.functions.file.CreateFolder;
-import me.boops.functions.forgehandler.ForgeHandler;
 import me.boops.functions.launchgame.LaunchGame;
 import me.boops.functions.network.DownloadClient;
 import me.boops.functions.profilemanager.ProfileManager;
@@ -91,11 +90,6 @@ public class Main {
         // Download the client
         System.out.println("");
         new DownloadClient(meta);
-        System.out.println("");
-
-        // Try to setup forge!
-        System.out.println("");
-        new ForgeHandler(args, profile[3], meta);
         System.out.println("");
 
         // Launch the game!

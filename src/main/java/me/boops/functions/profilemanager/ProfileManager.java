@@ -12,7 +12,6 @@ public class ProfileManager {
 	    String version = "";
 	    String name = "";
 	    String path = "";
-	    String forge_version = "";
 		
 		System.out.println("Attempting to load profile");
 		new CreateFolder(Main.home_dir + "profiles" + File.separator);
@@ -49,22 +48,11 @@ public class ProfileManager {
 			if(launcher_args[i].equalsIgnoreCase("--profile")) {
 				String[] data = new ReadProfileData().read(launcher_args[i + 1]);
 				version = data[0];
-				forge_version = data[1];
 				name = launcher_args[i + 1];
 			}
 			
 			if(launcher_args[i].equalsIgnoreCase("--list-profiles")) {
 				new ListProfiles();
-				System.exit(0);
-			}
-			
-			if(launcher_args[i].equalsIgnoreCase("--set-profile-forge")) {
-				new AppendForgeVersion(launcher_args[i + 1], launcher_args[i + 2]);
-				System.exit(0);
-			}
-			
-			if(launcher_args[i].equalsIgnoreCase("--update-profile-forge")) {
-				new AppendForgeVersion(launcher_args[i + 1], launcher_args[i + 2]);
 				System.exit(0);
 			}
 			
@@ -84,6 +72,6 @@ public class ProfileManager {
 		path = (Main.home_dir + "profiles" + File.separator + name + File.separator);
 		new CreateFolder(path);
 		System.out.println("Loaded profile: " + name);
-		return new String[] {version, name, path, forge_version};
+		return new String[] {version, name, path};
 	}
 }

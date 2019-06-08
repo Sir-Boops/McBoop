@@ -15,11 +15,6 @@ public class CommandParser {
 				new CommandListAllVersions();
 				System.exit(0);
 			}
-			
-			if(launcher_args[i].equalsIgnoreCase("--list-forge-versions")) {
-				new ListForgeVersions(launcher_args);
-				System.exit(0);
-			}
 		}
 	}
 }
