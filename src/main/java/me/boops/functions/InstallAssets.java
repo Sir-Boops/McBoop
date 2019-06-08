@@ -33,7 +33,7 @@ public class InstallAssets {
         JSONObject asset_index = version_meta.getJSONObject("assetIndex");
         JSONObject asset_list = new JSONObject(new FetchRemoteContent().text(asset_index.getString("url")));
 
-        if (asset_index.getString("id").equalsIgnoreCase("legacy")) {
+        if (asset_index.getString("id").equalsIgnoreCase("pre-1.6")) {
             this.is_legacy = true;
         }
 
@@ -54,7 +54,7 @@ public class InstallAssets {
         }
 
         // If legacy hack in the old sounds
-        if (this.is_legacy) {
+        if (this.is_legacy || this.is_alpha) {
             // First install to the profile dir /resources
             // Then install to the .minecraft dir /resources
 
@@ -74,7 +74,7 @@ public class InstallAssets {
 
             if (new File(Main.home_dir + "assets" + File.separator + "resource_type.txt").exists()) {
                 String last_type = new ReadTextFromFile().read(Main.home_dir + "assets" + File.separator + "resource_type.txt");
-                if (last_type.equals("alpha") && !this.is_alpha) {
+                if (last_type.equals("alpha") && this.is_legacy) {
                     // Last ran alpha currently running legacy
                     clean_resource_dirs(profile_path);
                 }
