@@ -1,3 +1,3 @@
 # McBoop
 
-Golang version....You should use this yet
+Golang version....You shouldn't use this yet

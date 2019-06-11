@@ -19,7 +19,18 @@ func ArgsParse(Args []string) {
     if Args[1] == "--status" {
       ArgsParse_Status()
     }
-    
+
+    if Args[1] == "--add-account" {
+      // Make sure there are enough args
+      if len(Args) <= 2 {
+        // Not enough Args to add an account
+        fmt.Println("Run `./Mcboop --help` for help")
+      } else {
+        // Enough args to add an account
+        AddAccount(AuthAccount(Args[2], Args[3]))
+      }
+    }
+
   }
 }
 
@@ -28,16 +39,17 @@ func ArgsParse_Help() {
   fmt.Println("")
   fmt.Println("McBoop Help")
   fmt.Println("")
-  fmt.Println("McBoop --help => Shows this page")
+  fmt.Println("./McBoop --help => Shows this page")
   fmt.Println("")
-  fmt.Println("McBoop --status => Shows mojang status")
+  fmt.Println("./McBoop --status => Shows mojang status")
+  fmt.Println("")
+  fmt.Println("./McBoop --add-account <username> <password> => Add a new account, The first account added becomes the default. ( This can be changed later ) ")
   os.Exit(0)
 }
 
 func ArgsParse_Status() {
   // System will exit upon calling this
   status := gjson.Parse(GetRemoteText("https://status.mojang.com/check"))
-  fmt.Println(status)
   fmt.Println("")
   fmt.Println("Minecraft server status")
   fmt.Println("")
