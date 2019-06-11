@@ -31,6 +31,22 @@ func ArgsParse(Args []string) {
       }
     }
 
+    if Args[1] == "--list-accounts" {
+      // Verify that accounts.json is there!
+      if !CheckForFile(GetMcBoopDir() + "accounts.json") {
+        fmt.Println("Accounts json not found!")
+        os.Exit(0)
+      }
+      users := ListAccounts()
+      fmt.Println("")
+      fmt.Println("Current added accounts")
+      fmt.Println("================")
+      for i := 0; i < len(users); i++ {
+        fmt.Println(users[i])
+      }
+      fmt.Println("================")
+      fmt.Println("")
+    }
   }
 }
 
@@ -44,6 +60,8 @@ func ArgsParse_Help() {
   fmt.Println("./McBoop --status => Shows mojang status")
   fmt.Println("")
   fmt.Println("./McBoop --add-account <username> <password> => Add a new account, The first account added becomes the default. ( This can be changed later ) ")
+  fmt.Println("")
+  fmt.Println("./Mcboop --list-accounts => List all saved accounts")
   os.Exit(0)
 }
 

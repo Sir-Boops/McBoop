@@ -85,3 +85,15 @@ func UpdateAccount(Username string, AccessToken string, ClientToken string, UUID
   new_file_data, _ := json.Marshal(user_array)
   WriteTextFile(new_file_data, GetMcBoopDir() + "accounts.json")
 }
+
+func ListAccounts() ([]string) {
+  var user_array []UserAccount
+  var users []string
+  json.Unmarshal(ReadTextFile(GetMcBoopDir() + "accounts.json"), &user_array)
+
+  for i := 0; i < len(user_array); i++ {
+    users = append(users, user_array[i].Username)
+  }
+
+  return users
+}
