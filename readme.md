@@ -1,4 +1,3 @@
 # McBoop
 
-Golang rewrite
-Requires dep
+Golang version....You should use this yet

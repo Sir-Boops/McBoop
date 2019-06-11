@@ -1,23 +1,18 @@
 package main
 
 import "os"
-import "fmt"
+//import "fmt"
 
-func main() () {
+func main() {
 
-  // TODO: Add support for windows
+  // Order of events
+  // 0: Check for launcher update
+  // 1: Parse commands ( If user dosn't need to login then just run it and quit )
+  // 1: Check for ~/.mcboop folder
+  // 2: check for and verify java ( Run test java command to make sure it works! )
+  // 3: Login user to mojang
 
-  // Args are read left to right first ones get parsed first
-  args_parse(os.Args)
+  LauncherUpdate()
 
-  // Init folder check
-  // if $HOME/.mcboop is not there create it
-  // Has tailing slash attached already!
-  mcboop_home_path := init_folder_check() // Returns: mcboop_home_path
-  fmt.Println(mcboop_home_path)
-
-  // Check the java install
-  java_bin := check_java_install(mcboop_home_path) // Returns java bin
-  fmt.Println(java_bin)
-
+  ArgsParse(os.Args)
 }
