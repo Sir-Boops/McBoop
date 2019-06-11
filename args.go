@@ -9,15 +9,15 @@ func ArgsParse(Args []string) {
 
   // If Nonthing is set then default to --help
   if len(Args) <= 1 {
-    ArgsParse_Help()
+    Help()
   } else {
     // Args is 1 or longer so parse time!
     if Args[1] == "--help" {
-      ArgsParse_Help()
+      Help()
     }
 
     if Args[1] == "--status" {
-      ArgsParse_Status()
+      Status()
     }
 
     if Args[1] == "--add-account" {
@@ -47,10 +47,29 @@ func ArgsParse(Args []string) {
       fmt.Println("================")
       fmt.Println("")
     }
+
+    if Args[1] == "--list-mc-versions" {
+      release, snapshot, list := ListMCVersions()
+      fmt.Println("")
+      fmt.Println("Here are a list of playable versions")
+      fmt.Println("")
+      for i := 0; i < len(list); i++ {
+        if (i + 1) >= len(list) {
+          fmt.Print(list[i])
+        } else {
+          fmt.Print(list[i] + ", ")
+        }
+      }
+      fmt.Println("")
+      fmt.Println("")
+      fmt.Println("Current", aurora.Green("stable"), "is:", aurora.Green(release))
+      fmt.Println("Current", aurora.Yellow("snapshot"), "is:", aurora.Yellow(snapshot))
+      fmt.Println("")
+    }
   }
 }
 
-func ArgsParse_Help() {
+func Help() {
   // System will exit when you call this!
   fmt.Println("")
   fmt.Println("McBoop Help")
@@ -62,27 +81,28 @@ func ArgsParse_Help() {
   fmt.Println("./McBoop --add-account <username> <password> => Add a new account, The first account added becomes the default. ( This can be changed later ) ")
   fmt.Println("")
   fmt.Println("./Mcboop --list-accounts => List all saved accounts")
+  fmt.Println("")
+  fmt.Println("./McBoop --list-mc-versions => List all playable MC versions")
   os.Exit(0)
 }
 
-func ArgsParse_Status() {
+func Status() {
   // System will exit upon calling this
   status := gjson.Parse(GetRemoteText("https://status.mojang.com/check"))
   fmt.Println("")
   fmt.Println("Minecraft server status")
   fmt.Println("")
-  fmt.Println("Minecraft.net status:", ArgsParse_Status_Color(status.Get("#.minecraft\\.net").Array()[0].String()))
-  fmt.Println("Session.Minecraft.net status:", ArgsParse_Status_Color(status.Get("#.session\\.minecraft\\.net").Array()[0].String()))
-  fmt.Println("Textures.Minecraft.net Status:", ArgsParse_Status_Color(status.Get("#.textures\\.minecraft\\.net").Array()[0].String()))
-  fmt.Println("Mojang.com status:", ArgsParse_Status_Color(status.Get("#.mojang\\.com").Array()[0].String()))
-  fmt.Println("Account.Mojang.com status:", ArgsParse_Status_Color(status.Get("#.account\\.mojang\\.com").Array()[0].String()))
-  fmt.Println("Authserver.Mojang.com status:", ArgsParse_Status_Color(status.Get("#.authserver\\.mojang\\.com").Array()[0].String()))
-  fmt.Println("Sessionserver.Mojang.com status:", ArgsParse_Status_Color(status.Get("#.sessionserver\\.mojang\\.com").Array()[0].String()))
-  fmt.Println("Api.Mojang.com status:", ArgsParse_Status_Color(status.Get("#.api\\.mojang\\.com").Array()[0].String()))
+  fmt.Println("Minecraft.net status:", StatusColor(status.Get("#.minecraft\\.net").Array()[0].String()))
+  fmt.Println("Session.Minecraft.net status:", StatusColor(status.Get("#.session\\.minecraft\\.net").Array()[0].String()))
+  fmt.Println("Textures.Minecraft.net Status:", StatusColor(status.Get("#.textures\\.minecraft\\.net").Array()[0].String()))
+  fmt.Println("Mojang.com status:", StatusColor(status.Get("#.mojang\\.com").Array()[0].String()))
+  fmt.Println("Account.Mojang.com status:", StatusColor(status.Get("#.account\\.mojang\\.com").Array()[0].String()))
+  fmt.Println("Authserver.Mojang.com status:", StatusColor(status.Get("#.authserver\\.mojang\\.com").Array()[0].String()))
+  fmt.Println("Sessionserver.Mojang.com status:", StatusColor(status.Get("#.sessionserver\\.mojang\\.com").Array()[0].String()))
+  fmt.Println("Api.Mojang.com status:", StatusColor(status.Get("#.api\\.mojang\\.com").Array()[0].String()))
   os.Exit(0)
 }
-
-func ArgsParse_Status_Color(Status string) (aurora.Value){
+func StatusColor(Status string) (aurora.Value){
   // Add some color to the status page
   ans := aurora.White(Status)
   if Status == "green" {
@@ -98,4 +118,13 @@ func ArgsParse_Status_Color(Status string) (aurora.Value){
   }
 
   return ans
+}
+
+func ListMCVersions() (string, string, []string) {
+  versions := gjson.Parse(GetRemoteText("https://launchermeta.mojang.com/mc/game/version_manifest.json"))
+  var list []string
+  for i := 0; i < len(versions.Get("versions.#.id").Array()); i++ {
+    list = append(list, versions.Get("versions.#.id").Array()[i].String())
+  }
+  return versions.Get("latest.release").String(), versions.Get("latest.snapshot").String(), list
 }
