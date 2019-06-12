@@ -15,7 +15,6 @@ func ArgsParse(Args []string) {
     if Args[1] == "--help" {
       Help()
     }
-
     if Args[1] == "--status" {
       Status()
     }
@@ -66,6 +65,34 @@ func ArgsParse(Args []string) {
       fmt.Println("Current", aurora.Yellow("snapshot"), "is:", aurora.Yellow(snapshot))
       fmt.Println("")
     }
+
+    if Args[1] == "--run" {
+      // Check if using default or not
+      account_name := ""
+      if len(Args) >= 4 {
+        // Using non-default
+        account_name = Args[3]
+      } else {
+        // Use default
+        account_name = GetDefaultAccount()
+      }
+
+      // Now refresh login token
+      //RefreshAccount(account_name)
+      fmt.Println(account_name)
+
+      //Get version meta
+      manifest := gjson.Get(GetRemoteText("https://launchermeta.mojang.com/mc/game/version_manifest.json"), "versions").Array()
+      version_meta := ""
+      for i := 0; i < len(manifest); i++ {
+        if manifest[i].Get("id").String() == Args[2] {
+          version_meta = GetRemoteText(manifest[i].Get("url").String())
+        }
+      }
+
+      // Now install/verify assets
+      InstallAssets(GetRemoteText(gjson.Get(version_meta, "assetIndex.url").String()))
+    }
   }
 }
 
@@ -74,15 +101,17 @@ func Help() {
   fmt.Println("")
   fmt.Println("McBoop Help")
   fmt.Println("")
-  fmt.Println("./McBoop --help => Shows this page")
+  fmt.Println("./McBoop --help => Shows this page.")
   fmt.Println("")
-  fmt.Println("./McBoop --status => Shows mojang status")
+  fmt.Println("./McBoop --status => Shows mojang status.")
   fmt.Println("")
   fmt.Println("./McBoop --add-account <username> <password> => Add a new account, The first account added becomes the default. ( This can be changed later ) ")
   fmt.Println("")
-  fmt.Println("./Mcboop --list-accounts => List all saved accounts")
+  fmt.Println("./Mcboop --list-accounts => List all saved accounts.")
   fmt.Println("")
-  fmt.Println("./McBoop --list-mc-versions => List all playable MC versions")
+  fmt.Println("./McBoop --list-mc-versions => List all playable MC versions.")
+  fmt.Println("")
+  fmt.Println("./Mcboop --run <version> [username] => Runs Minecraft <version> using [username] if [username] is not defined then the default is used.")
   os.Exit(0)
 }
 

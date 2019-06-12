@@ -1,8 +1,11 @@
 package main
 
 import "os"
+import "io"
 import "os/user"
 import "io/ioutil"
+import "crypto/sha1"
+import "encoding/hex"
 
 func GetMcBoopDir() (string) {
   usr, _ := user.Current();
@@ -25,10 +28,18 @@ func ReadTextFile(Path string) ([]byte) {
   return bytes
 }
 
-func WriteTextFile(Data []byte, Path string) {
+func WriteFile(Data []byte, Path string) {
   // Deletes the file before writing to it
   if CheckForFile(Path) {
     os.Remove(Path)
   }
   ioutil.WriteFile(Path, Data, os.ModePerm)
+}
+
+func Sha1Sum(Path string) (string) {
+  f, _ := os.Open(Path)
+  defer f.Close()
+  h := sha1.New()
+  io.Copy(h, f)
+  return hex.EncodeToString(h.Sum(nil))
 }

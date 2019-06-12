@@ -13,8 +13,8 @@ type AuthRequestAgent struct {
   Version int `json:version`
 }
 type RefreshRequest struct {
-  Access string `json:"accessToken"`
-  Client string `json:"clientToken"`
+  AccessToken string `json:"accessToken"`
+  ClientToken string `json:"clientToken"`
 }
 type UserAccount struct {
   Username string `json:"username"`
@@ -83,7 +83,7 @@ func UpdateAccount(Username string, AccessToken string, ClientToken string, UUID
     Default: Default})
 
   new_file_data, _ := json.Marshal(user_array)
-  WriteTextFile(new_file_data, GetMcBoopDir() + "accounts.json")
+  WriteFile(new_file_data, GetMcBoopDir() + "accounts.json")
 }
 
 func ListAccounts() ([]string) {
@@ -96,4 +96,46 @@ func ListAccounts() ([]string) {
   }
 
   return users
+}
+
+func GetDefaultAccount() (string) {
+  var user_array []UserAccount
+  default_account := ""
+  json.Unmarshal(ReadTextFile(GetMcBoopDir() + "accounts.json"), &user_array)
+
+  for i := 0; i < len(user_array); i++ {
+    if user_array[i].Default {
+      // Found the default account!
+      default_account = user_array[i].Username
+    }
+  }
+
+  return default_account
+}
+
+func GetAccount(Username string) (UserAccount) {
+  //Returns a whole UserAccount
+  var user_array []UserAccount
+  var ans UserAccount
+  json.Unmarshal(ReadTextFile(GetMcBoopDir() + "accounts.json"), &user_array)
+
+  for i := 0; i < len(user_array); i++ {
+    if user_array[i].Username == Username {
+      ans = user_array[i]
+    }
+  }
+
+  return ans
+}
+
+func RefreshAccount(Username string) {
+
+  user := GetAccount(Username)
+
+  refresh_request, _ := json.Marshal(&RefreshRequest{
+    AccessToken: user.AccessToken,
+    ClientToken: user.ClientToken})
+
+  resp := PostRemote(refresh_request, "https://authserver.mojang.com/refresh")
+  UpdateAccount(user.Username, gjson.Get(resp, "accessToken").String(), gjson.Get(resp, "clientToken").String(), user.UUID, user.Default)
 }
