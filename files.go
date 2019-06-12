@@ -5,6 +5,7 @@ import "io"
 import "os/user"
 import "io/ioutil"
 import "crypto/sha1"
+import "crypto/sha256"
 import "encoding/hex"
 
 func GetMcBoopDir() (string) {
@@ -40,6 +41,14 @@ func Sha1Sum(Path string) (string) {
   f, _ := os.Open(Path)
   defer f.Close()
   h := sha1.New()
+  io.Copy(h, f)
+  return hex.EncodeToString(h.Sum(nil))
+}
+
+func Sha256Sum(Path string) (string) {
+  f, _ := os.Open(Path)
+  defer f.Close()
+  h := sha256.New()
   io.Copy(h, f)
   return hex.EncodeToString(h.Sum(nil))
 }
