@@ -3,7 +3,12 @@ package main
 import "os"
 import "fmt"
 import "path"
+import "strings"
+import "io/ioutil"
+import "path/filepath"
 import "github.com/tidwall/gjson"
+import "github.com/mholt/archiver"
+import "github.com/satori/go.uuid"
 
 func InstallAssets(AssetIndex string) {
   assets := gjson.Get(AssetIndex, "objects")
@@ -36,4 +41,81 @@ func DownloadAsset(URL string, Path string, FileName string, PrettyFileName stri
   asset := ReadRemote(URL)
   WriteFile(asset, Path + FileName)
   WriteFile(asset, GetMcBoopDir() + "assets/virtual/legacy/" + PrettyFileName)
+}
+
+func InstallLibs(LibIndex []gjson.Result) ([]string, []string) {
+  // Returns []libs []nativelibs
+  libs := []string{}
+  nativelibs := []string{}
+
+  for i := 0; i < len(LibIndex); i++ {
+    libpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.artifact.path").String()
+    libs = append(libs, libpath)
+
+    if !CheckForFile(libpath) {
+      DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String())
+    }
+
+    if Sha1Sum(libpath) != LibIndex[i].Get("downloads.artifact.sha1").String() {
+      DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String())
+    }
+
+    if LibIndex[i].Get("natives.linux").Exists() {
+      nativelibpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".path").String()
+      nativelibs = append(nativelibs, nativelibpath)
+
+      if !CheckForFile(nativelibpath) {
+        DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".url").String())
+      }
+
+      if Sha1Sum(nativelibpath) != LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".sha1").String() {
+        DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".url").String())
+      }
+    }
+  }
+  return libs, nativelibs
+}
+func DownloadLib(Path string, URL string) {
+  os.MkdirAll(Path, os.ModePerm)
+  fmt.Println("Downloading:", filepath.Base(Path))
+  WriteFile(ReadRemote(URL), Path)
+}
+
+func InstallClient(Meta gjson.Result, Id string) {
+  path := GetMcBoopDir() + "client/" + Id + "/"
+  filename := Id + ".jar"
+
+  if !CheckForFile(path + filename) {
+    DownloadClient(Meta.Get("url").String(), path + filename)
+  }
+
+  if Sha1Sum(path + filename) != Meta.Get("sha1").String() {
+    DownloadClient(Meta.Get("url").String(), path + filename)
+  }
+}
+func DownloadClient(URL string, Path string) {
+  os.MkdirAll(Path, os.ModePerm)
+  fmt.Println("Downloading:", filepath.Base(Path))
+  WriteFile(ReadRemote(URL), Path)
+}
+
+func ExtractNatives(Natives []string) (string) {
+  zip := archiver.Zip{}
+  new_uuid, _ := uuid.NewV4()
+  nativesfolder := GetMcBoopDir() + new_uuid.String() + "/"
+  os.MkdirAll(nativesfolder, os.ModePerm)
+
+  for i := 0; i < len(Natives); i++ {
+    zip.Walk(Natives[i], func(f archiver.File) error {
+      if strings.HasSuffix(f.Name(), ".so") {
+        // Found a lib to extract
+        fmt.Println("Extracting native file:", f.Name())
+        bytes, _ := ioutil.ReadAll(f)
+        WriteFile(bytes, nativesfolder + f.Name())
+      }
+      return nil
+    })
+  }
+
+  return nativesfolder
 }

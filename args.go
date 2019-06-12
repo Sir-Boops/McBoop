@@ -92,6 +92,17 @@ func ArgsParse(Args []string) {
 
       // Now install/verify assets
       InstallAssets(GetRemoteText(gjson.Get(version_meta, "assetIndex.url").String()))
+
+      // Now install/verify Libs
+      _, nativelibs := InstallLibs(gjson.Get(version_meta, "libraries").Array())
+
+      // Download the client jar
+      InstallClient(gjson.Get(version_meta, "downloads.client"), gjson.Get(version_meta, "id").String())
+
+      // Extract natives
+      nativesfolder := ExtractNatives(nativelibs)
+
+      os.RemoveAll(nativesfolder)
     }
   }
 }
