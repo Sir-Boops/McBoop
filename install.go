@@ -10,7 +10,10 @@ import "github.com/tidwall/gjson"
 import "github.com/mholt/archiver"
 import "github.com/satori/go.uuid"
 
-func InstallAssets(AssetIndex string) {
+func InstallAssets(URL string, Id string) {
+  AssetIndex := GetRemoteText(URL)
+  os.MkdirAll(GetMcBoopDir() + "assets/indexes/", os.ModePerm)
+  WriteFile([]byte(AssetIndex), GetMcBoopDir() + "assets/indexes/" + Id + ".json")
   assets := gjson.Get(AssetIndex, "objects")
   assets.ForEach(func(key, value gjson.Result) (bool) {
 

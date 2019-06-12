@@ -2,6 +2,8 @@ package main
 
 import "os"
 import "fmt"
+import "os/exec"
+import "strings"
 import "github.com/tidwall/gjson"
 import "github.com/logrusorgru/aurora"
 
@@ -78,8 +80,7 @@ func ArgsParse(Args []string) {
       }
 
       // Now refresh login token
-      //RefreshAccount(account_name)
-      fmt.Println(account_name)
+      RefreshAccount(account_name)
 
       //Get version meta
       manifest := gjson.Get(GetRemoteText("https://launchermeta.mojang.com/mc/game/version_manifest.json"), "versions").Array()
@@ -91,16 +92,39 @@ func ArgsParse(Args []string) {
       }
 
       // Now install/verify assets
-      InstallAssets(GetRemoteText(gjson.Get(version_meta, "assetIndex.url").String()))
+      InstallAssets(gjson.Get(version_meta, "assetIndex.url").String(), gjson.Get(version_meta, "assets").String())
 
       // Now install/verify Libs
-      _, nativelibs := InstallLibs(gjson.Get(version_meta, "libraries").Array())
+      libs, nativelibs := InstallLibs(gjson.Get(version_meta, "libraries").Array())
 
       // Download the client jar
       InstallClient(gjson.Get(version_meta, "downloads.client"), gjson.Get(version_meta, "id").String())
 
       // Extract natives
       nativesfolder := ExtractNatives(nativelibs)
+
+      // Generate Launch Command
+
+      full_libs_list := []string{}
+      full_libs_list = append(full_libs_list, GetMcBoopDir() + "client/" + gjson.Get(version_meta, "id").String() + "/" + gjson.Get(version_meta, "id").String() + ".jar")
+      full_libs_list = append(full_libs_list, libs...)
+
+      game_launch_cmd := []string{"-Djava.library.path=" + nativesfolder, "-cp", strings.Join(full_libs_list, ":"), gjson.Get(version_meta, "mainClass").String()}
+
+      game_launch_cmd = append(game_launch_cmd, GenLaunchCommand(gjson.Get(version_meta, "arguments.game").Array(), account_name, gjson.Get(version_meta, "id").String(),
+        gjson.Get(version_meta, "assets").String(), gjson.Get(version_meta, "type").String())...)
+
+      fmt.Println(game_launch_cmd)
+
+      mc := exec.Command(GetMcBoopDir() + "java/bin/java", game_launch_cmd...)
+
+      mc.Stdout = os.Stdout
+      mc.Stderr = os.Stderr
+      fmt.Println("")
+      fmt.Println("Game logging starts here")
+      fmt.Println("")
+      mc.Run()
+
 
       os.RemoveAll(nativesfolder)
     }
