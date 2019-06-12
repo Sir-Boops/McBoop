@@ -108,11 +108,13 @@ func ArgsParse(Args []string) {
       full_libs_list := []string{}
       full_libs_list = append(full_libs_list, GetMcBoopDir() + "client/" + gjson.Get(version_meta, "id").String() + "/" + gjson.Get(version_meta, "id").String() + ".jar")
       full_libs_list = append(full_libs_list, libs...)
+      full_libs_list = append(full_libs_list, nativelibs...)
 
       game_launch_cmd := []string{"-Djava.library.path=" + nativesfolder, "-cp", strings.Join(full_libs_list, ":"), gjson.Get(version_meta, "mainClass").String()}
 
-      game_launch_cmd = append(game_launch_cmd, GenLaunchCommand(gjson.Get(version_meta, "arguments.game").Array(), account_name, gjson.Get(version_meta, "id").String(),
-        gjson.Get(version_meta, "assets").String(), gjson.Get(version_meta, "type").String())...)
+
+
+      game_launch_cmd = append(game_launch_cmd, GenLaunchArgs(version_meta, account_name)...)
 
       fmt.Println(game_launch_cmd)
 

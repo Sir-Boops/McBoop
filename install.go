@@ -52,27 +52,34 @@ func InstallLibs(LibIndex []gjson.Result) ([]string, []string) {
   nativelibs := []string{}
 
   for i := 0; i < len(LibIndex); i++ {
-    libpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.artifact.path").String()
-    libs = append(libs, libpath)
+    if LibIndex[i].Get("downloads.artifact.path").Exists() {
 
-    if !CheckForFile(libpath) {
-      DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String())
-    }
+      libpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.artifact.path").String()
+      libs = append(libs, libpath)
 
-    if Sha1Sum(libpath) != LibIndex[i].Get("downloads.artifact.sha1").String() {
-      DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String())
+      if !CheckForFile(libpath) {
+        DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String())
+      }
+
+      if Sha1Sum(libpath) != LibIndex[i].Get("downloads.artifact.sha1").String() {
+        DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String())
+      }
     }
 
     if LibIndex[i].Get("natives.linux").Exists() {
-      nativelibpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".path").String()
-      nativelibs = append(nativelibs, nativelibpath)
+      if LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String()).Exists() {
 
-      if !CheckForFile(nativelibpath) {
-        DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".url").String())
-      }
+        nativelibpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".path").String()
+        nativelibs = append(nativelibs, nativelibpath)
 
-      if Sha1Sum(nativelibpath) != LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".sha1").String() {
-        DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".url").String())
+        if !CheckForFile(nativelibpath) {
+          DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".url").String())
+        }
+
+        if Sha1Sum(nativelibpath) != LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".sha1").String() {
+          DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".url").String())
+        }
+
       }
     }
   }
