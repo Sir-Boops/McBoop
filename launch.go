@@ -46,7 +46,7 @@ func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, Ver
       gameargs = append(gameargs, user.AccessToken)
     }
 
-    if Args[i] == "${user_type}" {
+    if Args[i] == "${user_type}" || Args[i] == "${user_properties}" {
       gameargs = append(gameargs, "{}")
     }
 
