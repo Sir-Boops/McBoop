@@ -122,6 +122,8 @@ func ArgsParse(Args []string) {
 
       mc.Stdout = os.Stdout
       mc.Stderr = os.Stderr
+      mc.Dir = GetMcBoopDir() + "default/"
+
       fmt.Println("")
       fmt.Println("Game logging starts here")
       fmt.Println("")

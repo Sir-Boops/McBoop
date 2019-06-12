@@ -61,7 +61,9 @@ func GenLaunchArgs(VersionMeta string, AccountName string) ([]string) {
   // See if it uses minecraftArguments or arguments.game
   if gjson.Get(VersionMeta, "arguments.game").Exists() {
     for i := 0; i < len(gjson.Get(VersionMeta, "arguments.game").Array()); i++ {
-      game_args = append(game_args, gjson.Get(VersionMeta, "arguments.game").Array()[i].String())
+      if !strings.HasPrefix(gjson.Get(VersionMeta, "arguments.game").Array()[i].String(), "{") {
+        game_args = append(game_args, gjson.Get(VersionMeta, "arguments.game").Array()[i].String())
+      }
     }
   }
 
