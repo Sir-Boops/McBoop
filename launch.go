@@ -1,5 +1,6 @@
 package main
 
+import "fmt"
 import "strings"
 import "github.com/tidwall/gjson"
 
@@ -20,11 +21,15 @@ func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, Ver
     }
 
     if Args[i] == "${game_directory}" {
-      gameargs = append(gameargs, GetMcBoopDir() + "default" + "/")
+      gameargs = append(gameargs, GetMcBoopDir() + "default")
     }
 
-    if Args[i] == "${assets_root}" || Args[i] == "${game_assets}" {
-      gameargs = append(gameargs, GetMcBoopDir() + "assets" + "/")
+    if Args[i] == "${assets_root}" {
+      gameargs = append(gameargs, GetMcBoopDir() + "assets")
+    }
+
+    if Args[i] == "${game_assets}" {
+      gameargs = append(gameargs, GetMcBoopDir() + "default/resources")
     }
 
     if Args[i] == "${assets_index_name}" {
@@ -36,7 +41,7 @@ func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, Ver
       gameargs = append(gameargs, user.UUID)
     }
 
-    if Args[i] == "${auth_access_token}" {
+    if Args[i] == "${auth_access_token}" || Args[i] == "${auth_session}" {
       user := GetAccount(Name)
       gameargs = append(gameargs, user.AccessToken)
     }
@@ -70,6 +75,9 @@ func GenLaunchArgs(VersionMeta string, AccountName string) ([]string) {
   if gjson.Get(VersionMeta, "minecraftArguments").Exists() {
     game_args = append(game_args, strings.Split(gjson.Get(VersionMeta, "minecraftArguments").String(), " ")...)
   }
+
+  fmt.Println(game_args)
+  fmt.Println(gjson.Get(VersionMeta, "minecraftArguments"))
 
   return GenLaunchCommand(game_args, AccountName, gjson.Get(VersionMeta, "id").String(), gjson.Get(VersionMeta, "assets").String(), gjson.Get(VersionMeta, "type").String())
 }

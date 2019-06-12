@@ -93,6 +93,7 @@ func ArgsParse(Args []string) {
 
       // Now install/verify assets
       InstallAssets(gjson.Get(version_meta, "assetIndex.url").String(), gjson.Get(version_meta, "assets").String())
+      fmt.Println(gjson.Get(version_meta, "assets"))
 
       // Now install/verify Libs
       libs, nativelibs := InstallLibs(gjson.Get(version_meta, "libraries").Array())
@@ -111,12 +112,11 @@ func ArgsParse(Args []string) {
       full_libs_list = append(full_libs_list, nativelibs...)
 
       game_launch_cmd := []string{"-Djava.library.path=" + nativesfolder, "-cp", strings.Join(full_libs_list, ":"), gjson.Get(version_meta, "mainClass").String()}
-
-
-
       game_launch_cmd = append(game_launch_cmd, GenLaunchArgs(version_meta, account_name)...)
 
       fmt.Println(game_launch_cmd)
+
+      os.MkdirAll(GetMcBoopDir() + "default/", os.ModePerm)
 
       mc := exec.Command(GetMcBoopDir() + "java/bin/java", game_launch_cmd...)
 

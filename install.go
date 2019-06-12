@@ -33,17 +33,27 @@ func InstallAssets(URL string, Id string) {
         assetpath, value.Get("hash").String(), key.String())
     }
 
-
     return true
   })
+
+  if Id == "pre-1.6" || Id == "legacy" {
+    if !CheckForFile(GetMcBoopDir() + "default/resources/old_sounds.zip") {
+      fmt.Println("Downloading: old_sounds.zip")
+      os.MkdirAll(GetMcBoopDir() + "default/resources/", os.ModePerm)
+      WriteFile(ReadRemote("https://git.sergal.org/Sir-Boops/McBoop-Support-Files/raw/branch/master/mojang_files/old_sounds.zip"),
+        GetMcBoopDir() + "default/resources/old_sounds.zip")
+      fmt.Println("Extracting: old_sounds.zip")
+      archiver.Unarchive(GetMcBoopDir() + "default/resources/old_sounds.zip", GetMcBoopDir() + "default/resources/")
+    }
+  }
 }
 func DownloadAsset(URL string, Path string, FileName string, PrettyFileName string) {
   os.MkdirAll(Path, os.ModePerm)
-  os.MkdirAll(GetMcBoopDir() + "assets/virtual/legacy/" + path.Dir(PrettyFileName), os.ModePerm)
+  os.MkdirAll(GetMcBoopDir() + "default/resources/" + path.Dir(PrettyFileName), os.ModePerm)
   fmt.Println("Downloading:", PrettyFileName)
   asset := ReadRemote(URL)
   WriteFile(asset, Path + FileName)
-  WriteFile(asset, GetMcBoopDir() + "assets/virtual/legacy/" + PrettyFileName)
+  WriteFile(asset, GetMcBoopDir() + "default/resources/" + PrettyFileName)
 }
 
 func InstallLibs(LibIndex []gjson.Result) ([]string, []string) {
