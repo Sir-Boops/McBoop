@@ -19,7 +19,6 @@ func main() {
   }
 
   InstallJava()
-  os.Exit(0)
 
   ArgsParse(os.Args)
 }
