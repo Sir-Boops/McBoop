@@ -1,6 +1,5 @@
 package main
 
-import "fmt"
 import "strings"
 import "github.com/tidwall/gjson"
 
@@ -75,9 +74,6 @@ func GenLaunchArgs(VersionMeta string, AccountName string) ([]string) {
   if gjson.Get(VersionMeta, "minecraftArguments").Exists() {
     game_args = append(game_args, strings.Split(gjson.Get(VersionMeta, "minecraftArguments").String(), " ")...)
   }
-
-  fmt.Println(game_args)
-  fmt.Println(gjson.Get(VersionMeta, "minecraftArguments"))
 
   return GenLaunchCommand(game_args, AccountName, gjson.Get(VersionMeta, "id").String(), gjson.Get(VersionMeta, "assets").String(), gjson.Get(VersionMeta, "type").String())
 }
