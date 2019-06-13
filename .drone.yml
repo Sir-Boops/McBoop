@@ -7,6 +7,7 @@ pipeline:
             - go get -u github.com/mholt/archiver
             - go get -u github.com/logrusorgru/aurora
             - go get -u github.com/tidwall/gjson
+            - go get -u github.com/satori/go.uuid
             - CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o McBoop .
             - sha256sum McBoop | head -c 64 > McBoop.sha256
     deploy:
