@@ -1,0 +1,19 @@
+pipeline:
+    build:
+        image: golang:1.12.5-alpine
+        pull: true
+        commands:
+            - apk add git
+            - go get -u github.com/mholt/archiver
+            - go get -u github.com/logrusorgru/aurora
+            - go get -u github.com/tidwall/gjson
+            - CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o McBoop .
+            - sha256sum McBoop | head -c 64 > McBoop.sha256
+    deploy:
+        image: plugins/s3
+        bucket: boops-deploy
+        acl: public-read
+        region: us-east-1
+        source: McBoop*
+        target: /McBoop
+        secrets: [ aws_access_key_id, aws_secret_access_key ]
