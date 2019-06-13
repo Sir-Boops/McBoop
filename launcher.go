@@ -16,6 +16,4 @@ func LauncherUpdate() {
     fmt.Println("Update done, re-run your last command and enjoy! :)")
     os.Exit(0)
   }
-
-  fmt.Println(remote_sum, expath)
 }
