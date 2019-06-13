@@ -83,11 +83,22 @@ func ArgsParse(Args []string) {
       RefreshAccount(account_name)
 
       //Get version meta
-      manifest := gjson.Get(GetRemoteText("https://launchermeta.mojang.com/mc/game/version_manifest.json"), "versions").Array()
+      manifest := GetRemoteText("https://launchermeta.mojang.com/mc/game/version_manifest.json")
+      requested_version := Args[2]
+      if Args[2] == "stable" || Args[2] == "snapshot" {
+        if Args[2] == "stable" {
+          requested_version = gjson.Get(manifest, "latest.release").String()
+        }
+        if Args[2] == "snapshot" {
+          requested_version = gjson.Get(manifest, "latest.snapshot").String()
+        }
+      }
+
+      // Get version meta
       version_meta := ""
-      for i := 0; i < len(manifest); i++ {
-        if manifest[i].Get("id").String() == Args[2] {
-          version_meta = GetRemoteText(manifest[i].Get("url").String())
+      for i := 0; i < len(gjson.Get(manifest, "versions").Array()); i++ {
+        if gjson.Get(manifest, "versions").Array()[i].Get("id").String() == requested_version {
+          version_meta = GetRemoteText(gjson.Get(manifest, "versions").Array()[i].Get("url").String())
         }
       }
 
@@ -104,7 +115,6 @@ func ArgsParse(Args []string) {
       nativesfolder := ExtractNatives(nativelibs)
 
       // Generate Launch Command
-
       full_libs_list := []string{}
       full_libs_list = append(full_libs_list, GetMcBoopDir() + "client/" + gjson.Get(version_meta, "id").String() + "/" + gjson.Get(version_meta, "id").String() + ".jar")
       full_libs_list = append(full_libs_list, libs...)
@@ -113,10 +123,11 @@ func ArgsParse(Args []string) {
       game_launch_cmd := []string{"-Djava.library.path=" + nativesfolder, "-cp", strings.Join(full_libs_list, ":"), gjson.Get(version_meta, "mainClass").String()}
       game_launch_cmd = append(game_launch_cmd, GenLaunchArgs(version_meta, account_name)...)
 
+      // Ensure the profile folder is there
       os.MkdirAll(GetMcBoopDir() + "default/", os.ModePerm)
 
+      // Run the game!
       mc := exec.Command(GetMcBoopDir() + "java/bin/java", game_launch_cmd...)
-
       mc.Stdout = os.Stdout
       mc.Stderr = os.Stderr
       mc.Dir = GetMcBoopDir() + "default/"
