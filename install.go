@@ -62,12 +62,11 @@ func InstallAssets(URL string, Id string) {
     }
   }
 }
-
 func DownloadAsset(URL string, Path string, FileName string, PrettyFileName string, sha1sum string) {
   os.MkdirAll(Path, os.ModePerm)
   os.MkdirAll(GetMcBoopDir() + "default/resources/" + path.Dir(PrettyFileName), os.ModePerm)
   fmt.Println("Downloading:", PrettyFileName)
-  var asset []byte
+  asset := ReadRemote(URL)
   t := 0
   for Sha1SumByte(asset) != sha1sum && t < 5 {
     t = t+1
@@ -87,42 +86,40 @@ func InstallLibs(LibIndex []gjson.Result) ([]string, []string) {
 
   for i := 0; i < len(LibIndex); i++ {
     if LibIndex[i].Get("downloads.artifact.path").Exists() {
-
       libpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.artifact.path").String()
       libs = append(libs, libpath)
-
-      if !CheckForFile(libpath) {
-        DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String())
-      }
-
-      if Sha1Sum(libpath) != LibIndex[i].Get("downloads.artifact.sha1").String() {
-        DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String())
+      if !CheckForFile(libpath) || Sha1Sum(libpath) != LibIndex[i].Get("downloads.artifact.sha1").String() {
+        DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String(), LibIndex[i].Get("downloads.artifact.sha1").String())
       }
     }
 
     if LibIndex[i].Get("natives.linux").Exists() {
       if LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String()).Exists() {
-
         nativelibpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".path").String()
         nativelibs = append(nativelibs, nativelibpath)
 
-        if !CheckForFile(nativelibpath) {
-          DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".url").String())
+        if !CheckForFile(nativelibpath) || Sha1Sum(nativelibpath) != LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".sha1").String() {
+          DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".url").String(),
+            LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".sha1").String())
         }
-
-        if Sha1Sum(nativelibpath) != LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".sha1").String() {
-          DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".url").String())
-        }
-
       }
     }
   }
   return libs, nativelibs
 }
-func DownloadLib(Path string, URL string) {
+func DownloadLib(Path string, URL string, SHA1Sum string) {
   os.MkdirAll(Path, os.ModePerm)
   fmt.Println("Downloading:", filepath.Base(Path))
-  WriteFile(ReadRemote(URL), Path)
+  lib := ReadRemote(URL)
+  r := 0
+  for Sha1SumByte(lib) != SHA1Sum && r < 5 {
+    r = r+1
+    lib = ReadRemote(URL)
+  }
+  if r >= 5 {
+    fmt.Println("Failed to download:", filepath.Base(Path), "Tried 5 times, If your connection Ok?")
+  }
+  WriteFile(lib, Path)
 }
 
 func InstallClient(Meta gjson.Result, Id string) {
