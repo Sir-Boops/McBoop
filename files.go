@@ -45,6 +45,12 @@ func Sha1Sum(Path string) (string) {
   return hex.EncodeToString(h.Sum(nil))
 }
 
+func Sha1SumByte(bytes []byte) (string) {
+  h := sha1.New()
+  h.Write(bytes)
+  return hex.EncodeToString(h.Sum(nil))
+}
+
 func Sha256Sum(Path string) (string) {
   f, _ := os.Open(Path)
   defer f.Close()

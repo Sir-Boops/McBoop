@@ -3,6 +3,8 @@ package main
 import "os"
 import "fmt"
 import "path"
+import "sync"
+import "time"
 import "strings"
 import "io/ioutil"
 import "path/filepath"
@@ -15,26 +17,39 @@ func InstallAssets(URL string, Id string) {
   os.MkdirAll(GetMcBoopDir() + "assets/indexes/", os.ModePerm)
   WriteFile([]byte(AssetIndex), GetMcBoopDir() + "assets/indexes/" + Id + ".json")
   assets := gjson.Get(AssetIndex, "objects")
+  var wg sync.WaitGroup
+  r := 0
   assets.ForEach(func(key, value gjson.Result) (bool) {
-
     // Now we are looping over a list of assets
     // key is the filename
     // value is the object
 
+    // If we have to download it thread it else don't bother with threads
     assetpath := GetMcBoopDir() + "assets/objects/" + string(value.Get("hash").String()[0:2]) + "/"
+    if !CheckForFile(assetpath + value.Get("hash").String()) || Sha1Sum(assetpath + value.Get("hash").String()) != value.Get("hash").String() {
+      r = r+1
 
-    // Check to see if asset is there
-    if !CheckForFile(assetpath + value.Get("hash").String()) {
-      DownloadAsset("https://resources.download.minecraft.net/" + string(value.Get("hash").String()[0:2]) + "/" + value.Get("hash").String(),
-        assetpath, value.Get("hash").String(), key.String())
-    } else if Sha1Sum(assetpath + value.Get("hash").String()) != value.Get("hash").String() {
-      // Hash is wrong redownload
-      DownloadAsset("https://resources.download.minecraft.net/" + string(value.Get("hash").String()[0:2]) + "/" + value.Get("hash").String(),
-        assetpath, value.Get("hash").String(), key.String())
+      // Limit to 10 download threads
+      for r > 10 {
+        time.Sleep(250 * time.Millisecond)
+      }
+
+      wg.Add(1)
+      go func() {
+        defer wg.Done()
+        defer func() {
+          r = r-1
+        }()
+        DownloadAsset("https://resources.download.minecraft.net/" + string(value.Get("hash").String()[0:2]) + "/" + value.Get("hash").String(),
+          assetpath, value.Get("hash").String(), key.String(), value.Get("hash").String())
+      }()
     }
 
     return true
   })
+
+// Make sure everything is downloaded before going on
+  wg.Wait()
 
   if Id == "pre-1.6" || Id == "legacy" {
     if !CheckForFile(GetMcBoopDir() + "default/resources/old_sounds.zip") {
@@ -47,11 +62,20 @@ func InstallAssets(URL string, Id string) {
     }
   }
 }
-func DownloadAsset(URL string, Path string, FileName string, PrettyFileName string) {
+
+func DownloadAsset(URL string, Path string, FileName string, PrettyFileName string, sha1sum string) {
   os.MkdirAll(Path, os.ModePerm)
   os.MkdirAll(GetMcBoopDir() + "default/resources/" + path.Dir(PrettyFileName), os.ModePerm)
   fmt.Println("Downloading:", PrettyFileName)
-  asset := ReadRemote(URL)
+  var asset []byte
+  t := 0
+  for Sha1SumByte(asset) != sha1sum && t < 5 {
+    t = t+1
+    asset = ReadRemote(URL)
+  }
+  if t >= 5 {
+    fmt.Println("Failed to download:", PrettyFileName, "Five times is your connection ok?")
+  }
   WriteFile(asset, Path + FileName)
   WriteFile(asset, GetMcBoopDir() + "default/resources/" + PrettyFileName)
 }
