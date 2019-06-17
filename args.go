@@ -31,7 +31,6 @@ func ArgsParse(Args []string) {
         AddAccount(AuthAccount(Args[2], Args[3]))
       }
     }
-
     if Args[1] == "--list-accounts" {
       // Verify that accounts.json is there!
       if !CheckForFile(GetMcBoopDir() + "accounts.json") {
@@ -67,17 +66,8 @@ func ArgsParse(Args []string) {
       fmt.Println("Current", aurora.Yellow("snapshot"), "is:", aurora.Yellow(snapshot))
       fmt.Println("")
     }
-
     if Args[1] == "--run" {
-      // Check if using default or not
-      account_name := ""
-      if len(Args) >= 4 {
-        // Using non-default
-        account_name = Args[3]
-      } else {
-        // Use default
-        account_name = GetDefaultAccount()
-      }
+      account_name := GetDefaultAccount()
 
       // Now refresh login token
       RefreshAccount(account_name)
@@ -158,7 +148,7 @@ func Help() {
   fmt.Println("")
   fmt.Println("./McBoop --list-mc-versions => List all playable MC versions.")
   fmt.Println("")
-  fmt.Println("./Mcboop --run <version> [username] => Runs Minecraft <version> using [username] if [username] is not defined then the default is used.")
+  fmt.Println("./Mcboop --run <version> => Runs Minecraft <version>.")
   os.Exit(0)
 }
 
