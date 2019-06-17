@@ -126,17 +126,22 @@ func InstallClient(Meta gjson.Result, Id string) {
   path := GetMcBoopDir() + "client/" + Id + "/"
   filename := Id + ".jar"
 
-  if !CheckForFile(path + filename) {
-    DownloadClient(Meta.Get("url").String(), path + filename)
-  }
-
-  if Sha1Sum(path + filename) != Meta.Get("sha1").String() {
-    DownloadClient(Meta.Get("url").String(), path + filename)
+  if !CheckForFile(path + filename) || Sha1Sum(path + filename) != Meta.Get("sha1").String() {
+    DownloadClient(Meta.Get("url").String(), path + filename, Meta.Get("sha1").String())
   }
 }
-func DownloadClient(URL string, Path string) {
+func DownloadClient(URL string, Path string, Sha1Sum string) {
   os.MkdirAll(Path, os.ModePerm)
   fmt.Println("Downloading:", filepath.Base(Path))
+  client := ReadRemote(URL)
+  r := 0
+  for Sha1SumByte(client) != Sha1Sum && r < 5 {
+    r = r+1
+    client = ReadRemote(URL)
+  }
+  if r >= 5 {
+    fmt.Println("Failed to download:", filepath.Base(Path), "5 Times is your connection ok?")
+  }
   WriteFile(ReadRemote(URL), Path)
 }
 
