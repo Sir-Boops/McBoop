@@ -7,31 +7,32 @@ import "strings"
 import "github.com/tidwall/gjson"
 import "github.com/logrusorgru/aurora"
 
-func ArgsParse(Args []string) {
+func ArgsParse() {
 
   // If Nonthing is set then default to --help
-  if len(Args) <= 1 {
+  if len(os.Args) <= 1 {
     Help()
   } else {
     // Args is 1 or longer so parse time!
-    if Args[1] == "--help" {
+    // Order here is important!
+    if os.Args[1] == "--help" {
       Help()
     }
-    if Args[1] == "--status" {
+    if os.Args[1] == "--status" {
       Status()
     }
 
-    if Args[1] == "--add-account" {
+    if os.Args[1] == "--add-account" {
       // Make sure there are enough args
-      if len(Args) <= 2 {
+      if len(os.Args) <= 2 {
         // Not enough Args to add an account
         fmt.Println("Run `./Mcboop --help` for help")
       } else {
         // Enough args to add an account
-        AddAccount(AuthAccount(Args[2], Args[3]))
+        AddAccount(AuthAccount(os.Args[2], os.Args[3]))
       }
     }
-    if Args[1] == "--list-accounts" {
+    if os.Args[1] == "--list-accounts" {
       // Verify that accounts.json is there!
       if !CheckForFile(GetMcBoopDir() + "accounts.json") {
         fmt.Println("Accounts json not found!")
@@ -48,7 +49,7 @@ func ArgsParse(Args []string) {
       fmt.Println("")
     }
 
-    if Args[1] == "--list-mc-versions" {
+    if os.Args[1] == "--list-mc-versions" {
       release, snapshot, list := ListMCVersions()
       fmt.Println("")
       fmt.Println("Here are a list of playable versions")
@@ -66,7 +67,7 @@ func ArgsParse(Args []string) {
       fmt.Println("Current", aurora.Yellow("snapshot"), "is:", aurora.Yellow(snapshot))
       fmt.Println("")
     }
-    if Args[1] == "--run" {
+    if os.Args[1] == "--run" {
       account_name := GetDefaultAccount()
 
       // Now refresh login token
@@ -74,12 +75,12 @@ func ArgsParse(Args []string) {
 
       //Get version meta
       manifest := GetRemoteText("https://launchermeta.mojang.com/mc/game/version_manifest.json")
-      requested_version := Args[2]
-      if Args[2] == "stable" || Args[2] == "snapshot" {
-        if Args[2] == "stable" {
+      requested_version := os.Args[2]
+      if os.Args[2] == "stable" || os.Args[2] == "snapshot" {
+        if os.Args[2] == "stable" {
           requested_version = gjson.Get(manifest, "latest.release").String()
         }
-        if Args[2] == "snapshot" {
+        if os.Args[2] == "snapshot" {
           requested_version = gjson.Get(manifest, "latest.snapshot").String()
         }
       }
