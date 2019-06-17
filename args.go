@@ -94,16 +94,24 @@ func ArgsParse() {
       }
 
       // Now install/verify assets
+      fmt.Println("==== Installing/Verfiying Assets ====")
       InstallAssets(gjson.Get(version_meta, "assetIndex.url").String(), gjson.Get(version_meta, "assets").String())
+      fmt.Println("")
 
       // Now install/verify Libs
+      fmt.Println("==== Installing/Verifying Libraries ====")
       libs, nativelibs := InstallLibs(gjson.Get(version_meta, "libraries").Array())
-
-      // Download the client jar
-      InstallClient(gjson.Get(version_meta, "downloads.client"), gjson.Get(version_meta, "id").String())
+      fmt.Println("")
 
       // Extract natives
+      fmt.Println("==== Extracting Native Libraries ====")
       nativesfolder := ExtractNatives(nativelibs)
+      fmt.Println("")
+
+      // Download the client jar
+      fmt.Println("==== Installing/Verifying Client ====")
+      InstallClient(gjson.Get(version_meta, "downloads.client"), gjson.Get(version_meta, "id").String())
+      fmt.Println("")
 
       // Generate Launch Command
       full_libs_list := []string{}
@@ -124,7 +132,7 @@ func ArgsParse() {
       mc.Dir = GetMcBoopDir() + "default/"
 
       fmt.Println("")
-      fmt.Println("Game logging starts here")
+      fmt.Println("==== Game logging starts here ====")
       fmt.Println("")
       mc.Run()
 
@@ -137,7 +145,7 @@ func ArgsParse() {
 func Help() {
   // System will exit when you call this!
   fmt.Println("")
-  fmt.Println("McBoop Help")
+  fmt.Println("==== McBoop Help ====")
   fmt.Println("")
   fmt.Println("./McBoop --help => Shows this page.")
   fmt.Println("")
@@ -150,6 +158,7 @@ func Help() {
   fmt.Println("./McBoop --list-mc-versions => List all playable MC versions.")
   fmt.Println("")
   fmt.Println("./Mcboop --run <version> => Runs Minecraft <version>.")
+  fmt.Println("")
   os.Exit(0)
 }
 
@@ -157,7 +166,7 @@ func Status() {
   // System will exit upon calling this
   status := gjson.Parse(GetRemoteText("https://status.mojang.com/check"))
   fmt.Println("")
-  fmt.Println("Minecraft server status")
+  fmt.Println("==== Minecraft server status ====")
   fmt.Println("")
   fmt.Println("Minecraft.net status:", StatusColor(status.Get("#.minecraft\\.net").Array()[0].String()))
   fmt.Println("Session.Minecraft.net status:", StatusColor(status.Get("#.session\\.minecraft\\.net").Array()[0].String()))
@@ -167,6 +176,7 @@ func Status() {
   fmt.Println("Authserver.Mojang.com status:", StatusColor(status.Get("#.authserver\\.mojang\\.com").Array()[0].String()))
   fmt.Println("Sessionserver.Mojang.com status:", StatusColor(status.Get("#.sessionserver\\.mojang\\.com").Array()[0].String()))
   fmt.Println("Api.Mojang.com status:", StatusColor(status.Get("#.api\\.mojang\\.com").Array()[0].String()))
+  fmt.Println("")
   os.Exit(0)
 }
 func StatusColor(Status string) (aurora.Value){
@@ -174,16 +184,11 @@ func StatusColor(Status string) (aurora.Value){
   ans := aurora.White(Status)
   if Status == "green" {
     ans = aurora.Green("Green")
-  }
-
-  if Status == "yellow" {
+  } else if Status == "yellow" {
     ans = aurora.Yellow("Yellow")
-  }
-
-  if Status == "red" {
+  } else if Status == "red" {
     ans = aurora.Red("Red")
   }
-
   return ans
 }
 
