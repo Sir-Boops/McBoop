@@ -20,5 +20,5 @@ func main() {
 
   InstallJava()
 
-  ArgsParse(os.Args)
+  ArgsParse()
 }
