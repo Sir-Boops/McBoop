@@ -40,9 +40,14 @@ func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, Ver
       gameargs = append(gameargs, user.UUID)
     }
 
-    if Args[i] == "${auth_access_token}" || Args[i] == "${auth_session}" {
+    if Args[i] == "${auth_access_token}" {
       user := GetAccount(Name)
       gameargs = append(gameargs, user.AccessToken)
+    }
+
+    if Args[i] == "${auth_session}" {
+      user := GetAccount(Name)
+      gameargs = append(gameargs, "token:" + user.AccessToken + ":" + user.UUID)
     }
 
     if Args[i] == "${user_type}" || Args[i] == "${user_properties}" {
