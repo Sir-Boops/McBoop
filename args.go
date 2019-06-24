@@ -15,6 +15,7 @@ func ArgsParse() {
   } else {
     // Args is 1 or longer so parse time!
     // Order here is important!
+
     if os.Args[1] == "--help" {
       Help()
     }
@@ -29,7 +30,9 @@ func ArgsParse() {
         fmt.Println("Run `./Mcboop --help` for help")
       } else {
         // Enough args to add an account
-        AddAccount(AuthAccount(os.Args[2], os.Args[3]))
+        auth := AuthAccount(os.Args[2], os.Args[3])
+        AddAccount(auth)
+        fmt.Println("Added account:", gjson.Get(auth, "selectedProfile.name"))
       }
     }
     if os.Args[1] == "--list-accounts" {
@@ -43,7 +46,11 @@ func ArgsParse() {
       fmt.Println("Current added accounts")
       fmt.Println("================")
       for i := 0; i < len(users); i++ {
-        fmt.Println(users[i])
+        if users[i] == GetDefaultAccount() {
+          fmt.Println(users[i], aurora.Green("Default"))
+        } else {
+          fmt.Println(users[i])
+        }
       }
       fmt.Println("================")
       fmt.Println("")
@@ -70,6 +77,14 @@ func ArgsParse() {
     if os.Args[1] == "--run" {
       account_name := GetDefaultAccount()
 
+      // Check for optional account name
+      for i := 0; i < len(os.Args); i++ {
+        if os.Args[i] == "--user" {
+          account_name = os.Args[i + 1]
+          break
+        }
+      }
+
       // Now refresh login token
       RefreshAccount(account_name)
 
@@ -92,6 +107,9 @@ func ArgsParse() {
           version_meta = GetRemoteText(gjson.Get(manifest, "versions").Array()[i].Get("url").String())
         }
       }
+
+      // Ensure the profile folder is there
+      os.MkdirAll(GetMcBoopDir() + "default/", os.ModePerm)
 
       // Now install/verify assets
       fmt.Println("==== Installing/Verfiying Assets ====")
@@ -122,9 +140,6 @@ func ArgsParse() {
       game_launch_cmd := []string{"-Djava.library.path=" + nativesfolder, "-cp", strings.Join(full_libs_list, ":"), gjson.Get(version_meta, "mainClass").String()}
       game_launch_cmd = append(game_launch_cmd, GenLaunchArgs(version_meta, account_name)...)
 
-      // Ensure the profile folder is there
-      os.MkdirAll(GetMcBoopDir() + "default/", os.ModePerm)
-
       // Run the game!
       mc := exec.Command(GetMcBoopDir() + "java/bin/java", game_launch_cmd...)
       mc.Stdout = os.Stdout
@@ -147,6 +162,8 @@ func Help() {
   fmt.Println("")
   fmt.Println("==== McBoop Help ====")
   fmt.Println("")
+  fmt.Println("<> Signify required args, [] Signify optional args")
+  fmt.Println("")
   fmt.Println("./McBoop --help => Shows this page.")
   fmt.Println("")
   fmt.Println("./McBoop --status => Shows mojang status.")
@@ -158,6 +175,8 @@ func Help() {
   fmt.Println("./McBoop --list-mc-versions => List all playable MC versions.")
   fmt.Println("")
   fmt.Println("./Mcboop --run <version> => Runs Minecraft <version>.")
+  fmt.Println("")
+  fmt.Println("./Mcboop --user <username> => Used with `--run` to select a spefic user to run the game with")
   fmt.Println("")
   os.Exit(0)
 }
