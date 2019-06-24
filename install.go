@@ -12,7 +12,7 @@ import "github.com/tidwall/gjson"
 import "github.com/mholt/archiver"
 import "github.com/satori/go.uuid"
 
-func InstallAssets(URL string, Id string) {
+func InstallAssets(URL string, Id string, ProfilePath string) {
   AssetIndex := GetRemoteText(URL)
   os.MkdirAll(GetMcBoopDir() + "assets/indexes/", os.ModePerm)
   WriteFile([]byte(AssetIndex), GetMcBoopDir() + "assets/indexes/" + Id + ".json")
@@ -26,7 +26,8 @@ func InstallAssets(URL string, Id string) {
 
     // If we have to download it thread it else don't bother with threads
     assetpath := GetMcBoopDir() + "assets/objects/" + string(value.Get("hash").String()[0:2]) + "/"
-    if !CheckForFile(assetpath + value.Get("hash").String()) || Sha1Sum(assetpath + value.Get("hash").String()) != value.Get("hash").String() {
+    if !CheckForFile(assetpath + value.Get("hash").String()) || Sha1Sum(assetpath + value.Get("hash").String()) != value.Get("hash").String() ||
+      !CheckForFile(ProfilePath + "resources/" + key.String()) || Sha1Sum(ProfilePath + "resources/" + key.String()) != value.Get("hash").String() {
       r = r+1
 
       // Limit to 10 download threads
@@ -41,7 +42,7 @@ func InstallAssets(URL string, Id string) {
           r = r-1
         }()
         DownloadAsset("https://resources.download.minecraft.net/" + string(value.Get("hash").String()[0:2]) + "/" + value.Get("hash").String(),
-          assetpath, value.Get("hash").String(), key.String(), value.Get("hash").String())
+          assetpath, value.Get("hash").String(), key.String(), value.Get("hash").String(), ProfilePath)
       }()
     }
 
@@ -52,19 +53,19 @@ func InstallAssets(URL string, Id string) {
   wg.Wait()
 
   if Id == "pre-1.6" || Id == "legacy" {
-    if !CheckForFile(GetMcBoopDir() + "default/resources/old_sounds.zip") {
+    if !CheckForFile(ProfilePath + "resources/old_sounds.zip") {
       fmt.Println("Downloading: old_sounds.zip")
-      os.MkdirAll(GetMcBoopDir() + "default/resources/", os.ModePerm)
+      os.MkdirAll(ProfilePath + "resources/", os.ModePerm)
       WriteFile(ReadRemote("https://git.sergal.org/Sir-Boops/McBoop-Support-Files/raw/branch/master/mojang_files/old_sounds.zip"),
-        GetMcBoopDir() + "default/resources/old_sounds.zip")
+        ProfilePath + "resources/old_sounds.zip")
       fmt.Println("Extracting: old_sounds.zip")
-      archiver.Unarchive(GetMcBoopDir() + "default/resources/old_sounds.zip", GetMcBoopDir() + "default/resources/")
+      archiver.Unarchive(ProfilePath + "resources/old_sounds.zip", ProfilePath + "resources/")
     }
   }
 }
-func DownloadAsset(URL string, Path string, FileName string, PrettyFileName string, sha1sum string) {
+func DownloadAsset(URL string, Path string, FileName string, PrettyFileName string, sha1sum string, ProfilePath string) {
   os.MkdirAll(Path, os.ModePerm)
-  os.MkdirAll(GetMcBoopDir() + "default/resources/" + path.Dir(PrettyFileName), os.ModePerm)
+  os.MkdirAll(ProfilePath + "resources/" + path.Dir(PrettyFileName), os.ModePerm)
   fmt.Println("Downloading:", PrettyFileName)
   asset := ReadRemote(URL)
   t := 0
@@ -76,7 +77,7 @@ func DownloadAsset(URL string, Path string, FileName string, PrettyFileName stri
     fmt.Println("Failed to download:", PrettyFileName, "Five times is your connection ok?")
   }
   WriteFile(asset, Path + FileName)
-  WriteFile(asset, GetMcBoopDir() + "default/resources/" + PrettyFileName)
+  WriteFile(asset, ProfilePath + "resources/" + PrettyFileName)
 }
 
 func InstallLibs(LibIndex []gjson.Result) ([]string, []string) {

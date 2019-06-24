@@ -3,7 +3,7 @@ package main
 import "strings"
 import "github.com/tidwall/gjson"
 
-func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, VersionType string) ([]string) {
+func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, VersionType string, ProfilePath string) ([]string) {
   gameargs := []string{}
   for i := 0; i < len(Args); i++ {
 
@@ -20,7 +20,7 @@ func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, Ver
     }
 
     if Args[i] == "${game_directory}" {
-      gameargs = append(gameargs, GetMcBoopDir() + "default")
+      gameargs = append(gameargs, ProfilePath)
     }
 
     if Args[i] == "${assets_root}" {
@@ -63,7 +63,7 @@ func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, Ver
   return gameargs
 }
 
-func GenLaunchArgs(VersionMeta string, AccountName string) ([]string) {
+func GenLaunchArgs(VersionMeta string, AccountName string, ProfilePath string) ([]string) {
 
   game_args := []string{}
 
@@ -80,5 +80,6 @@ func GenLaunchArgs(VersionMeta string, AccountName string) ([]string) {
     game_args = append(game_args, strings.Split(gjson.Get(VersionMeta, "minecraftArguments").String(), " ")...)
   }
 
-  return GenLaunchCommand(game_args, AccountName, gjson.Get(VersionMeta, "id").String(), gjson.Get(VersionMeta, "assets").String(), gjson.Get(VersionMeta, "type").String())
+  return GenLaunchCommand(game_args, AccountName, gjson.Get(VersionMeta, "id").String(), gjson.Get(VersionMeta, "assets").String(), gjson.Get(VersionMeta, "type").String(),
+   ProfilePath)
 }

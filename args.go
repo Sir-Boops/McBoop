@@ -85,6 +85,17 @@ func ArgsParse() {
         }
       }
 
+      // Get custom profile path
+      profile_path := GetMcBoopDir() + "profiles/default/"
+      for i := 0; i < len(os.Args); i++ {
+        if os.Args[i] == "--profile" {
+          profile_path = GetMcBoopDir() + "profiles/" + os.Args[i + 1] + "/"
+        }
+      }
+
+      // Ensure the profile folder is there
+      os.MkdirAll(profile_path, os.ModePerm)
+
       // Now refresh login token
       RefreshAccount(account_name)
 
@@ -108,12 +119,9 @@ func ArgsParse() {
         }
       }
 
-      // Ensure the profile folder is there
-      os.MkdirAll(GetMcBoopDir() + "default/", os.ModePerm)
-
       // Now install/verify assets
       fmt.Println("==== Installing/Verfiying Assets ====")
-      InstallAssets(gjson.Get(version_meta, "assetIndex.url").String(), gjson.Get(version_meta, "assets").String())
+      InstallAssets(gjson.Get(version_meta, "assetIndex.url").String(), gjson.Get(version_meta, "assets").String(), profile_path)
       fmt.Println("")
 
       // Now install/verify Libs
@@ -138,13 +146,13 @@ func ArgsParse() {
       full_libs_list = append(full_libs_list, nativelibs...)
 
       game_launch_cmd := []string{"-Djava.library.path=" + nativesfolder, "-cp", strings.Join(full_libs_list, ":"), gjson.Get(version_meta, "mainClass").String()}
-      game_launch_cmd = append(game_launch_cmd, GenLaunchArgs(version_meta, account_name)...)
+      game_launch_cmd = append(game_launch_cmd, GenLaunchArgs(version_meta, account_name, profile_path)...)
 
       // Run the game!
       mc := exec.Command(GetMcBoopDir() + "java/bin/java", game_launch_cmd...)
       mc.Stdout = os.Stdout
       mc.Stderr = os.Stderr
-      mc.Dir = GetMcBoopDir() + "default/"
+      mc.Dir = profile_path
 
       fmt.Println("")
       fmt.Println("==== Game logging starts here ====")
@@ -177,6 +185,8 @@ func Help() {
   fmt.Println("./Mcboop --run <version> => Runs Minecraft <version>.")
   fmt.Println("")
   fmt.Println("./Mcboop --user <username> => Used with `--run` to select a spefic user to run the game with")
+  fmt.Println("")
+  fmt.Println("./Mcboop --profile <profile name> => Used with `--run` to run in a non-default profile")
   fmt.Println("")
   os.Exit(0)
 }
