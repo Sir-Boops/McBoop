@@ -63,7 +63,7 @@ func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, Ver
   return gameargs
 }
 
-func GenLaunchArgs(VersionMeta string, AccountName string, ProfilePath string) ([]string) {
+func GenLaunchArgs(VersionMeta string, AccountName string, ProfilePath string, AssetIndex string) ([]string) {
 
   game_args := []string{}
 
@@ -80,6 +80,6 @@ func GenLaunchArgs(VersionMeta string, AccountName string, ProfilePath string) (
     game_args = append(game_args, strings.Split(gjson.Get(VersionMeta, "minecraftArguments").String(), " ")...)
   }
 
-  return GenLaunchCommand(game_args, AccountName, gjson.Get(VersionMeta, "id").String(), gjson.Get(VersionMeta, "assets").String(), gjson.Get(VersionMeta, "type").String(),
+  return GenLaunchCommand(game_args, AccountName, gjson.Get(VersionMeta, "id").String(), AssetIndex, gjson.Get(VersionMeta, "type").String(),
    ProfilePath)
 }

@@ -93,6 +93,14 @@ func ArgsParse() {
         }
       }
 
+      // Check if we should deal with forge or not
+      forge := false
+      for i := 0; i < len(os.Args); i++ {
+        if os.Args[i] == "--forge" {
+          forge = true
+        }
+      }
+
       // Ensure the profile folder is there
       os.MkdirAll(profile_path, os.ModePerm)
 
@@ -139,14 +147,31 @@ func ArgsParse() {
       InstallClient(gjson.Get(version_meta, "downloads.client"), gjson.Get(version_meta, "id").String())
       fmt.Println("")
 
-      // Generate Launch Command
+      // Start defining libs
       full_libs_list := []string{}
       full_libs_list = append(full_libs_list, GetMcBoopDir() + "client/" + gjson.Get(version_meta, "id").String() + "/" + gjson.Get(version_meta, "id").String() + ".jar")
+
+      // Define some args that can go missing with forge
+      asset_index := gjson.Get(version_meta, "assets").String()
+
+      // Install forge
+      if forge {
+        var forge_libs []string
+        version_meta, forge_libs = CreateForgeJar(GetMcBoopDir() + "client/" + gjson.Get(version_meta, "id").String() + "/" + gjson.Get(version_meta, "id").String() + ".jar",
+          profile_path + "forge.jar", nativesfolder, version_meta, profile_path)
+        libs_dump := libs
+        libs = []string{}
+        libs = append(libs, forge_libs...)
+        libs = append(libs, libs_dump...)
+        fmt.Println("")
+      }
+
+      // Generate Launch Command
       full_libs_list = append(full_libs_list, libs...)
       full_libs_list = append(full_libs_list, nativelibs...)
 
       game_launch_cmd := []string{"-Djava.library.path=" + nativesfolder, "-cp", strings.Join(full_libs_list, ":"), gjson.Get(version_meta, "mainClass").String()}
-      game_launch_cmd = append(game_launch_cmd, GenLaunchArgs(version_meta, account_name, profile_path)...)
+      game_launch_cmd = append(game_launch_cmd, GenLaunchArgs(version_meta, account_name, profile_path, asset_index)...)
 
       // Run the game!
       mc := exec.Command(GetMcBoopDir() + "java/bin/java", game_launch_cmd...)
@@ -187,6 +212,8 @@ func Help() {
   fmt.Println("./Mcboop --user <username> => Used with `--run` to select a spefic user to run the game with")
   fmt.Println("")
   fmt.Println("./Mcboop --profile <profile name> => Used with `--run` to run in a non-default profile")
+  fmt.Println("")
+  fmt.Println("./McBoop --forge => Used with `--run` will try to install and run the forge installer jar inside the profile directory this file must be named `forge.jar`")
   fmt.Println("")
   os.Exit(0)
 }
