@@ -40,7 +40,7 @@ func CreateForgeJar (ClientJar string, ForgeJar string, TempDir string, CleanMet
     json_file = json_files[0]
   }
 
-  // Install libs
+  // Fetch lib list
   var libs []gjson.Result
   if gjson.Get(string(ReadTextFile(json_file)), "libraries").Exists() {
     libs = gjson.Get(string(ReadTextFile(json_file)), "libraries").Array()
@@ -48,35 +48,28 @@ func CreateForgeJar (ClientJar string, ForgeJar string, TempDir string, CleanMet
     libs = gjson.Get(string(ReadTextFile(json_file)), "versionInfo.libraries").Array()
   }
 
+  // Install libs
   var lib_ans []string
   fmt.Println("")
   fmt.Println("==== Downloading and Verfiying Forge Libs ====")
   for i := 0; i < len(libs); i++ {
     if (libs[i].Get("serverreq").Exists() && libs[i].Get("serverreq").Bool()) {
-      lib := libs[i].Get("name").String()
-      lib_name := strings.Split(lib, ":")[1]
-      lib_version := strings.Split(lib, ":")[2]
-      lib_path := strings.ReplaceAll(strings.Split(lib, ":")[0], ".", "/") + "/" + lib_name + "/" + lib_version + "/"
+      lib_name, lib_version, lib_path := GetLibDetails(libs[i].Get("name").String())
       if !CheckForFile(GetMcBoopDir() + "libraries/" + lib_path + lib_name + "-" + lib_version + ".jar") {
-        fmt.Println("Downloading forge lib:", lib_path + lib_name + "-" + lib_version + ".jar")
-        os.MkdirAll(GetMcBoopDir() + "libraries/" + lib_path, os.ModePerm)
-        WriteFile(ReadRemote("https://git.sergal.org/Sir-Boops/McBoop-Support-Files/raw/branch/master/forge-libs/" + lib_path + lib_name + "-" + lib_version + ".jar"),
-          GetMcBoopDir() + "libraries/" + lib_path + lib_name + "-" + lib_version + ".jar")
+        DownloadForgeLib(GetMcBoopDir() + "libraries/" + lib_path + lib_name + "-" + lib_version + ".jar",
+         "https://git.sergal.org/Sir-Boops/McBoop-Support-Files/raw/branch/master/forge-libs/" + lib_path + lib_name + "-" + lib_version + ".jar", "")
       }
       lib_ans = append(lib_ans, GetMcBoopDir() + "libraries/" + lib_path + lib_name + "-" + lib_version + ".jar")
 
     } else if libs[i].Get("downloads").Exists() && libs[i].Get("downloads.artifact.url").String() != "" {
       if Sha1Sum(GetMcBoopDir() + "libraries/" + libs[i].Get("downloads.artifact.path").String()) != libs[i].Get("downloads.artifact.sha1").String() {
-          DownloadLib(GetMcBoopDir() + "libraries/" + libs[i].Get("downloads.artifact.path").String(),
+          DownloadForgeLib(GetMcBoopDir() + "libraries/" + libs[i].Get("downloads.artifact.path").String(),
             libs[i].Get("downloads.artifact.url").String(), libs[i].Get("downloads.artifact.sha1").String())
         }
         lib_ans = append(lib_ans, GetMcBoopDir() + "libraries/" + libs[i].Get("downloads.artifact.path").String())
 
     } else if strings.Contains(libs[i].Get("name").String(), "net.minecraftforge:forge:") || strings.Contains(libs[i].Get("name").String(), "net.minecraftforge:minecraftforge:") {
-      lib := libs[i].Get("name").String()
-      lib_name := strings.Split(lib, ":")[1]
-      lib_version := strings.Split(lib, ":")[2]
-      lib_path := strings.ReplaceAll(strings.Split(lib, ":")[0], ".", "/") + "/" + lib_name + "/" + lib_version + "/"
+      _, _, lib_path := GetLibDetails(libs[i].Get("name").String())
       installer_files, _ := filepath.Glob(TempDir + "forge-installer/*forge*.jar")
       for i := 0; i < len(installer_files); i++ {
         os.MkdirAll(GetMcBoopDir() + "libraries/" + lib_path, os.ModePerm)
@@ -89,10 +82,7 @@ func CreateForgeJar (ClientJar string, ForgeJar string, TempDir string, CleanMet
   // Check if we need to run the installer itself
   version_json, _ := filepath.Glob(TempDir + "forge-installer/install_profile.json")
   if gjson.Get(string(ReadTextFile(version_json[0])), "processors").Exists() {
-    json := string(ReadTextFile(version_json[0]))
-    lib_name := strings.Split(gjson.Get(json, "path").String(), ":")[1]
-    lib_version := strings.Split(gjson.Get(json, "path").String(), ":")[2]
-    lib_path := strings.ReplaceAll(strings.Split(gjson.Get(json, "path").String(), ":")[0], ".", "/") + "/" + lib_name + "/" + lib_version + "/"
+    lib_name, lib_version, lib_path := GetLibDetails(gjson.Get(string(ReadTextFile(version_json[0])), "path").String())
     if !CheckForFile(GetMcBoopDir() + "libraries/" + lib_path + lib_name + "-" + lib_version + "-client.jar") {
       // We need to run the installer
       fmt.Println("")
@@ -107,11 +97,13 @@ func CreateForgeJar (ClientJar string, ForgeJar string, TempDir string, CleanMet
   }
 
 
+  // Make sure we have te version meta we're looking for in the forge json
   version_meta := gjson.Get(string(ReadTextFile(json_file)), "versionInfo").String()
   if !gjson.Get(string(ReadTextFile(json_file)), "versionInfo").Exists() {
     version_meta = string(ReadTextFile(json_file))
   }
 
+  // Convert 1.13+ args into simple minecraftArguments for launching
   var minecraft_args string
   if gjson.Get(version_meta, "arguments.game").Exists() {
     var new_args []gjson.Result
@@ -128,6 +120,7 @@ func CreateForgeJar (ClientJar string, ForgeJar string, TempDir string, CleanMet
     minecraft_args = gjson.Get(version_meta, "minecraftArguments").String()
   }
 
+  // Create a new meta 'file'
   meta, _ := json.Marshal(&VersionMeta{
     MainClass: gjson.Get(version_meta, "mainClass").String(),
     MinecraftArguments: minecraft_args,
@@ -135,4 +128,27 @@ func CreateForgeJar (ClientJar string, ForgeJar string, TempDir string, CleanMet
     Id: gjson.Get(version_meta, "id").String()})
 
   return string(meta), lib_ans
+}
+
+
+func GetLibDetails(Lib string) (string, string, string) {
+  lib_name := strings.Split(Lib, ":")[1]
+  lib_version := strings.Split(Lib, ":")[2]
+  lib_path := strings.ReplaceAll(strings.Split(Lib, ":")[0], ".", "/") + "/" + lib_name + "/" + lib_version + "/"
+  return lib_name, lib_version, lib_path
+}
+
+func DownloadForgeLib(Path string, URL string, SHA1Sum string) {
+  os.MkdirAll(Path, os.ModePerm)
+  fmt.Println("Downloading:", filepath.Base(Path))
+  lib := ReadRemote(URL)
+  r := 0
+  for Sha1SumByte(lib) != SHA1Sum && r < 5 && SHA1Sum != "" {
+    r = r+1
+    lib = ReadRemote(URL)
+  }
+  if r >= 5 {
+    fmt.Println("Failed to download:", filepath.Base(Path), "Tried 5 times, If your connection Ok?")
+  }
+  WriteFile(lib, Path)
 }
