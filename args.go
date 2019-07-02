@@ -4,6 +4,7 @@ import "os"
 import "fmt"
 import "os/exec"
 import "strings"
+import "io/ioutil"
 import "github.com/tidwall/gjson"
 import "github.com/logrusorgru/aurora"
 
@@ -21,6 +22,9 @@ func ArgsParse() {
     }
     if os.Args[1] == "--status" {
       Status()
+    }
+    if os.Args[1] == "--list-profiles" {
+      ListProfiles()
     }
 
     if os.Args[1] == "--add-account" {
@@ -213,6 +217,8 @@ func Help() {
   fmt.Println("")
   fmt.Println("./Mcboop --profile <profile name> => Used with `--run` to run in a non-default profile")
   fmt.Println("")
+  fmt.Println("./Mcboop --list-profiles => List all profiles")
+  fmt.Println("")
   fmt.Println("./McBoop --forge => Used with `--run` will try to install and run the forge installer jar inside the profile directory this file must be named `forge.jar`")
   fmt.Println("")
   os.Exit(0)
@@ -255,4 +261,14 @@ func ListMCVersions() (string, string, []string) {
     list = append(list, versions.Get("versions.#.id").Array()[i].String())
   }
   return versions.Get("latest.release").String(), versions.Get("latest.snapshot").String(), list
+}
+func ListProfiles() {
+  files, _ := ioutil.ReadDir(GetMcBoopDir() + "profiles")
+  fmt.Println("")
+  fmt.Println("==== Currently installed profiles ====")
+  for i := 0; i < len(files); i++ {
+    fmt.Println("\"" + files[i].Name() + "\"")
+  }
+  fmt.Println("")
+  os.Exit(0)
 }
