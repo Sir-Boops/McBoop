@@ -2,7 +2,7 @@ language: go
 
 build:
     include:
-        - go: "1.12.X"
+        - go: 1.12.X
 
     before_install:
         - go get -u github.com/mholt/archiver
