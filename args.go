@@ -97,6 +97,14 @@ func ArgsParse() {
         }
       }
 
+      // Get Custom ram amount
+      ram_amount := "4G"
+      for i := 0; i < len(os.Args); i++ {
+        if os.Args[i] == "--ram" {
+          ram_amount = os.Args[i + 1]
+        }
+      }
+
       // Check if we should deal with forge or not
       forge := false
       for i := 0; i < len(os.Args); i++ {
@@ -174,7 +182,7 @@ func ArgsParse() {
       full_libs_list = append(full_libs_list, libs...)
       full_libs_list = append(full_libs_list, nativelibs...)
 
-      game_launch_cmd := []string{"-Djava.library.path=" + nativesfolder, "-cp", strings.Join(full_libs_list, ":"), gjson.Get(version_meta, "mainClass").String()}
+      game_launch_cmd := []string{"-Xmx" + ram_amount, "-Djava.library.path=" + nativesfolder, "-cp", strings.Join(full_libs_list, ":"), gjson.Get(version_meta, "mainClass").String()}
       game_launch_cmd = append(game_launch_cmd, GenLaunchArgs(version_meta, account_name, profile_path, asset_index)...)
 
       // Run the game!
@@ -216,6 +224,8 @@ func Help() {
   fmt.Println("./Mcboop --user <username> => Used with `--run` to select a spefic user to run the game with")
   fmt.Println("")
   fmt.Println("./Mcboop --profile <profile name> => Used with `--run` to run in a non-default profile")
+  fmt.Println("")
+  fmt.Println("./Mcboop --ram <max amount> => Used with `--run` to set maximum amount of RAM ( Default is 4G )")
   fmt.Println("")
   fmt.Println("./Mcboop --list-profiles => List all profiles")
   fmt.Println("")
