@@ -1,6 +1,6 @@
 pipeline:
     build:
-        image: golang:1.12.5-alpine
+        image: golang:1.12.6-alpine
         pull: true
         commands:
             - apk add git
