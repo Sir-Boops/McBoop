@@ -57,7 +57,7 @@ func CreateForgeJar (ClientJar string, ForgeJar string, TempDir string, CleanMet
       lib_name, lib_version, lib_path := GetLibDetails(libs[i].Get("name").String())
       if !CheckForFile(GetMcBoopDir() + "libraries/" + lib_path + lib_name + "-" + lib_version + ".jar") {
         DownloadForgeLib(GetMcBoopDir() + "libraries/" + lib_path + lib_name + "-" + lib_version + ".jar",
-         "https://git.sergal.org/Sir-Boops/McBoop-Support-Files/raw/branch/master/forge-libs/" + lib_path + lib_name + "-" + lib_version + ".jar", "")
+         "https://github.com/Sir-Boops/McBoop-Support-Files/raw/master/forge-libs/" + lib_path + lib_name + "-" + lib_version + ".jar", "")
       }
       lib_ans = append(lib_ans, GetMcBoopDir() + "libraries/" + lib_path + lib_name + "-" + lib_version + ".jar")
 

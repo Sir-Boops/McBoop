@@ -58,7 +58,7 @@ func InstallAssets(URL string, Id string, ProfilePath string) {
     if !CheckForFile(ProfilePath + "resources/old_sounds.zip") {
       fmt.Println("Downloading: old_sounds.zip")
       os.MkdirAll(ProfilePath + "resources/", os.ModePerm)
-      WriteFile(ReadRemote("https://git.sergal.org/Sir-Boops/McBoop-Support-Files/raw/branch/master/mojang_files/old_sounds.zip"),
+      WriteFile(ReadRemote("https://github.com/Sir-Boops/McBoop-Support-Files/raw/master/mojang_files/old_sounds.zip"),
         ProfilePath + "resources/old_sounds.zip")
       fmt.Println("Extracting: old_sounds.zip")
       archiver.Unarchive(ProfilePath + "resources/old_sounds.zip", ProfilePath + "resources/")
