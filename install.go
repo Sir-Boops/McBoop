@@ -26,8 +26,7 @@ func InstallAssets(URL string, Id string, ProfilePath string) {
 
     // If we have to download it thread it else don't bother with threads
     assetpath := GetMcBoopDir() + "assets/objects/" + string(value.Get("hash").String()[0:2]) + "/"
-    if !CheckForFile(assetpath + value.Get("hash").String()) || Sha1Sum(assetpath + value.Get("hash").String()) != value.Get("hash").String() ||
-      !CheckForFile(ProfilePath + "resources/" + key.String()) || Sha1Sum(ProfilePath + "resources/" + key.String()) != value.Get("hash").String() {
+    if !CheckForFile(assetpath + value.Get("hash").String()) || Sha1Sum(assetpath + value.Get("hash").String()) != value.Get("hash").String() {
       r = r+1
 
       // Limit to 10 download threads
@@ -44,6 +43,9 @@ func InstallAssets(URL string, Id string, ProfilePath string) {
         DownloadAsset("https://resources.download.minecraft.net/" + string(value.Get("hash").String()[0:2]) + "/" + value.Get("hash").String(),
           assetpath, value.Get("hash").String(), key.String(), value.Get("hash").String(), ProfilePath)
       }()
+    } else if !CheckForFile(ProfilePath + "resources/" + key.String()) || Sha1Sum(ProfilePath + "resources/" + key.String()) != value.Get("hash").String() {
+      fmt.Println("Copying:", key.String())
+      WriteFile(ReadTextFile(assetpath + value.Get("hash").String()), ProfilePath + "resources/" + key.String())
     }
 
     return true
