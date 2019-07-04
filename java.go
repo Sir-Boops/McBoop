@@ -30,11 +30,11 @@ func InstallJava() {
     os.Exit(0)
   }
 
-  if !CheckForFile(GetMcBoopDir() + "java.tar.gz") {
+  if !CheckForFile(GetMcBoopDir() + filename) {
     DownloadJava(url, filename)
   }
 
-  if Sha256Sum(GetMcBoopDir() + "java.tar.gz") != hash {
+  if Sha256Sum(GetMcBoopDir() + filename) != hash {
     DownloadJava(url, filename)
   }
 
