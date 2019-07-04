@@ -88,7 +88,7 @@ func CreateForgeJar (ClientJar string, ForgeJar string, TempDir string, CleanMet
       fmt.Println("")
       fmt.Println("==== Running Forge installer ====")
       fmt.Println("")
-      fmt.Println("When prompted please select `" + GetMcBoopDir() + "` as your home directory")
+      fmt.Println("When prompted please select `" + filepath.FromSlash(GetMcBoopDir()) + "` as your home directory")
       WriteFile([]byte("{\"profiles\":{}}"), GetMcBoopDir() + "launcher_profiles.json")
       mc := exec.Command(GetMcBoopDir() + "java/bin/java", "-jar", ForgeJar)
       mc.Dir = ProfilePath
