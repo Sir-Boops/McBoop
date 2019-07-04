@@ -1,10 +1,13 @@
 # McBoop
-
-## The little quick MC launcher!
+## The quick little MC launcher!
+* Lightweight af
+* Dosn't store your password
 * Runs every version with working sound
-* Lightweight af statically compiled
 * Auto updates ( I can hear atleast one of you screaming )
-* Forge support! ( Supports forge 1.6+ )
+* Forge support from 1.6 to current
+* Works on Linux and Windows!
+* CLI only means this can be used nearly anywhere
 
-
-Enjoy :) -> https://boops-deploy.s3.amazonaws.com/McBoop/McBoop
+Enjoy :)
+[Linux Download](https://boops-deploy.s3.amazonaws.com/McBoop/McBoop)
+[Windows Download](https://boops-deploy.s3.amazonaws.com/McBoop/McBoop.exe)
