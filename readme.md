@@ -9,5 +9,7 @@
 * CLI only means this can be used nearly anywhere
 
 Enjoy :)
+
 [Linux Download](https://boops-deploy.s3.amazonaws.com/McBoop/McBoop)
+
 [Windows Download](https://boops-deploy.s3.amazonaws.com/McBoop/McBoop.exe)
