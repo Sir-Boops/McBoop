@@ -19,7 +19,7 @@ pipeline:
         - go get -u github.com/logrusorgru/aurora
         - go get -u github.com/tidwall/gjson
         - go get -u github.com/satori/go.uuid
-        - CGO_ENABLED=0 GOARCH=386 GOOS=windows go build -o McBoop.exe .
+        - CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -o McBoop.exe .
         - sha256sum McBoop.exe | head -c 64 > McBoop.exe.sha256
     Deploy:
         image: plugins/s3
