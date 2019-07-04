@@ -2,7 +2,6 @@ package main
 
 import "os"
 import "fmt"
-import "os/exec"
 import "runtime"
 import "path/filepath"
 

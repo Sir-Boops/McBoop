@@ -5,6 +5,7 @@ import "fmt"
 import "path"
 import "sync"
 import "time"
+import "runtime"
 import "strings"
 import "io/ioutil"
 import "path/filepath"
@@ -96,14 +97,15 @@ func InstallLibs(LibIndex []gjson.Result) ([]string, []string) {
       }
     }
 
-    if LibIndex[i].Get("natives.linux").Exists() {
-      if LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String()).Exists() {
-        nativelibpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".path").String()
+    if LibIndex[i].Get("natives." + runtime.GOOS).Exists() {
+      if LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String()).Exists() {
+        nativelibpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() + ".path").String()
         nativelibs = append(nativelibs, nativelibpath)
 
-        if !CheckForFile(nativelibpath) || Sha1Sum(nativelibpath) != LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".sha1").String() {
-          DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".url").String(),
-            LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives.linux").String() + ".sha1").String())
+        if !CheckForFile(nativelibpath) || Sha1Sum(nativelibpath) != LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() +
+          ".sha1").String() {
+          DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() + ".url").String(),
+            LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() + ".sha1").String())
         }
       }
     }
@@ -156,7 +158,7 @@ func ExtractNatives(Natives []string) (string) {
 
   for i := 0; i < len(Natives); i++ {
     zip.Walk(Natives[i], func(f archiver.File) error {
-      if strings.HasSuffix(f.Name(), ".so") {
+      if strings.HasSuffix(f.Name(), ".so") || strings.HasSuffix(f.Name(), ".dll") {
         // Found a lib to extract
         fmt.Println("Extracting native file:", f.Name())
         bytes, _ := ioutil.ReadAll(f)
