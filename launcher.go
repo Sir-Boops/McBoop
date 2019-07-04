@@ -11,6 +11,11 @@ func LauncherUpdate() {
   local_sum := Sha256Sum(expath)
   remote_sum := GetRemoteText("https://boops-deploy.s3.amazonaws.com/McBoop/" + filepath.Base(expath) + ".sha256")
 
+  // Auto clean old binary if there
+  if runtime.GOOS == "windows" && CheckForFile(expath + ".old") {
+    os.RemoveAll(expath + ".old")
+  }
+
   if local_sum != remote_sum {
     fmt.Println("A launcher update has been found and will now be downloaded")
     if runtime.GOOS == "windows" {
