@@ -2,6 +2,7 @@ package main
 
 import "os"
 import "fmt"
+import "runtime"
 import "os/exec"
 import "strings"
 import "io/ioutil"
@@ -182,7 +183,12 @@ func ArgsParse() {
       full_libs_list = append(full_libs_list, libs...)
       full_libs_list = append(full_libs_list, nativelibs...)
 
-      game_launch_cmd := []string{"-Xmx" + ram_amount, "-Djava.library.path=" + nativesfolder, "-cp", strings.Join(full_libs_list, ":"), gjson.Get(version_meta, "mainClass").String()}
+      lib_sep := ":"
+      if runtime.GOOS == "windows" {
+        lib_sep = ";"
+      }
+
+      game_launch_cmd := []string{"-Xmx" + ram_amount, "-Djava.library.path=" + nativesfolder, "-cp", strings.Join(full_libs_list, lib_sep), gjson.Get(version_meta, "mainClass").String()}
       game_launch_cmd = append(game_launch_cmd, GenLaunchArgs(version_meta, account_name, profile_path, asset_index)...)
 
       // Run the game!
