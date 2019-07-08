@@ -1,6 +1,7 @@
 package main
 
 import "strings"
+import "runtime"
 import "github.com/tidwall/gjson"
 
 func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, VersionType string, ProfilePath string) ([]string) {
@@ -62,7 +63,6 @@ func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, Ver
 
   return gameargs
 }
-
 func GenLaunchArgs(VersionMeta string, AccountName string, ProfilePath string, AssetIndex string) ([]string) {
 
   game_args := []string{}
@@ -82,4 +82,55 @@ func GenLaunchArgs(VersionMeta string, AccountName string, ProfilePath string, A
 
   return GenLaunchCommand(game_args, AccountName, gjson.Get(VersionMeta, "id").String(), AssetIndex, gjson.Get(VersionMeta, "type").String(),
    ProfilePath)
+}
+
+func FillJVMArgs(Arg string, NativesFolder string) (string) {
+  ans := Arg
+  if strings.Contains(Arg, "${natives_directory}") {
+    ans = strings.ReplaceAll(Arg, "${natives_directory}", NativesFolder)
+  }
+
+  if strings.Contains(Arg, "${classpath}") {
+    ans = ""
+  }
+
+  if strings.Contains(Arg, "${launcher_name}") {
+    ans = strings.ReplaceAll(Arg, "${launcher_name}", "McBoop")
+  }
+
+  if strings.Contains(Arg, "${launcher_version}") {
+    ans = strings.ReplaceAll(Arg, "${launcher_version}", "rolling-release")
+  }
+
+  if strings.Contains(Arg, "${natives_directory}") {
+    ans = strings.ReplaceAll(Arg, "${natives_directory}", NativesFolder)
+  }
+  return ans
+}
+func GenJVMArgs(VersionMeta string, NativesFolder string) ([]string) {
+  jvm_args := []string{}
+  if gjson.Get(VersionMeta, "arguments.jvm").Exists() {
+    args_array := gjson.Get(VersionMeta, "arguments.jvm").Array()
+    for i := 0; i < len(args_array); i++ {
+      if args_array[i].Get("rules").Exists() {
+        // We have an OS based option!
+        if args_array[i].Get("rules").Array()[0].Get("os.name").Exists() {
+          if args_array[i].Get("rules").Array()[0].Get("os.name").String() == runtime.GOOS {
+            jvm_args = append(jvm_args, FillJVMArgs(args_array[i].Get("value").String(), NativesFolder))
+          }
+        } else if args_array[i].Get("rules").Array()[0].Get("os.arch").Exists() {
+          jvm_args = append(jvm_args, FillJVMArgs(args_array[i].Get("value").String(), NativesFolder))
+        }
+      } else {
+        // Generic option just fill it in and be done
+        arg := FillJVMArgs(args_array[i].String(), NativesFolder)
+        if arg != "" {
+          jvm_args = append(jvm_args, arg)
+        }
+      }
+    }
+  } else {
+    jvm_args = append(jvm_args, []string{"-Djava.library.path=" + NativesFolder, "-cp"}...)
+  }
+  return jvm_args
 }
