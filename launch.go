@@ -2,6 +2,7 @@ package main
 
 import "strings"
 import "runtime"
+import "encoding/json"
 import "github.com/tidwall/gjson"
 
 func GenLaunchCommand(Args []string, Name string, Id string, AssetId string, VersionType string, ProfilePath string) ([]string) {
@@ -104,6 +105,12 @@ func FillJVMArgs(Arg string, NativesFolder string) (string) {
 
   if strings.Contains(Arg, "${natives_directory}") {
     ans = strings.ReplaceAll(Arg, "${natives_directory}", NativesFolder)
+  }
+
+  if strings.HasPrefix(Arg, "[") {
+    var arr []string
+    json.Unmarshal([]byte(Arg), &arr)
+    ans = strings.Join(arr, " ")
   }
   return ans
 }
