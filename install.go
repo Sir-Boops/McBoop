@@ -91,21 +91,25 @@ func InstallLibs(LibIndex []gjson.Result) ([]string, []string) {
   for i := 0; i < len(LibIndex); i++ {
     if LibIndex[i].Get("downloads.artifact.path").Exists() {
       libpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.artifact.path").String()
-      libs = append(libs, libpath)
-      if !CheckForFile(libpath) || Sha1Sum(libpath) != LibIndex[i].Get("downloads.artifact.sha1").String() {
-        DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String(), LibIndex[i].Get("downloads.artifact.sha1").String())
+      if (LibIndex[i].Get("rules").Exists() && CheckForAllow(LibIndex[i].Get("rules").Array())) || !LibIndex[i].Get("rules").Exists() {
+        libs = append(libs, libpath)
+        if !CheckForFile(libpath) || Sha1Sum(libpath) != LibIndex[i].Get("downloads.artifact.sha1").String() {
+          DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String(), LibIndex[i].Get("downloads.artifact.sha1").String())
+        }
       }
     }
 
     if LibIndex[i].Get("natives." + runtime.GOOS).Exists() {
-      if LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String()).Exists() {
-        nativelibpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() + ".path").String()
-        nativelibs = append(nativelibs, nativelibpath)
+      if LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String()).Exists() { // Make find the natives for this OS
+        if LibIndex[i].Get("rules").Exists() && CheckForAllow(LibIndex[i].Get("rules").Array()) {
+          nativelibpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() + ".path").String()
+          nativelibs = append(nativelibs, nativelibpath)
 
-        if !CheckForFile(nativelibpath) || Sha1Sum(nativelibpath) != LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() +
-          ".sha1").String() {
-          DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() + ".url").String(),
-            LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() + ".sha1").String())
+          if !CheckForFile(nativelibpath) || Sha1Sum(nativelibpath) != LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() +
+            ".sha1").String() {
+            DownloadLib(nativelibpath, LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() + ".url").String(),
+              LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() + ".sha1").String())
+          }
         }
       }
     }
@@ -169,4 +173,17 @@ func ExtractNatives(Natives []string) (string) {
   }
 
   return nativesfolder
+}
+
+func CheckForAllow(Arr []gjson.Result) (bool) {
+  ans := false
+  if Arr != nil {
+    for i := 0; i < len(Arr); i++ {
+      if Arr[i].Get("action").String() == "allow" && !Arr[i].Get("os").Exists() {
+        ans = true
+        break
+      }
+    }
+  }
+  return ans
 }
