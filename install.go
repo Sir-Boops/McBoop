@@ -91,7 +91,7 @@ func InstallLibs(LibIndex []gjson.Result) ([]string, []string) {
   for i := 0; i < len(LibIndex); i++ {
     if LibIndex[i].Get("downloads.artifact.path").Exists() {
       libpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.artifact.path").String()
-      if (LibIndex[i].Get("rules").Exists() && CheckForAllow(LibIndex[i].Get("rules").Array())) || !LibIndex[i].Get("rules").Exists() {
+      if (LibIndex[i].Get("rules").Exists() && CheckForAllow(LibIndex[i].Get("rules").Array())) || !LibIndex[i].Get("rules").Exists() && !LibIndex[i].Get("natives").Exists() {
         libs = append(libs, libpath)
         if !CheckForFile(libpath) || Sha1Sum(libpath) != LibIndex[i].Get("downloads.artifact.sha1").String() {
           DownloadLib(libpath, LibIndex[i].Get("downloads.artifact.url").String(), LibIndex[i].Get("downloads.artifact.sha1").String())
