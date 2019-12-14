@@ -4,10 +4,12 @@ pipeline:
         pull: true
         commands:
             - apk add git
-            - go get -u github.com/mholt/archiver
-            - go get -u github.com/logrusorgru/aurora
-            - go get -u github.com/tidwall/gjson
-            - go get -u github.com/satori/go.uuid
+            - go get github.com/logrusorgru/aurora
+            - go get github.com/tidwall/gjson
+            - go get github.com/satori/go.uuid
+            - go get github.com/pierrec/lz4
+            - cd $GOPATH/src/github.com/pierrec/lz4 && git fetch && git checkout v3.0.1
+            - go get github.com/mholt/archiver
             - CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o McBoop .
             - sha256sum McBoop | head -c 64 > McBoop.sha256
     Windows Build:
@@ -15,10 +17,12 @@ pipeline:
       pull: true
       commands:
         - apk add git
-        - go get -u github.com/mholt/archiver
-        - go get -u github.com/logrusorgru/aurora
-        - go get -u github.com/tidwall/gjson
-        - go get -u github.com/satori/go.uuid
+        - go get github.com/logrusorgru/aurora
+        - go get github.com/tidwall/gjson
+        - go get github.com/satori/go.uuid
+        - go get github.com/pierrec/lz4
+        - cd $GOPATH/src/github.com/pierrec/lz4 && git fetch && git checkout v3.0.1
+        - go get github.com/mholt/archiver
         - CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -o McBoop.exe .
         - sha256sum McBoop.exe | head -c 64 > McBoop.exe.sha256
     Deploy:
