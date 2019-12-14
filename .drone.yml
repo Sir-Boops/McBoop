@@ -1,6 +1,6 @@
 pipeline:
     Linux Build:
-        image: golang:1.12.6-alpine
+        image: golang:1.13.5-alpine
         pull: true
         commands:
             - apk add git
@@ -13,7 +13,7 @@ pipeline:
             - CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o McBoop .
             - sha256sum McBoop | head -c 64 > McBoop.sha256
     Windows Build:
-      image: golang:1.12.6-alpine
+      image: golang:1.13.5-alpine
       pull: true
       commands:
         - apk add git
