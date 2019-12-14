@@ -15,12 +15,12 @@ func InstallJava() {
   var filename string
 
   if runtime.GOOS == "linux" {
-    hash = "96d24d94c022b3e414b612cae8829244329d71ad2cce790f099c020f33247e7e"
-    url = "https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u212-b04/OpenJDK8U-jre_x64_linux_hotspot_8u212b04.tar.gz"
+    hash = "bd06b84a1fc10e0a555431bc49a84e86df45de0be93c8ee4d09d13513219843b"
+    url = "https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u232-b09/OpenJDK8U-jre_x64_linux_hotspot_8u232b09.tar.gz"
     filename = "java.tar.gz"
   } else if runtime.GOOS == "windows" {
-    hash = "a83d8ed72766308d28932cbe65012b526cc977b669832f8868e46c1450b44748"
-    url = "https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u212-b04/OpenJDK8U-jre_x86-32_windows_hotspot_8u212b04.zip"
+    hash = "3e56345e39d5ee04cae8d9a253d2529f553b14041a22c23fb2730504015202a9"
+    url = "https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u232-b09/OpenJDK8U-jre_x64_windows_hotspot_8u232b09.zip"
     filename = "java.zip"
   }
 
