@@ -1,6 +1,4 @@
 version: 2.1
-orbs:
-  aws-s3: circleci/aws-s3@1.0.12
 jobs:
   build:
     docker:
