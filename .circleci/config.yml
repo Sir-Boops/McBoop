@@ -1,0 +1,18 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: golang:1.13.5-alpine
+      steps:
+        - checkout
+        - run: apk add git
+        - run: go get github.com/logrusorgru/aurora
+        - run: go get github.com/tidwall/gjson
+        - run: go get github.com/satori/go.uuid
+        - run: go get github.com/pierrec/lz4
+        - run: cd $GOPATH/src/github.com/pierrec/lz4 && git fetch && git checkout v3.0.1
+        - run: go get github.com/mholt/archiver
+        - run: CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o McBoop .
+        - run: CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -o McBoop.exe .
+        - run: sha256sum McBoop | head -c 64 > McBoop.sha256
+        - run: sha256sum McBoop.exe | head -c 64 > McBoop.exe.sha256
