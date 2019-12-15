@@ -14,12 +14,11 @@ pipeline:
             - CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -o McBoop.exe .
             - sha256sum McBoop | head -c 64 > McBoop.sha256
             - sha256sum McBoop.exe | head -c 64 > McBoop.exe.sha256
-            - ls -al
     Deploy:
         image: plugins/s3:1
         bucket: boops-deploy
         acl: public-read
         region: us-east-1
-        source: McBoop*
+        source: McBoop
         target: /McBoop
         secrets: [ aws_access_key_id, aws_secret_access_key ]
