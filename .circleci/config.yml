@@ -22,5 +22,5 @@ jobs:
         from: McBoop*
         to: s3://boops-deploy/McBoop
         arguments: |
-          --acl public-read \
+          --acl public-read
         overwrite: true
