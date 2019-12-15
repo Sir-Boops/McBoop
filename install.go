@@ -32,7 +32,7 @@ func InstallAssets(URL string, Id string, ProfilePath string) {
 
       // Limit to 10 download threads
       for r > 10 {
-        time.Sleep(250 * time.Millisecond)
+        time.Sleep(100 * time.Millisecond)
       }
 
       wg.Add(1)
@@ -44,9 +44,6 @@ func InstallAssets(URL string, Id string, ProfilePath string) {
         DownloadAsset("https://resources.download.minecraft.net/" + string(value.Get("hash").String()[0:2]) + "/" + value.Get("hash").String(),
           assetpath, value.Get("hash").String(), key.String(), value.Get("hash").String(), ProfilePath)
       }()
-    } else if !CheckForFile(ProfilePath + "resources/" + key.String()) || Sha1Sum(ProfilePath + "resources/" + key.String()) != value.Get("hash").String() {
-      fmt.Println("Copying:", key.String())
-      WriteFile(ReadTextFile(assetpath + value.Get("hash").String()), ProfilePath + "resources/" + key.String())
     }
 
     return true
