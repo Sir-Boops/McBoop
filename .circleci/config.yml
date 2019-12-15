@@ -1,13 +1,11 @@
 version: 2.1
-orbs:
-  - circleci/aws-s3@1.0.12
 jobs:
   build:
     docker:
       - image: golang:1.13.5-alpine
     steps:
       - checkout
-      - run: apk add git
+      - run: apk add git aws-cli
       - run: go get github.com/logrusorgru/aurora
       - run: go get github.com/tidwall/gjson
       - run: go get github.com/satori/go.uuid
@@ -18,9 +16,4 @@ jobs:
       - run: CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -o McBoop.exe .
       - run: sha256sum McBoop | head -c 64 > McBoop.sha256
       - run: sha256sum McBoop.exe | head -c 64 > McBoop.exe.sha256
-      - aws-s3/sync:
-        from: McBoop*
-        to: s3://boops-deploy/McBoop
-        arguments: |
-          --acl public-read
-        overwrite: true
+      - run: aws s3 sync McBoop* s3://boops-deploy/McBoop
