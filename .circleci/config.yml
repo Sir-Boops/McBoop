@@ -8,7 +8,7 @@ jobs:
     steps:
       - checkout
       - run: apk add git py2-pip
-      - run: pip install aws-cli
+      - run: pip install awscli
       - run: go get github.com/logrusorgru/aurora
       - run: go get github.com/tidwall/gjson
       - run: go get github.com/satori/go.uuid
