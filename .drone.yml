@@ -26,9 +26,7 @@ pipeline:
         - CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -o McBoop.exe .
         - sha256sum McBoop.exe | head -c 64 > McBoop.exe.sha256
     Deploy:
-        image: plugins/s3-sync
-        commands:
-          - ls -al
+        image: plugins/s3:1
         bucket: boops-deploy
         acl: public-read
         region: us-east-1
