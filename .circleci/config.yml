@@ -19,4 +19,7 @@ jobs:
       - run: CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -o McBoop.exe .
       - run: sha256sum McBoop | head -c 64 > McBoop.sha256
       - run: sha256sum McBoop.exe | head -c 64 > McBoop.exe.sha256
-      - run: aws s3 cp McBoop* s3://boops-deploy/McBoop/ --acl public-read
+      - run: aws s3 cp McBoop s3://boops-deploy/McBoop/McBoop --acl public-read
+      - run: aws s3 cp McBoop.sha256 s3://boops-deploy/McBoop/McBoop.sha256 --acl public-read
+      - run: aws s3 cp McBoop.exe s3://boops-deploy/McBoop/McBoop.exe --acl public-read
+      - run: aws s3 cp McBoop.exe.sha256 s3://boops-deploy/McBoop/McBoop.exe.sha256 --acl public-read
