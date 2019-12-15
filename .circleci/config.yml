@@ -7,7 +7,7 @@ jobs:
       - image: golang:1.13.5-alpine
     steps:
       - checkout
-      - run: apk add git aws-cli
+      - run: apk add git
       - run: go get github.com/logrusorgru/aurora
       - run: go get github.com/tidwall/gjson
       - run: go get github.com/satori/go.uuid
