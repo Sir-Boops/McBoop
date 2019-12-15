@@ -25,9 +25,10 @@ pipeline:
         - go get github.com/mholt/archiver
         - CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -o McBoop.exe .
         - sha256sum McBoop.exe | head -c 64 > McBoop.exe.sha256
-        - ls -al
     Deploy:
         image: plugins/s3-sync
+        commands:
+          - ls -al
         bucket: boops-deploy
         acl: public-read
         region: us-east-1
