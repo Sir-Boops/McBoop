@@ -4,6 +4,7 @@ import "os"
 import "fmt"
 import "runtime"
 import "path/filepath"
+import "github.com/tidwall/gjson"
 import "github.com/mholt/archiver"
 
 func InstallJava() {
@@ -13,28 +14,25 @@ func InstallJava() {
   var hash string
   var url string
   var filename string
+  java_json := GetRemoteText("https://boops-deploy.s3.amazonaws.com/McBoop/Support-Files/openjdk/sha256sums.json")
 
   if runtime.GOOS == "linux" {
-    hash = "bd06b84a1fc10e0a555431bc49a84e86df45de0be93c8ee4d09d13513219843b"
-    url = "https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u232-b09/OpenJDK8U-jre_x64_linux_hotspot_8u232b09.tar.gz"
+    hash = gjson.Get(java_json, "linux-sum").String()
+    url = "https://boops-deploy.s3.amazonaws.com/McBoop/Support-Files/openjdk/" + gjson.Get(java_json, "linux-filename").String()
     filename = "java.tar.gz"
   } else if runtime.GOOS == "windows" {
-    hash = "3e56345e39d5ee04cae8d9a253d2529f553b14041a22c23fb2730504015202a9"
-    url = "https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u232-b09/OpenJDK8U-jre_x64_windows_hotspot_8u232b09.zip"
+    hash = gjson.Get(java_json, "windows-sum").String()
+    url = "https://boops-deploy.s3.amazonaws.com/McBoop/Support-Files/openjdk/" + gjson.Get(java_json, "windows-filename").String()
     filename = "java.zip"
   }
 
-  if hash == "" {
-    // Unsupported OS
-    fmt.Println("Please use Linux or Windows or open an issue!")
-    os.Exit(0)
-  }
-
   if !CheckForFile(GetMcBoopDir() + filename) {
+    fmt.Println("Installing Java, This can take a bit")
     DownloadJava(url, filename)
   }
 
   if Sha256Sum(GetMcBoopDir() + filename) != hash {
+    fmt.Println("Updating Java, This can take a bit")
     DownloadJava(url, filename)
   }
 

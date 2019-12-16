@@ -7,6 +7,7 @@
 * Forge support from 1.6 to current
 * Works on Linux and Windows!
 * CLI only means this can be used nearly anywhere
+* Handles Java for you, So you don't need to install anything
 
 Enjoy :)
 
