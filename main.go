@@ -1,7 +1,8 @@
 package main
 
 import "os"
-//import "fmt"
+import "fmt"
+import "runtime"
 
 func main() {
 
@@ -10,6 +11,11 @@ func main() {
   // 1: Parse commands ( If user dosn't need to login then just run it and quit )
   // 2: check for and verify java ( Run test java command to make sure it works! )
   // 3: Login user to mojang
+
+  if runtime.GOOS != "linux" && runtime.GOOS != "windows" {
+    fmt.Println("Sorry McBoop only currently supports Linux and Windows")
+    os.Exit(0)
+  }
 
   LauncherUpdate()
 
