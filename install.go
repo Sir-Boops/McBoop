@@ -118,7 +118,7 @@ func InstallLibs(LibIndex []gjson.Result) ([]string, []string) {
 
     if LibIndex[i].Get("natives." + runtime.GOOS).Exists() {
       if LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String()).Exists() { // Make find the natives for this OS
-        if LibIndex[i].Get("rules").Exists() && CheckForAllow(LibIndex[i].Get("rules").Array()) {
+        if !LibIndex[i].Get("rules").Exists() || CheckForAllow(LibIndex[i].Get("rules").Array()) {
           nativelibpath := GetMcBoopDir() + "libraries/" + LibIndex[i].Get("downloads.classifiers." + LibIndex[i].Get("natives." + runtime.GOOS).String() + ".path").String()
           nativelibs = append(nativelibs, nativelibpath)
 
