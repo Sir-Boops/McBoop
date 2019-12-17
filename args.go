@@ -296,6 +296,8 @@ func Help() {
   fmt.Println("")
   fmt.Println("./McBoop --list-fabric-versions => List all Fabric versions")
   fmt.Println("")
+  fmt.Println("./McBoop --fabric [fabric version] => Used with `--run` if [fabric version] is not defined will install the latest version for Minecraft")
+  fmt.Println("")
   os.Exit(0)
 }
 
