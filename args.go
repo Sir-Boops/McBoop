@@ -27,6 +27,13 @@ func ArgsParse() {
     if os.Args[1] == "--list-profiles" {
       ListProfiles()
     }
+    if os.Args[1] == "--list-fabric-versions" {
+      if len(os.Args) <= 2 {
+        fmt.Println("Run `./Mcboop --help` for help")
+      } else {
+        ListFabricVersions(os.Args[2])
+      }
+    }
 
     if os.Args[1] == "--add-account" {
       // Make sure there are enough args
@@ -114,6 +121,14 @@ func ArgsParse() {
         }
       }
 
+      // Check if we should deal with fabric or not
+      fabric := false
+      for i := 0; i < len(os.Args); i++ {
+        if os.Args[i] == "--fabric" {
+          fabric = true
+        }
+      }
+
       // Ensure the profile folder is there
       os.MkdirAll(profile_path, os.ModePerm)
 
@@ -171,6 +186,9 @@ func ArgsParse() {
       game_launch_cmd := []string{"-Xmx" + ram_amount}
       game_launch_cmd = append(game_launch_cmd, GenJVMArgs(version_meta, nativesfolder)...)
 
+      // Define the mainCLass
+      main_class := gjson.Get(version_meta, "mainClass").String()
+
       // Install forge
       if forge {
         var forge_libs []string
@@ -180,7 +198,41 @@ func ArgsParse() {
         libs = []string{}
         libs = append(libs, forge_libs...)
         libs = append(libs, libs_dump...)
+        main_class = gjson.Get(version_meta, "mainClass").String()
         fmt.Println("")
+      }
+
+      // Install Fabric
+      if fabric {
+        var FabricVersion string
+        // If user defines custom fabric version
+        for i := 0; i < len(os.Args); i++ {
+          if os.Args[i] == "--fabric" && len(os.Args) > i + 1  {
+            if !strings.Contains(os.Args[i + 1], "--") {
+              FabricVersion = os.Args[i + 1]
+              break
+            }
+          }
+        }
+
+        // If no fabric version is defined
+        if FabricVersion == "" {
+          FabricVersion = GetLatestFabricVersion(requested_version)
+        }
+
+        // Verify fabric version is there and fetch meta
+        FabricMeta := FetchFabricMeta(requested_version, FabricVersion)
+
+        // Install Fabric Libs
+        fmt.Println("==== Installing/Verifying Fabric Libraries ====")
+        libs = append(libs, InstallFabricLibs(gjson.Get(FabricMeta, "launcherMeta.libraries.client").Array())...)
+        libs = append(libs, InstallFabricLibs(gjson.Get(FabricMeta, "launcherMeta.libraries.common").Array())...)
+        libs = append(libs, InstallFabricLibs(gjson.Parse("[{\"name\":\"" + gjson.Get(FabricMeta, "loader.maven").String() +
+          "\",\"url\":\"https://maven.fabricmc.net/\"}]").Array())...)
+        libs = append(libs, InstallFabricLibs(gjson.Parse("[{\"name\":\"" + gjson.Get(FabricMeta, "intermediary.maven").String() +
+          "\",\"url\":\"https://maven.fabricmc.net/\"}]").Array())...)
+
+        main_class = gjson.Get(FabricMeta, "launcherMeta.mainClass.client").String()
       }
 
       // Generate Launch Command
@@ -193,7 +245,7 @@ func ArgsParse() {
         lib_sep = ";"
       }
 
-      game_launch_cmd = append(game_launch_cmd, []string{strings.Join(full_libs_list, lib_sep), gjson.Get(version_meta, "mainClass").String()}...)
+      game_launch_cmd = append(game_launch_cmd, []string{strings.Join(full_libs_list, lib_sep), main_class}...)
       game_launch_cmd = append(game_launch_cmd, GenLaunchArgs(version_meta, account_name, profile_path, asset_index)...)
 
       // Run the game!
@@ -241,6 +293,8 @@ func Help() {
   fmt.Println("./Mcboop --list-profiles => List all profiles")
   fmt.Println("")
   fmt.Println("./McBoop --forge => Used with `--run` will try to install and run the forge installer jar inside the profile directory this file must be named `forge.jar`")
+  fmt.Println("")
+  fmt.Println("./McBoop --list-fabric-versions => List all Fabric versions")
   fmt.Println("")
   os.Exit(0)
 }
