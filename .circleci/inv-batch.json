@@ -5,5 +5,5 @@
       "/McBoop/McBoop*"
     ]
   },
-  "CallerReference": "buildbot-$commit$"
+  "CallerReference": "buildbot-commit"
 }
