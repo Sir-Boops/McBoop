@@ -1,4 +1,4 @@
 {
-  "linux":"lin",
-  "windows":"win"
+  "linux":"$lin",
+  "windows":"$win"
 }
