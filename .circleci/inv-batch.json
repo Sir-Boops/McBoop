@@ -1,12 +1,9 @@
 {
   "Paths": {
-    "Quantity": 4,
+    "Quantity": 1,
     "Items": [
-      "/McBoop/McBoop",
-      "/McBoop/McBoop.sha256",
-      "/McBoop/McBoop.exe",
-      "/McBoop/McBoop.exe.sha256"
+      "/McBoop/McBoop*"
     ]
   },
-  "CallerReference": "buildbot"
+  "CallerReference": "buildbot-$commit$"
 }

@@ -4,12 +4,13 @@ import "os"
 import "fmt"
 import "runtime"
 import "path/filepath"
+import "github.com/tidwall/gjson"
 
 func LauncherUpdate() {
 
   expath, _ := filepath.Abs(os.Args[0])
   local_sum := Sha256Sum(expath)
-  remote_sum := GetRemoteText("https://mcboop.boops.org/McBoop/" + filepath.Base(expath) + ".sha256")
+  remote_sum := gjson.Get(GetRemoteText("https://mcboop.boops.org/McBoop/McBoop.json"), runtime.GOOS).String()
 
   // Auto clean old binary if there
   if runtime.GOOS == "windows" && CheckForFile(expath + ".old") {
