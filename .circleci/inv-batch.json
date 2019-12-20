@@ -7,5 +7,6 @@
       "/McBoop/McBoop.exe",
       "/McBoop/McBoop.exe.sha256sum"
     ]
-  }
+  },
+  "CallerReference": "buildbot"
 }
