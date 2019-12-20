@@ -1,0 +1,11 @@
+{
+  "Paths": {
+    "Quantity": 4,
+    "Items": [
+      "/McBoop/McBoop",
+      "/McBoop/McBoop.sha256sum",
+      "/McBoop/McBoop.exe",
+      "/McBoop/McBoop.exe.sha256sum"
+    ]
+  }
+}

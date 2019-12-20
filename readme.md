@@ -12,6 +12,6 @@
 
 Enjoy :)
 
-[Linux Download](https://boops-deploy.s3.amazonaws.com/McBoop/McBoop)
+[Linux Download](https://mcboop.boops.org/McBoop/McBoop)
 
-[Windows Download](https://boops-deploy.s3.amazonaws.com/McBoop/McBoop.exe)
+[Windows Download](https://mcboop.boops.org/McBoop/McBoop.exe)

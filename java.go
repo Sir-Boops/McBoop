@@ -14,15 +14,15 @@ func InstallJava() {
   var hash string
   var url string
   var filename string
-  java_json := GetRemoteText("https://boops-deploy.s3.amazonaws.com/McBoop/Support-Files/openjdk/sha256sums.json")
+  java_json := GetRemoteText("https://mcboop.boops.org/McBoop/Support-Files/openjdk/sha256sums.json")
 
   if runtime.GOOS == "linux" {
     hash = gjson.Get(java_json, "linux-sum").String()
-    url = "https://boops-deploy.s3.amazonaws.com/McBoop/Support-Files/openjdk/" + gjson.Get(java_json, "linux-filename").String()
+    url = "https://mcboop.boops.org/McBoop/Support-Files/openjdk/" + gjson.Get(java_json, "linux-filename").String()
     filename = "java.tar.gz"
   } else if runtime.GOOS == "windows" {
     hash = gjson.Get(java_json, "windows-sum").String()
-    url = "https://boops-deploy.s3.amazonaws.com/McBoop/Support-Files/openjdk/" + gjson.Get(java_json, "windows-filename").String()
+    url = "https://mcboop.boops.org/McBoop/Support-Files/openjdk/" + gjson.Get(java_json, "windows-filename").String()
     filename = "java.zip"
   }
 

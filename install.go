@@ -54,14 +54,14 @@ func InstallAssets(URL string, Id string, ProfilePath string) {
 
   if Id == "pre-1.6" || Id == "legacy" {
     // Check old_sounds.zip sum
-    if gjson.Get(GetRemoteText("https://boops-deploy.s3.amazonaws.com/McBoop/Support-Files/mojang_files/old_sounds.sha1sum"), "sum").String() != Sha1Sum(GetMcBoopDir() + "old_sounds.zip") {
+    if gjson.Get(GetRemoteText("https://mcboop.boops.org/McBoop/Support-Files/mojang_files/old_sounds.sha1sum"), "sum").String() != Sha1Sum(GetMcBoopDir() + "old_sounds.zip") {
       fmt.Println("Downloading old_sounds.zip")
-      WriteFile(ReadRemote("https://boops-deploy.s3.amazonaws.com/McBoop/Support-Files/mojang_files/old_sounds.zip"), GetMcBoopDir() + "old_sounds.zip")
+      WriteFile(ReadRemote("https://mcboop.boops.org/McBoop/Support-Files/mojang_files/old_sounds.zip"), GetMcBoopDir() + "old_sounds.zip")
     }
     os.MkdirAll(ProfilePath + "resources", os.ModePerm)
     os.MkdirAll(GetMcBoopDir() + "default/resources", os.ModePerm)
     // Make sure old sounds are still good
-    old_sounds_json := GetRemoteText("https://boops-deploy.s3.amazonaws.com/McBoop/Support-Files/mojang_files/old_sounds.json")
+    old_sounds_json := GetRemoteText("https://mcboop.boops.org/McBoop/Support-Files/mojang_files/old_sounds.json")
     old_assets := gjson.Parse(old_sounds_json)
     old_assets.ForEach(func(key, value gjson.Result) bool {
       // Check inside the profile

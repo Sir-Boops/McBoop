@@ -21,3 +21,4 @@ jobs:
       - run: aws s3 cp McBoop.sha256 s3://boops-deploy/McBoop/McBoop.sha256 --acl public-read
       - run: aws s3 cp McBoop.exe s3://boops-deploy/McBoop/McBoop.exe --acl public-read
       - run: aws s3 cp McBoop.exe.sha256 s3://boops-deploy/McBoop/McBoop.exe.sha256 --acl public-read
+      - run: aws cloudfront --distribution-id EYO1QOMN5FQJH --invalidation-batch file://.circleci/inv-batch.json
