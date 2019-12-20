@@ -1,4 +1,4 @@
 {
-  "linux":"sum",
-  "windows":"winsum"
+  "linux":"lin",
+  "windows":"win"
 }
