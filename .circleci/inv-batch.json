@@ -3,9 +3,9 @@
     "Quantity": 4,
     "Items": [
       "/McBoop/McBoop",
-      "/McBoop/McBoop.sha256sum",
+      "/McBoop/McBoop.sha256",
       "/McBoop/McBoop.exe",
-      "/McBoop/McBoop.exe.sha256sum"
+      "/McBoop/McBoop.exe.sha256"
     ]
   },
   "CallerReference": "buildbot"

@@ -9,7 +9,7 @@ func LauncherUpdate() {
 
   expath, _ := filepath.Abs(os.Args[0])
   local_sum := Sha256Sum(expath)
-  remote_sum := GetRemoteText("https://boops-deploy.s3.amazonaws.com/McBoop/" + filepath.Base(expath) + ".sha256")
+  remote_sum := GetRemoteText("https://mcboop.boops.org/McBoop/" + filepath.Base(expath) + ".sha256")
 
   // Auto clean old binary if there
   if runtime.GOOS == "windows" && CheckForFile(expath + ".old") {
@@ -21,7 +21,7 @@ func LauncherUpdate() {
     if runtime.GOOS == "windows" {
       os.Rename(expath, expath + ".old")
     }
-    WriteFile(ReadRemote("https://boops-deploy.s3.amazonaws.com/McBoop/" + filepath.Base(expath)), expath)
+    WriteFile(ReadRemote("https://mcboop.boops.org/McBoop/" + filepath.Base(expath)), expath)
     fmt.Println("Update done, re-run your last command and enjoy! :)")
     os.Exit(0)
   }
