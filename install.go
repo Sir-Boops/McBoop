@@ -54,35 +54,36 @@ func InstallAssets(URL string, Id string, ProfilePath string) {
 
   if Id == "pre-1.6" || Id == "legacy" {
     // Check old_sounds.zip sum
-    if gjson.Get(GetRemoteText("https://mcboop.boops.org/McBoop/Support-Files/mojang_files/old_sounds.sha1sum"), "sum").String() != Sha1Sum(GetMcBoopDir() + "old_sounds.zip") {
+    if gjson.Get(GetRemoteText("https://mcboop.boops.org/McBoop/Support-Files/mojang_files/sha256sums.json"), "old_sounds\\.zip").String() != Sha256Sum(GetMcBoopDir() + "old_sounds.zip") {
       fmt.Println("Downloading old_sounds.zip")
       WriteFile(ReadRemote("https://mcboop.boops.org/McBoop/Support-Files/mojang_files/old_sounds.zip"), GetMcBoopDir() + "old_sounds.zip")
     }
     os.MkdirAll(ProfilePath + "resources", os.ModePerm)
     os.MkdirAll(GetMcBoopDir() + "default/resources", os.ModePerm)
     // Make sure old sounds are still good
-    old_sounds_json := GetRemoteText("https://mcboop.boops.org/McBoop/Support-Files/mojang_files/old_sounds.json")
+    old_sounds_json := GetRemoteText("https://mcboop.boops.org/McBoop/Support-Files/mojang_files/old_sounds.zip.json")
     old_assets := gjson.Parse(old_sounds_json)
     old_assets.ForEach(func(key, value gjson.Result) bool {
       // Check inside the profile
-      if !CheckForFile(ProfilePath + "resources/" + value.Get("name").String()) || Sha1Sum(ProfilePath + "resources/" + value.Get("name").String()) != value.Get("sha1sum").String() {
-        fmt.Println("Extracting old_sounds.zip to profile")
-        archiver.Unarchive(GetMcBoopDir() + "old_sounds.zip", ProfilePath + "resources/")
-        return false
-      }
-      return true
+      return CheckSoundFile(ProfilePath + "resources/", value.Get("name").String(), value.Get("sha256sum").String())
     })
     old_assets.ForEach(func(key, value gjson.Result) bool {
       // Check inside the default folder
-      if !CheckForFile(GetMcBoopDir() + "default/" + value.Get("name").String()) || Sha1Sum(GetMcBoopDir() + "default/" + value.Get("name").String()) != value.Get("sha1sum").String() {
-        fmt.Println("Extracting old_sounds.zip to default")
-        archiver.Unarchive(GetMcBoopDir() + "old_sounds.zip", GetMcBoopDir() + "default/")
-        return false
-      }
-      return true
+      return CheckSoundFile(GetMcBoopDir() + "default/", value.Get("name").String(), value.Get("sha256sum").String())
     })
   }
 }
+
+func CheckSoundFile(Path string, Object string, RemoteSum string) (bool) {
+  if !CheckForFile(Path + Object) || Sha256Sum(Path + Object) != RemoteSum {
+    fmt.Println("Extracting old_sounds.zip to", Path)
+    os.RemoveAll(Path)
+    archiver.Unarchive(GetMcBoopDir() + "old_sounds.zip", Path)
+    return false
+  }
+  return true
+}
+
 func DownloadAsset(URL string, Path string, FileName string, PrettyFileName string, sha1sum string, ProfilePath string) {
   os.MkdirAll(Path, os.ModePerm)
   os.MkdirAll(ProfilePath + "resources/" + path.Dir(PrettyFileName), os.ModePerm)
