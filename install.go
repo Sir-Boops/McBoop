@@ -174,7 +174,7 @@ func DownloadClient(URL string, Path string, Sha1Sum string) {
 
 func ExtractNatives(Natives []string) (string) {
   zip := archiver.Zip{}
-  new_uuid, _ := uuid.NewV4()
+  new_uuid := uuid.NewV4()
   nativesfolder := GetMcBoopDir() + new_uuid.String() + "/"
   os.MkdirAll(nativesfolder, os.ModePerm)
 
