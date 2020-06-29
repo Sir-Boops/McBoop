@@ -129,6 +129,9 @@ func ArgsParse() {
         }
       }
 
+      // Install and verify java
+      InstallJava()
+
       // Ensure the profile folder is there
       os.MkdirAll(profile_path, os.ModePerm)
 

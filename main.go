@@ -24,7 +24,5 @@ func main() {
     os.MkdirAll(GetMcBoopDir(), os.ModePerm)
   }
 
-  InstallJava()
-
   ArgsParse()
 }
