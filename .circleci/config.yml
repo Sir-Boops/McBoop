@@ -5,7 +5,7 @@ jobs:
       - image: golang:1.14.4-alpine
     steps:
       - checkout
-      - run: apk add git py2-pip
+      - run: apk add git py3-pip
       - run: pip install awscli
       - run: CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o McBoop .
       - run: CGO_ENABLED=0 GOARCH=amd64 GOOS=windows go build -o McBoop.exe .
