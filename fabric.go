@@ -24,7 +24,7 @@ func ListFabricVersions(VersionID string) {
   fmt.Println("")
 
   // At the bottom print the newest
-  fmt.Println("List is in order newest to oldest")
+  fmt.Println("List is in order newest ( top ) to oldest ( bottom )")
   fmt.Println("")
   fmt.Println("Latest Fabric Version:", VersionList[0].Get("loader.version"))
 }
