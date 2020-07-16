@@ -15,18 +15,15 @@ func InstallJava() {
   var hash string
   var url string
   var filename string
-  var files_sums gjson.Result
   java_json := GetRemoteText("https://mcboop.boops.org/McBoop/Support-Files/openjdk/sha256sums.json")
 
   if runtime.GOOS == "linux" {
     hash = gjson.Get(java_json, "linux-sum").String()
     url = "https://mcboop.boops.org/McBoop/Support-Files/openjdk/" + gjson.Get(java_json, "linux-filename").String()
-    files_sums = gjson.Parse(GetRemoteText(url + ".json"))
     filename = "java.tar.gz"
   } else if runtime.GOOS == "windows" {
     hash = gjson.Get(java_json, "windows-sum").String()
     url = "https://mcboop.boops.org/McBoop/Support-Files/openjdk/" + gjson.Get(java_json, "windows-filename").String()
-    files_sums = gjson.Parse(GetRemoteText(url + ".json"))
     filename = "java.zip"
   }
 
@@ -40,14 +37,9 @@ func InstallJava() {
     DownloadJava(url, filename)
   }
 
-  // Verify all Java files
-  files_sums.ForEach(func(key, value gjson.Result) bool {
-    if !CheckForFile(GetMcBoopDir() + "java/" + value.Get("name").String()) || Sha256Sum(GetMcBoopDir() + "java/" + value.Get("name").String()) != value.Get("sha256sum").String() {
-      ExtractJava(filename)
-      return false
-    }
-    return true
-  })
+  if !CheckForFile(GetMcBoopDir() + "java/") {
+    ExtractJava(filename)
+  }
 
   fmt.Println("")
 }
