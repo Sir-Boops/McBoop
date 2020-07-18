@@ -4,7 +4,6 @@ import "os"
 import "fmt"
 import "io/ioutil"
 import "github.com/tidwall/gjson"
-import "github.com/logrusorgru/aurora"
 
 func ArgsParse() {
 
@@ -59,7 +58,7 @@ func ArgsParse() {
       fmt.Println("================")
       for i := 0; i < len(users); i++ {
         if users[i] == GetDefaultAccount() {
-          fmt.Println(users[i], aurora.Green("<- Default"))
+          fmt.Println(users[i], "<- Default")
         } else {
           fmt.Println(users[i])
         }
@@ -82,8 +81,8 @@ func ArgsParse() {
       }
       fmt.Println("")
       fmt.Println("")
-      fmt.Println("Current", aurora.Green("stable"), "is:", aurora.Green(release))
-      fmt.Println("Current", aurora.Yellow("snapshot"), "is:", aurora.Yellow(snapshot))
+      fmt.Println("Current stable is:", release)
+      fmt.Println("Current snapshot is:", snapshot)
       fmt.Println("")
     }
     if os.Args[1] == "--run" {
@@ -134,28 +133,16 @@ func Status() {
   fmt.Println("")
   fmt.Println("==== Minecraft server status ====")
   fmt.Println("")
-  fmt.Println("Minecraft.net status:", StatusColor(status.Get("#.minecraft\\.net").Array()[0].String()))
-  fmt.Println("Session.Minecraft.net status:", StatusColor(status.Get("#.session\\.minecraft\\.net").Array()[0].String()))
-  fmt.Println("Textures.Minecraft.net Status:", StatusColor(status.Get("#.textures\\.minecraft\\.net").Array()[0].String()))
-  fmt.Println("Mojang.com status:", StatusColor(status.Get("#.mojang\\.com").Array()[0].String()))
-  fmt.Println("Account.Mojang.com status:", StatusColor(status.Get("#.account\\.mojang\\.com").Array()[0].String()))
-  fmt.Println("Authserver.Mojang.com status:", StatusColor(status.Get("#.authserver\\.mojang\\.com").Array()[0].String()))
-  fmt.Println("Sessionserver.Mojang.com status:", StatusColor(status.Get("#.sessionserver\\.mojang\\.com").Array()[0].String()))
-  fmt.Println("Api.Mojang.com status:", StatusColor(status.Get("#.api\\.mojang\\.com").Array()[0].String()))
+  fmt.Println("Minecraft.net status:", status.Get("#.minecraft\\.net").Array()[0].String())
+  fmt.Println("Session.Minecraft.net status:", status.Get("#.session\\.minecraft\\.net").Array()[0].String())
+  fmt.Println("Textures.Minecraft.net Status:", status.Get("#.textures\\.minecraft\\.net").Array()[0].String())
+  fmt.Println("Mojang.com status:", status.Get("#.mojang\\.com").Array()[0].String())
+  fmt.Println("Account.Mojang.com status:", status.Get("#.account\\.mojang\\.com").Array()[0].String())
+  fmt.Println("Authserver.Mojang.com status:", status.Get("#.authserver\\.mojang\\.com").Array()[0].String())
+  fmt.Println("Sessionserver.Mojang.com status:", status.Get("#.sessionserver\\.mojang\\.com").Array()[0].String())
+  fmt.Println("Api.Mojang.com status:", status.Get("#.api\\.mojang\\.com").Array()[0].String())
   fmt.Println("")
   os.Exit(0)
-}
-func StatusColor(Status string) (aurora.Value){
-  // Add some color to the status page
-  ans := aurora.White(Status)
-  if Status == "green" {
-    ans = aurora.Green("Green")
-  } else if Status == "yellow" {
-    ans = aurora.Yellow("Yellow")
-  } else if Status == "red" {
-    ans = aurora.Red("Red")
-  }
-  return ans
 }
 
 func ListMCVersions() (string, string, []string) {

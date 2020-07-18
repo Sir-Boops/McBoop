@@ -6,7 +6,6 @@ require (
 	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/frankban/quicktest v1.10.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
-	github.com/logrusorgru/aurora v0.0.0-20200102142835-e9ef32dff381
 	github.com/mholt/archiver v3.1.1+incompatible
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/nwaples/rardecode v1.1.0 // indirect
