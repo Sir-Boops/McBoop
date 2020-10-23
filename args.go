@@ -120,6 +120,8 @@ func Help() {
   fmt.Println("")
   fmt.Println("./McBoop --forge => Used with `--run` will try to install and run the forge installer jar inside the profile directory this file must be named `forge.jar`")
   fmt.Println("")
+  fmt.Println("./Mcboop --no-verify-client => Used with `--run` will not verify client jar")
+  fmt.Println("")
   fmt.Println("./McBoop --list-fabric-versions => List all Fabric versions")
   fmt.Println("")
   fmt.Println("./McBoop --fabric [fabric version] => Used with `--run` if [fabric version] is not defined will install the latest version for Minecraft")

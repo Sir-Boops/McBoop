@@ -149,11 +149,15 @@ func DownloadLib(Path string, URL string, SHA1Sum string) {
   WriteFile(lib, Path)
 }
 
-func InstallClient(Meta gjson.Result, Id string) {
+func InstallClient(Meta gjson.Result, Id string, Verify bool) {
   path := GetMcBoopDir() + "client/" + Id + "/"
   filename := Id + ".jar"
 
-  if !CheckForFile(path + filename) || Sha1Sum(path + filename) != Meta.Get("sha1").String() {
+  if !Verify {
+    fmt.Println("Warning, Not verifying client jar hash")
+  }
+
+  if !CheckForFile(path + filename) || (Sha1Sum(path + filename) != Meta.Get("sha1").String() && Verify) {
     DownloadClient(Meta.Get("url").String(), path + filename, Meta.Get("sha1").String())
   }
 }

@@ -50,6 +50,14 @@ func runGame () {
     }
   }
 
+  // Check if we should verify client jar or not
+  verify := true
+  for i := 0; i < len(os.Args); i++ {
+    if os.Args[i] == "--no-verify-client" {
+      verify = false
+    }
+  }
+
   // Install and verify java
   InstallJava()
 
@@ -96,7 +104,7 @@ func runGame () {
 
   // Download the client jar
   fmt.Println("==== Installing/Verifying Client ====")
-  InstallClient(gjson.Get(version_meta, "downloads.client"), gjson.Get(version_meta, "id").String())
+  InstallClient(gjson.Get(version_meta, "downloads.client"), gjson.Get(version_meta, "id").String(), verify)
   fmt.Println("")
 
   // Start defining libs
